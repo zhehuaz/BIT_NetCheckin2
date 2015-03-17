@@ -1,5 +1,7 @@
 package org.bitnp.netcheckin2.network;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 public class HttpRequest {
+    static String TAG = "LoginHelper";
     /**
      * 向指定URL发送GET方法的请求
      * 
@@ -84,6 +87,7 @@ public class HttpRequest {
      * @return 所代表远程资源的响应结果
      */
     public static String sendPost(String url, String param) {
+        Log.v(TAG, "post\nurl = "+url+"\nparam = "+param);
         PrintWriter out = null;
         BufferedReader in = null;
         String result = "";
@@ -131,6 +135,7 @@ public class HttpRequest {
                 ex.printStackTrace();
             }
         }
+        Log.v(TAG, "\nresult = "+result);
         return result;
     }    
 

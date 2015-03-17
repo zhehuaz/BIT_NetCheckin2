@@ -15,6 +15,8 @@ import java.util.regex.Pattern;
  */
 public class LoginHelper {
 
+    String TAG = "LoginHelper";
+
     private static int LOGIN_MODE_1 = 0x1, LOGIN_MODE_2 = 0x2, OFFLINE = 0x0;
 
     private String username, password;
@@ -96,6 +98,8 @@ public class LoginHelper {
                         msg.obj = errorMessage;
                         handler.sendMessage(msg);
 
+                        //FIXME: the pattern of keeplive status might be incorrect
+                        /*
                         int i = 0;
                         for(i = 0; i < 5; i++){
                             if(!keeplive1()){
@@ -105,9 +109,8 @@ public class LoginHelper {
                                 break;
                             }
                         }
-
-                        if(i>0)
-                            loginState = LOGIN_MODE_1;
+                        */
+                        loginState = LOGIN_MODE_1;
 
                     } else {
                         Message msg = new Message();
@@ -172,16 +175,15 @@ public class LoginHelper {
     }
 
     private boolean login1(){
-        password = MD5.getMD516(password).toLowerCase();
-
         String url = "http://10.0.0.55/cgi-bin/do_login";
-        String param = "username=" + username + "&password=" + password + "&drop=" + "0" + "&type=1&n=100";
+        String param = "username=" + username + "&password=" + MD5.getMD516(password).toLowerCase() + "&drop=" + "0" + "&type=1&n=100";
         String res = HttpRequest.sendPost(url, param);
 
         Matcher matcher = VALID_UID.matcher(res);
         if(matcher.matches()){
             uid = res;
             //this.loginState = LOGIN_MODE_1;
+            this.errorMessage = "认证成功";
             return true;
         } else {
             this.errorMessage = findMessage(res, LOGIN_STATUS, LOGIN_MESSAGE);
@@ -195,7 +197,6 @@ public class LoginHelper {
         String res = HttpRequest.sendPost(url, param);
 
         if(res.contains("login_ok")||res.contains("help.html")){
-            //this.loginState = LOGIN_MODE_2;
             return true;
         } else {
             this.errorMessage = res;
@@ -210,12 +211,11 @@ public class LoginHelper {
             params.put("uid",uid);
             String res = HttpRequest.sendPost(url, params);
             System.out.println(res);
+            errorMessage = findMessage(res, LOGOUT_STATUS, LOGOUT_MESSAGE);
             if(res.equals("logout_ok")){
                 uid = "";
-                //this.loginState = OFFLINE;
                 return true;
             } else {
-                errorMessage = findMessage(res, LOGOUT_STATUS, LOGOUT_MESSAGE);
                 return false;
             }
         } else
@@ -227,11 +227,11 @@ public class LoginHelper {
             String url = "http://10.0.0.55/cgi-bin/srun_portal";
             String param = "action=logout";
             String res = HttpRequest.sendPost(url, param);
+            this.errorMessage = res;
             if (res.contains("注销成功")) {
                 //this.loginState = OFFLINE;
                 return true;
             } else {
-                this.errorMessage = res;
                 return false;
             }
         } else {
