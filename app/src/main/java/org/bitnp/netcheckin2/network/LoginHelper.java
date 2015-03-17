@@ -271,4 +271,9 @@ public class LoginHelper {
     public static String getErrorMessage(){
         return errorMessage;
     }
+    
+    public boolean isAutoLogin(String SSID){
+        // TODO check Auto Login SSID
+        return true;
+    }
 }

@@ -28,19 +28,20 @@
             android:exported="true" >
         </service>
 
-        <receiver
-            android:name=".util.NetworkListener"
-            android:enabled="true"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
-
         <activity
             android:name=".ui.Demo"
             android:label="@string/title_activity_demo" >
         </activity>
+
+        <receiver
+            android:name=".broadcast.WifiChangedListener"
+            android:enabled="true"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
