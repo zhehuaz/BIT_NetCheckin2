@@ -19,15 +19,15 @@ public class LoginHelper {
 
     private static int LOGIN_MODE_1 = 0x1, LOGIN_MODE_2 = 0x2, OFFLINE = 0x0;
 
-    private String username, password;
+    private static String username, password;
 
-    private String uid;
+    private static String uid;
 
-    private int loginState = OFFLINE;
+    private static int loginState = OFFLINE;
 
-    private String errorMessage;
+    private static String errorMessage;
 
-    private Handler handler;
+    private static Handler handler;
 
     static Pattern VALID_UID, VALID_KEEPLIVE_STATUS;
 
@@ -62,20 +62,20 @@ public class LoginHelper {
         VALID_KEEPLIVE_STATUS = Pattern.compile("^[\\d]+,[\\d]+,[\\d]+,[\\d]+");
     }
 
-    public void setAccount(String username, String password){
-        this.username = username;
-        this.password = password;
+    public static void setAccount(String u, String p){
+        username = u;
+        password = p;
     }
 
-    public void reset(){
-        this.loginState = OFFLINE;
+    public static void reset(){
+        loginState = OFFLINE;
     }
 
-    public void setHandler(Handler handler){
-        this.handler = handler;
+    public static void setHandler(Handler handler){
+        handler = handler;
     }
 
-    public void asyncLogin(){
+    public static void asyncLogin(){
         if(username == null || password == null || username.isEmpty() || password.isEmpty())
             return ;
         new Thread(new Runnable() {
@@ -122,7 +122,7 @@ public class LoginHelper {
         }).start();
     }
 
-    public void asyncLogout(){
+    public static void asyncLogout(){
         if(loginState == 0)
             return ;
         new Thread(new Runnable() {
@@ -151,7 +151,7 @@ public class LoginHelper {
         }).start();
     }
 
-    public void asyncForceLogout(){
+    public static void asyncForceLogout(){
         new Thread(new Runnable(){
             @Override
             public void run() {
@@ -165,7 +165,7 @@ public class LoginHelper {
         }).start();
     }
 
-    private String findMessage(String s, String[] status, String[] message) {
+    private static String findMessage(String s, String[] status, String[] message) {
         for(int i = 0; i < status.length; i++) {
             if(s.equals(status[i])) {
                 return message[i];
@@ -174,7 +174,7 @@ public class LoginHelper {
         return s;
     }
 
-    private boolean login1(){
+    private static boolean login1(){
         String url = "http://10.0.0.55/cgi-bin/do_login";
         String param = "username=" + username + "&password=" + MD5.getMD516(password).toLowerCase() + "&drop=" + "0" + "&type=1&n=100";
         String res = HttpRequest.sendPost(url, param);
@@ -183,15 +183,15 @@ public class LoginHelper {
         if(matcher.matches()){
             uid = res;
             //this.loginState = LOGIN_MODE_1;
-            this.errorMessage = "认证成功";
+            errorMessage = "认证成功";
             return true;
         } else {
-            this.errorMessage = findMessage(res, LOGIN_STATUS, LOGIN_MESSAGE);
+            errorMessage = findMessage(res, LOGIN_STATUS, LOGIN_MESSAGE);
             return false;
         }
     }
 
-    private boolean login2(){
+    private static boolean login2(){
         String url = "http://10.0.0.55/cgi-bin/srun_portal";
         String param = "action=login&username=" + username + "&password=" + password+"&ac_id=8&type=1&wbaredirect=&mac=&user_ip=";
         String res = HttpRequest.sendPost(url, param);
@@ -199,13 +199,13 @@ public class LoginHelper {
         if(res.contains("login_ok")||res.contains("help.html")){
             return true;
         } else {
-            this.errorMessage = res;
+            errorMessage = res;
             return false;
         }
     }
 
-    private boolean logout1(){
-        if(this.loginState == LOGIN_MODE_1 && uid.length() > 0){
+    private static boolean logout1(){
+        if(loginState == LOGIN_MODE_1 && uid.length() > 0){
             String url = "http://10.0.0.55/cgi-bin/do_logout";
             HashMap<String,String> params = new HashMap<String,String>();
             params.put("uid",uid);
@@ -222,12 +222,12 @@ public class LoginHelper {
             return false;
     }
 
-    private boolean logout2(){
-        if(this.loginState == LOGIN_MODE_2) {
+    private static boolean logout2(){
+        if(loginState == LOGIN_MODE_2) {
             String url = "http://10.0.0.55/cgi-bin/srun_portal";
             String param = "action=logout";
             String res = HttpRequest.sendPost(url, param);
-            this.errorMessage = res;
+            errorMessage = res;
             if (res.contains("注销成功")) {
                 //this.loginState = OFFLINE;
                 return true;
@@ -239,7 +239,7 @@ public class LoginHelper {
         }
     }
 
-    private boolean keeplive1(){
+    private static boolean keeplive1(){
         String url = "http://10.0.0.55/cgi-bin/keeplive";
         HashMap<String,String> params = new HashMap<String,String>();
         params.put("uid",uid);
@@ -248,27 +248,27 @@ public class LoginHelper {
         if(matcher.matches())
             return true;
         else{
-            this.errorMessage = findMessage(res, KEEPLIVE_STATUS, KEEPLIVE_MESSAGE);
+            errorMessage = findMessage(res, KEEPLIVE_STATUS, KEEPLIVE_MESSAGE);
             return false;
         }
     }
 
-    private boolean forceLogout(){
+    private static boolean forceLogout(){
         String url = "http://10.0.0.55/cgi-bin/force_logout";
         String res = HttpRequest.sendPost(url, "username="+ username +"&password="+ password +"&drop=" + "0" + "&type=1&n=1");
-        this.errorMessage = findMessage(res, LOGOUT_STATUS, LOGOUT_MESSAGE);
+        errorMessage = findMessage(res, LOGOUT_STATUS, LOGOUT_MESSAGE);
         return res.equals("logout_ok");
     }
 
-    private String getLoginState2(){
+    private static String getLoginState2(){
         return HttpRequest.sendPost("http://10.0.0.55/cgi-bin/rad_user_info", "");
     }
 
-    public int getLoginState(){
+    public static int getLoginState(){
         return loginState;
     }
 
-    public String getErrorMessage(){
+    public static String getErrorMessage(){
         return errorMessage;
     }
 }
