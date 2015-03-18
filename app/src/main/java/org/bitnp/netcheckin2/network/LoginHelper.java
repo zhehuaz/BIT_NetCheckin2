@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.Message;
 
 import org.bitnp.netcheckin2.util.MD5;
+import org.bitnp.netcheckin2.util.SharedPreferencesManager;
 
 import java.security.MessageDigest;
 import java.util.HashMap;

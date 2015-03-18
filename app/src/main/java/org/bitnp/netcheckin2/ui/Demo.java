@@ -63,7 +63,7 @@ public class Demo extends ActionBarActivity {
         set.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                helper.setAccount(u.getText().toString(), p.getText().toString());
+                //helper.setAccount(u.getText().toString(), p.getText().toString());
             }
         });
     }

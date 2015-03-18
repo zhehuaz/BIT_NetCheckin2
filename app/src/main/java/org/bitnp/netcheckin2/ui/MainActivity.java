@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import org.bitnp.netcheckin2.R;
 import org.bitnp.netcheckin2.network.LoginHelper;
+import org.bitnp.netcheckin2.service.LoginService;
 import org.bitnp.netcheckin2.util.SharedPreferencesManager;
 
 
@@ -26,7 +27,7 @@ import org.bitnp.netcheckin2.util.SharedPreferencesManager;
 public class MainActivity extends ActionBarActivity {
 
     SharedPreferencesManager manager = new SharedPreferencesManager(MainActivity.this);
-    String username, password;
+    String username;
 
     ProgressBar progressBar;
     TextView status, currentUser;
@@ -34,6 +35,8 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Intent intent = new Intent(MainActivity.this, LoginService.class);
+        this.startService(intent);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -43,9 +46,6 @@ public class MainActivity extends ActionBarActivity {
             Intent i = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(i);
         }
-        password = manager.getPassword();
-        LoginHelper.setAccount(username, password);
-
         LoginHelper.setHandler(this.handler);
 
         initUI();
