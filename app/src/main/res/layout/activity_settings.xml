@@ -54,4 +54,15 @@
         android:id="@+id/listView"
         android:layout_below="@+id/textView7"
         android:layout_centerHorizontal="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="确定"
+        android:id="@+id/button7"
+        android:onClick="confirmTime"
+        android:layout_alignBottom="@+id/editText3"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>

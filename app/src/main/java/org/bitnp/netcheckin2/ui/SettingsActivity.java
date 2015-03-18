@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.bitnp.netcheckin2.R;
 import org.bitnp.netcheckin2.util.SharedPreferencesManager;
@@ -34,6 +35,17 @@ public class SettingsActivity extends ActionBarActivity {
     ArrayList<String> ssidList;
 
     SharedPreferencesManager manager;
+
+    public void confirmTime(View v){
+        String s = autoCheckTime.getText().toString();
+        long val = 0;
+        try{
+            val = Long.parseLong(s);
+            manager.setAutoCheckTime(val);
+        } catch (Exception e) {
+            Toast.makeText(SettingsActivity.this, "Invalid format", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,27 +77,16 @@ public class SettingsActivity extends ActionBarActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 manager.setIsAutoCheck(isChecked);
                 autoCheckTime.setEnabled(isChecked);
-                autoCheckTime.setText(manager.getAutoCheckTime() / 1000 + "");
+                autoCheckTime.setText(manager.getAutoCheckTime() + "");
             }
         });
 
-        autoCheckTime.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
+        autoCheckTime.setText(manager.getAutoCheckTime()+"");
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                manager.setAutoCheckTime(Long.parseLong(s.toString()) / 1000);
-            }
-        });
         autoLogin.setChecked(manager.getIsAutoLogin());
+
+        autoCheck.setChecked(manager.getIsAutoCheck());
 
         listView.setAdapter(new BaseAdapter() {
             @Override
