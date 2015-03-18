@@ -65,7 +65,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/linearLayout"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="24dp">
+        android:layout_marginTop="24dp"
+        android:id="@+id/linearLayout2">
 
         <Button
             android:layout_width="match_parent"
@@ -82,5 +83,14 @@
             android:layout_weight="1.0"
             android:id="@+id/button6" />
     </LinearLayout>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButton"
+        android:layout_below="@+id/linearLayout2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:src="@android:drawable/ic_menu_manage" />
 
 </RelativeLayout>

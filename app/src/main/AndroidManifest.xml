@@ -27,12 +27,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.Demo"
             android:label="@string/title_activity_demo" >
         </activity>
-
         <activity
             android:name=".ui.LoginActivity"
             android:label="@string/title_activity_login"
@@ -48,6 +46,11 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name=".ui.SettingsActivity"
+            android:label="@string/title_activity_settings" >
+        </activity>
     </application>
 
 </manifest>

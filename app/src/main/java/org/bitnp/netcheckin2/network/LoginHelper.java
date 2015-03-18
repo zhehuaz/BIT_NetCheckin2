@@ -3,9 +3,10 @@ package org.bitnp.netcheckin2.network;
 import android.os.Handler;
 import android.os.Message;
 
+import org.bitnp.netcheckin2.util.LoginStateListener;
 import org.bitnp.netcheckin2.util.MD5;
 
-import java.security.MessageDigest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,7 +28,7 @@ public class LoginHelper {
 
     private static String errorMessage;
 
-    private static Handler handler;
+    private static ArrayList<LoginStateListener> listeners = new ArrayList<LoginStateListener>();
 
     static Pattern VALID_UID, VALID_KEEPLIVE_STATUS;
 
@@ -69,11 +70,15 @@ public class LoginHelper {
 
     public static void reset(){
         loginState = OFFLINE;
-        handler.sendEmptyMessage(0);
+
     }
 
-    public static void setHandler(Handler handler){
-        LoginHelper.handler = handler;
+    public static boolean registerListener(LoginStateListener listener){
+        return listeners.add(listener);
+    }
+
+    public static boolean unRegisterLisener(LoginStateListener listener){
+        return listeners.remove(listener);
     }
 
     public static void asyncLogin(){
@@ -84,15 +89,11 @@ public class LoginHelper {
             public void run() {
                 if(login2()){
                     getLoginState2();
-
                     loginState = LOGIN_MODE_2;
-                    Message msg = new Message();
-                    msg.obj = "登录成功";
-                    handler.sendMessage(msg);
+                    errorMessage = "登录成功";
+                    updateInfo();
                 } else if((errorMessage.length() != 0) && (!errorMessage.contains("err_code"))) {
-                    Message msg = new Message();
-                    msg.obj = errorMessage;
-                    handler.sendMessage(msg);
+                    updateInfo();
                 } else {
                     if(login1()) {
                         //FIXME: the pattern of keeplive status might be incorrect
@@ -111,12 +112,12 @@ public class LoginHelper {
 
                         Message msg = new Message();
                         msg.obj = errorMessage;
-                        handler.sendMessage(msg);
+                        updateInfo();
 
                     } else {
                         Message msg = new Message();
                         msg.obj = findMessage(errorMessage, LOGIN_STATUS, LOGIN_MESSAGE);
-                        handler.sendMessage(msg);
+                        updateInfo();
                     }
                 }
             }
@@ -134,11 +135,11 @@ public class LoginHelper {
                         loginState = OFFLINE;
                         Message msg = new Message();
                         msg.obj = "注销成功";
-                        handler.sendMessage(msg);
+                        updateInfo();
                     } else {
                         Message msg = new Message();
                         msg.obj = errorMessage;
-                        handler.sendMessage(msg);
+                        updateInfo();
                     }
                 } else {
                     if(logout2()){
@@ -146,7 +147,7 @@ public class LoginHelper {
                     }
                     Message msg = new Message();
                     msg.obj = errorMessage;
-                    handler.sendMessage(msg);
+                    updateInfo();
                 }
             }
         }).start();
@@ -161,9 +162,15 @@ public class LoginHelper {
                 }
                 Message msg = new Message();
                 msg.obj = errorMessage;
-                handler.sendMessage(msg);
+                updateInfo();
             }
         }).start();
+    }
+
+    private static void updateInfo(){
+        for(LoginStateListener i:listeners){
+            i.onLoginStateChanged(errorMessage, loginState);
+        }
     }
 
     private static String findMessage(String s, String[] status, String[] message) {
@@ -277,4 +284,5 @@ public class LoginHelper {
         // TODO check Auto Login SSID
         return true;
     }
+
 }
