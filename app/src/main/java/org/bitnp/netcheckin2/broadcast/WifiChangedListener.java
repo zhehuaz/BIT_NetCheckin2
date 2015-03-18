@@ -8,13 +8,16 @@ import android.net.wifi.WifiManager;
 import android.util.Log;
 
 import org.bitnp.netcheckin2.network.LoginHelper;
+import org.bitnp.netcheckin2.util.ConnTest;
+import org.bitnp.netcheckin2.util.ConnTestCallBack;
 
-public class WifiChangedListener extends BroadcastReceiver {
+public class WifiChangedListener extends BroadcastReceiver implements ConnTestCallBack {
     
     private final static String TAG = "WifiChangedListener";
     
     private WifiManager mWifiManager;
     private WifiInfo mWifiInfo;
+    private LoginHelper mHelper;
     
     public WifiChangedListener() {
     }
@@ -23,15 +26,23 @@ public class WifiChangedListener extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Log.v(TAG, "Wifi status changed");
         
-        LoginHelper mHelper = new LoginHelper();
+        mHelper = new LoginHelper();
         mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         if(!mWifiManager.isWifiEnabled())
             return ;
         mWifiInfo = mWifiManager.getConnectionInfo();
         String currentSSID = mWifiInfo.getSSID();
         if(mHelper.isAutoLogin(currentSSID)){
-            mHelper.asyncLogin();
+            ConnTest.test(WifiChangedListener.this);
         }
         
+    }
+
+    @Override
+    public void onTestOver(boolean result) {
+        if(!result)
+            mHelper.asyncLogin();
+        else
+            Log.d(TAG, "Login already");
     }
 }
