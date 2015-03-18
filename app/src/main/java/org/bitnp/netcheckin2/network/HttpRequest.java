@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 public class HttpRequest {
-    static String TAG = "LoginHelper";
+    private final static String TAG = "HttpRequest";
     /**
      * 向指定URL发送GET方法的请求
      * 
@@ -24,6 +24,16 @@ public class HttpRequest {
      * @return URL 所代表远程资源的响应结果
      */
     public static String sendGet(String url, String param) {
+        return sendGet(url, param, 0);
+    }
+    
+    /**
+     * 向指定URL发送GET方法的请求，只返回指定前若干行
+     * 
+     * @param lineNum
+     *              返回行数
+     */
+    public static String sendGet(String url, String param, int lineNum){
         String result = "";
         BufferedReader in = null;
         try {
@@ -48,9 +58,17 @@ public class HttpRequest {
             in = new BufferedReader(new InputStreamReader(
                     connection.getInputStream()));
             String line;
-            while ((line = in.readLine()) != null) {
-                result += line;
-            }
+
+            if(lineNum == 0)
+                while ((line = in.readLine()) != null) {
+                    result += line;
+                }
+            else
+                for(int i = 0;i < lineNum;i ++) {
+                    line = in.readLine();
+                    result += line;
+                }
+            
         } catch (Exception e) {
             System.out.println("发送GET请求出现异常！" + e);
             e.printStackTrace();
