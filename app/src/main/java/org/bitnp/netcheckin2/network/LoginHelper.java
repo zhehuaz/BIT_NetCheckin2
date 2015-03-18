@@ -69,10 +69,11 @@ public class LoginHelper {
 
     public static void reset(){
         loginState = OFFLINE;
+        handler.sendEmptyMessage(0);
     }
 
     public static void setHandler(Handler handler){
-        handler = handler;
+        LoginHelper.handler = handler;
     }
 
     public static void asyncLogin(){
@@ -84,20 +85,16 @@ public class LoginHelper {
                 if(login2()){
                     getLoginState2();
 
+                    loginState = LOGIN_MODE_2;
                     Message msg = new Message();
                     msg.obj = "登录成功";
                     handler.sendMessage(msg);
-                    loginState = LOGIN_MODE_2;
                 } else if((errorMessage.length() != 0) && (!errorMessage.contains("err_code"))) {
                     Message msg = new Message();
                     msg.obj = errorMessage;
                     handler.sendMessage(msg);
                 } else {
                     if(login1()) {
-                        Message msg = new Message();
-                        msg.obj = errorMessage;
-                        handler.sendMessage(msg);
-
                         //FIXME: the pattern of keeplive status might be incorrect
                         /*
                         int i = 0;
@@ -111,6 +108,10 @@ public class LoginHelper {
                         }
                         */
                         loginState = LOGIN_MODE_1;
+
+                        Message msg = new Message();
+                        msg.obj = errorMessage;
+                        handler.sendMessage(msg);
 
                     } else {
                         Message msg = new Message();
@@ -130,10 +131,10 @@ public class LoginHelper {
             public void run() {
                 if(loginState == LOGIN_MODE_1){
                     if(logout1()){
+                        loginState = OFFLINE;
                         Message msg = new Message();
                         msg.obj = "注销成功";
                         handler.sendMessage(msg);
-                        loginState = OFFLINE;
                     } else {
                         Message msg = new Message();
                         msg.obj = errorMessage;
@@ -272,7 +273,7 @@ public class LoginHelper {
         return errorMessage;
     }
     
-    public boolean isAutoLogin(String SSID){
+    public static boolean isAutoLogin(String SSID){
         // TODO check Auto Login SSID
         return true;
     }

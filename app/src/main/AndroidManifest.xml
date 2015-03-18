@@ -28,15 +28,15 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".service.LoginService"
-            android:enabled="true"
-            android:exported="true" >
-        </service>
-
         <activity
             android:name=".ui.Demo"
             android:label="@string/title_activity_demo" >
+        </activity>
+
+        <activity
+            android:name=".ui.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:windowSoftInputMode="adjustResize|stateHidden" >
         </activity>
 
         <receiver

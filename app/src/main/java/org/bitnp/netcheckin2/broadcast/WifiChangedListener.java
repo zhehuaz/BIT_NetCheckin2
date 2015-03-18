@@ -28,8 +28,10 @@ public class WifiChangedListener extends BroadcastReceiver implements ConnTestCa
         
         mHelper = new LoginHelper();
         mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-        if(!mWifiManager.isWifiEnabled())
-            return ;
+        if(!mWifiManager.isWifiEnabled()) {
+            mHelper.reset();
+            return;
+        }
         mWifiInfo = mWifiManager.getConnectionInfo();
         String currentSSID = mWifiInfo.getSSID();
         if(mHelper.isAutoLogin(currentSSID)){
