@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.bitnp.netcheckin2.network.LoginHelper;
 import org.bitnp.netcheckin2.util.ConnTest;
@@ -19,6 +20,8 @@ public class LoginService extends Service implements ConnTestCallBack{
 
     public final static String START_LISTEN = "START LISTEN";
 
+    public final static String STOP_LISTEN = "STOP_LISTEN";
+
     private SharedPreferencesManager mManager;
     private static boolean keepAliveFlag;
     private static long interval;
@@ -32,6 +35,7 @@ public class LoginService extends Service implements ConnTestCallBack{
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
+        Log.d(TAG, "Get intent in onBind " + intent.getAction());
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
@@ -46,21 +50,28 @@ public class LoginService extends Service implements ConnTestCallBack{
     @Override
     public void onCreate() {
         Log.v(TAG, "Service started");
-        mManager = new SharedPreferencesManager(LoginService.this);
+        mManager = new SharedPreferencesManager(this.getApplicationContext());
         timer = new Timer(true);
         timerTask = new TimerTask() {
             @Override
             public void run() {
+                Log.d(TAG, "Run in timer task");
                 ConnTest.test(LoginService.this);
             }
         };
-        // TODO read settings from mManager @keepAliveFlag @interval
+        /*
+        interval = mManager.getAutoCheckTime();
+        keepAliveFlag = mManager.getIsAutoCheck();
+        */
+        //TODO only for debug
+        interval = 5 * 60 * 1000;
+        keepAliveFlag = true;
+        // TODO
+
         LoginHelper.setAccount(mManager.getUsername(), mManager.getPassword());
 
-        if(keepAliveFlag)
-            timer.schedule(timerTask, interval);
-
-
+        //if(keepAliveFlag)
+            timer.schedule(timerTask, 0, interval);
     }
 
     @Override
@@ -68,13 +79,11 @@ public class LoginService extends Service implements ConnTestCallBack{
         return super.onStartCommand(intent, flags, startId);
     }
 
-
-
     @Override
     public void onTestOver(boolean result) {
+        Log.d(TAG, "Connection test : " + (result ? "Connected" : "Disconnected"));
         if(!result){
-
-
+            LoginHelper.asyncLogin();
         }
     }
 }
