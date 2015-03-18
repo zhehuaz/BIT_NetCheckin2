@@ -35,7 +35,6 @@ public class Demo extends ActionBarActivity {
         msg=(TextView)findViewById(R.id.textView);
         state=(TextView)findViewById(R.id.textView2);
 
-        helper.setHandler(handler);
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override

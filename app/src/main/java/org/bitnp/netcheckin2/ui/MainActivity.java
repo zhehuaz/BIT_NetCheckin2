@@ -10,8 +10,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
@@ -20,11 +23,13 @@ import android.widget.TextView;
 import org.bitnp.netcheckin2.R;
 import org.bitnp.netcheckin2.network.LoginHelper;
 import org.bitnp.netcheckin2.service.LoginService;
+import org.bitnp.netcheckin2.util.LoginStateListener;
+import org.bitnp.netcheckin2.util.NotifTools;
 import org.bitnp.netcheckin2.util.SharedPreferencesManager;
 
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements LoginStateListener{
 
     SharedPreferencesManager manager = new SharedPreferencesManager(MainActivity.this);
     String username;
@@ -32,6 +37,7 @@ public class MainActivity extends ActionBarActivity {
     ProgressBar progressBar;
     TextView status, currentUser;
     Button buttonLogin, buttonLogout;
+    ImageButton showSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,15 +46,15 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         username = manager.getUsername();
         if(username.length() == 0){
             Intent i = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(i);
         }
-        LoginHelper.setHandler(this.handler);
 
         initUI();
+
+        NotifTools.sendNotification(MainActivity.this, "title", "context");
     }
 
     private void initUI() {
@@ -57,6 +63,7 @@ public class MainActivity extends ActionBarActivity {
         buttonLogin = (Button) findViewById(R.id.button5);
         buttonLogout = (Button) findViewById(R.id.button6);
         currentUser = (TextView) findViewById(R.id.textView5);
+        showSettings = (ImageButton) findViewById(R.id.imageButton);
 
         status.setText((LoginHelper.getLoginState() == 0 ? "未登录" : "已登录"));
         progressBar.setVisibility(View.INVISIBLE);
@@ -85,18 +92,17 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
+        showSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent();
+                i.setClass(MainActivity.this, SettingsActivity.class);
+                startActivity(i);
+            }
+        });
+
 
     }
-
-
-    Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            status.setText((String) msg.obj);
-            setProgress(false);
-        }
-    };
 
     void setProgress(boolean show){
         if(show) {
@@ -110,5 +116,12 @@ public class MainActivity extends ActionBarActivity {
             buttonLogin.setClickable(true);
             buttonLogout.setClickable(true);
         }
+    }
+
+
+    @Override
+    public void onLoginStateChanged(String message, int state) {
+        setProgress(false);
+        status.setText(message);
     }
 }
