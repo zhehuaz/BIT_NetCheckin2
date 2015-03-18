@@ -88,7 +88,7 @@ public class LoginHelper {
                     msg.obj = "登录成功";
                     handler.sendMessage(msg);
                     loginState = LOGIN_MODE_2;
-                } else if((!(errorMessage.length() == 0)) && (!(errorMessage.contains("err_code")))) {
+                } else if((errorMessage.length() != 0) && (!errorMessage.contains("err_code"))) {
                     Message msg = new Message();
                     msg.obj = errorMessage;
                     handler.sendMessage(msg);
