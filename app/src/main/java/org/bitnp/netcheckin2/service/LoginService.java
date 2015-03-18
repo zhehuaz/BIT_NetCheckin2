@@ -70,12 +70,17 @@ public class LoginService extends Service implements ConnTestCallBack{
 
         LoginHelper.setAccount(mManager.getUsername(), mManager.getPassword());
 
-        //if(keepAliveFlag)
-            timer.schedule(timerTask, 0, interval);
+        startListen();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d(TAG, "receive message in onStartCommand " + intent.getAction());
+        switch (intent.getAction()){
+            case START_LISTEN : startListen();break;
+            case STOP_LISTEN : stopListen();break;
+            default : Log.e(TAG, "Unknown action received");
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -85,5 +90,14 @@ public class LoginService extends Service implements ConnTestCallBack{
         if(!result){
             LoginHelper.asyncLogin();
         }
+    }
+
+    private void startListen(){
+        if(keepAliveFlag)
+            timer.schedule(timerTask, 0, interval);
+    }
+
+    private void stopListen(){
+        timerTask.cancel();
     }
 }
