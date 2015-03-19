@@ -5,6 +5,9 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Created by ental_000 on 2015/3/17.
@@ -77,23 +80,30 @@ public class SharedPreferencesManager {
         editor.commit();
     }
 
-    public ArrayList<String> getAllSSID(){
+    public ArrayList<String> getAllCustomSSID(){
         SharedPreferences sp = context.getSharedPreferences("autoLogin_SSID", Context.MODE_PRIVATE);
+
+        Set<String> set = new HashSet<String>();
+
+        set = sp.getStringSet("autoLogin_SSID", set);
+
         ArrayList<String> res = new ArrayList<String>();
-        for(int i = 0; i < 5; i++){
-            String s = sp.getString("ssid_" + i, "");
-            if(!s.isEmpty())
-                res.add(s);
+
+        for(String i:set){
+            res.add(i);
         }
+
         return res;
     }
 
-    public void setAllSSID(ArrayList<String> arr){
+    public void setAllCustomSSID(ArrayList<String> arr){
         SharedPreferences sp = context.getSharedPreferences("autoLogin_SSID", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        for(int i = 0; i < 5; i++){
-            editor.putString("ssid_" + i, arr.get(i));
+        HashSet<String> set = new HashSet<String>();
+        for(String i:arr){
+            set.add(i);
         }
+        editor.putStringSet("autoLogin_SSD", set);
         editor.commit();
     }
 }

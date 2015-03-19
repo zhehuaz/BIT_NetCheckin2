@@ -59,7 +59,7 @@ public class SettingsActivity extends ActionBarActivity {
         autoCheckTime = (EditText) findViewById(R.id.editText3);
         listView = (ListView) findViewById(R.id.listView);
 
-        ssidList = manager.getAllSSID();
+        ssidList = manager.getAllCustomSSID();
 
         autoLogin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -82,11 +82,8 @@ public class SettingsActivity extends ActionBarActivity {
         });
 
 
-        autoCheckTime.setText(manager.getAutoCheckTime()+"");
 
         autoLogin.setChecked(manager.getIsAutoLogin());
-
-        autoCheck.setChecked(manager.getIsAutoCheck());
 
         listView.setAdapter(new BaseAdapter() {
             @Override
@@ -119,7 +116,8 @@ public class SettingsActivity extends ActionBarActivity {
                                             ((BaseAdapter)listView.getAdapter()).notifyDataSetChanged();
                                         }
                                     })
-                                    .setNegativeButton("取消", null);
+                                    .setNegativeButton("取消", null)
+                                    .setTitle("自定义SSID");
                             dialog.show();
 
                         }
