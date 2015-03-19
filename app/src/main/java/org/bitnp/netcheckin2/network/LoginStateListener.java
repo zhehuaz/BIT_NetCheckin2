@@ -1,4 +1,4 @@
-package org.bitnp.netcheckin2.util;
+package org.bitnp.netcheckin2.network;
 
 /**
  * Created by ental_000 on 2015/3/18.

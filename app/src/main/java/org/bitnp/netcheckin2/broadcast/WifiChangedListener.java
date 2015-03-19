@@ -23,8 +23,6 @@ public class WifiChangedListener extends BroadcastReceiver implements ConnTestCa
     public WifiChangedListener() {
     }
 
-
-
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.v(TAG, "Wifi status changed");

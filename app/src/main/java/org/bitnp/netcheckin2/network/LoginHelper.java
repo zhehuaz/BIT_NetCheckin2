@@ -1,11 +1,8 @@
 package org.bitnp.netcheckin2.network;
 
-import android.os.Handler;
 import android.os.Message;
 
-import org.bitnp.netcheckin2.util.LoginStateListener;
 import org.bitnp.netcheckin2.util.MD5;
-import org.bitnp.netcheckin2.util.SharedPreferencesManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
