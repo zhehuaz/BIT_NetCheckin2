@@ -13,7 +13,7 @@ import org.bitnp.netcheckin2.service.LoginService;
 import org.bitnp.netcheckin2.util.ConnTest;
 import org.bitnp.netcheckin2.util.ConnTestCallBack;
 
-public class WifiChangedListener extends BroadcastReceiver implements ConnTestCallBack {
+public class WifiChangedListener extends BroadcastReceiver {
     
     private final static String TAG = "WifiChangedListener";
     
@@ -33,15 +33,10 @@ public class WifiChangedListener extends BroadcastReceiver implements ConnTestCa
             return;
         }
 
-        // turn on the wifi
-        if(LoginService.isKeepAlive())
-            callBackToService(context, LoginService.START_LISTEN);
-
-
         mWifiInfo = mWifiManager.getConnectionInfo();
         String currentSSID = mWifiInfo.getSSID();
-        if(LoginHelper.isAutoLogin(currentSSID)){
-            ConnTest.test(WifiChangedListener.this);
+        if(LoginHelper.isAutoLogin(currentSSID) && LoginService.isKeepAlive()){
+            callBackToService(context, LoginService.START_LISTEN);
         }
     }
 
@@ -52,13 +47,4 @@ public class WifiChangedListener extends BroadcastReceiver implements ConnTestCa
         context.startService(service);
     }
 
-    @Override
-    public void onTestOver(boolean result) {
-        if(!result) {
-            LoginHelper.asyncLogin();
-            Log.d(TAG, "Try to login");
-        }
-        else
-            Log.d(TAG, "Login already");
-    }
 }

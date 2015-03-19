@@ -20,14 +20,17 @@ public class NotifTools {
     public static void sendNotification(Context context, String title, String content){
         NotificationManager mNotificationManager;
 
-        mNotificationManager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+        mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        Intent intent = new Intent(context, MainActivity.class);
+        PendingIntent pd = PendingIntent.getActivity(context, 0, intent, 0);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
                 .setContentTitle(title)
                 .setContentText(content)
                 .setTicker(title)
-                .setWhen(System.currentTimeMillis())
-                .setPriority(Notification.PRIORITY_DEFAULT);
-                //.setSmallIcon(R.drawable.)
+                .setContentIntent(pd)
+                //.setWhen(System.currentTimeMillis())
+                //.setPriority(Notification.PRIORITY_DEFAULT)
+                .setSmallIcon(R.mipmap.ic_launcher);
                 //.setContentIntent(PendingIntent.getActivity(context,1,new Intent(context, MainActivity.class),Intent.));
         mNotificationManager.notify(0, mBuilder.build());
     }
