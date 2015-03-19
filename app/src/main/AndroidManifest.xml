@@ -47,10 +47,18 @@
             </intent-filter>
         </receiver>
 
+        <service
+            android:name=".service.LoginService"
+            android:enabled="true"
+            android:exported="true" >
+            <action android:name="android.intent.action.BOOT_COMPLETED" />
+        </service>
+
         <activity
             android:name=".ui.SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
+
     </application>
 
 </manifest>
