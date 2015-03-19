@@ -43,8 +43,6 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
         }
 
         initUI();
-
-        NotifTools.sendNotification(MainActivity.this, "title", "context");
     }
 
     private void initUI() {

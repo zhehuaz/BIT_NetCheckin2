@@ -33,7 +33,10 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
 
     private SharedPreferencesManager mManager;
     private static boolean keepAliveFlag;
+    private static boolean autoLogoutFlag;
     private static long interval;
+
+    private NotifTools mNotifTools;
 
     private Timer timer;
     private TimerTask timerTask;
@@ -62,14 +65,17 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
         mManager = new SharedPreferencesManager(this.getApplicationContext());
         timer = new Timer(true);
         LoginHelper.registerListener(this);
+        mNotifTools = NotifTools.getInstance(this.getApplicationContext());
 
         /*
         interval = mManager.getAutoCheckTime();
         keepAliveFlag = mManager.getIsAutoCheck();
+        autoLogoutFlag = mManager.getIsAutoLogout();
         */
         //TODO only for debug
         interval = 5 * 60 * 1000;
         keepAliveFlag = true;
+        autoLogoutFlag = true;
         // TODO
 
         LoginHelper.setAccount(mManager.getUsername(), mManager.getPassword());
@@ -101,12 +107,9 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
         Log.d(TAG, "Connection test : " + (result ? "Connected" : "Disconnected"));
         if(!result){
             status = NetworkState.OFFLINE;
-            NotifTools.sendNotification(getApplicationContext(), "开始自动连接", "点击查看详情");
             LoginHelper.asyncLogin();
-        } else {
+        } else
             status = NetworkState.ONLINE;
-            NotifTools.sendNotification(getApplicationContext(), "检测到已连接", "点击查看详情");
-        }
     }
 
     private void startListen(){
@@ -139,19 +142,25 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
             case LoginHelper.OFFLINE:
                 status = NetworkState.OFFLINE;
                 stopListen();
-                NotifTools.sendNotification(getApplicationContext(), "已断开", "点击查看详情");
+                mNotifTools.sendSimpleNotification(getApplicationContext(), "已断开", "点击查看详情");
                 break;
             case LoginHelper.LOGIN_MODE_1:
                 Log.i(TAG, "login in mode 1");
                 status = NetworkState.ONLINE;
                 startListen();
-                NotifTools.sendNotification(getApplicationContext(), "已自动连接", "点击查看详情");
+                if(autoLogoutFlag && message.equals("该帐号的登录人数已超过限额\n" +
+                        "如果怀疑帐号被盗用，请联系管理员。")){
+                    //TODO notification
+                    mNotifTools.sendButtonNotification(getApplicationContext(), "是否强制断开", message);
+                }
+                else
+                    mNotifTools.sendSimpleNotification(getApplicationContext(), message, "点击查看详情");
                 break;
             case LoginHelper.LOGIN_MODE_2:
                 Log.i(TAG, "login in mode 2");
                 status = NetworkState.ONLINE;
                 startListen();
-                NotifTools.sendNotification(getApplicationContext(), "已自动连接", "点击查看详情");
+                mNotifTools.sendSimpleNotification(getApplicationContext(), message, "点击查看详情");
                 break;
             default:
                 Log.e(TAG, "unknown login state");

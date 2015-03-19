@@ -89,23 +89,11 @@ public class LoginHelper {
                     getLoginState2();
                     loginState = LOGIN_MODE_2;
                     responseMessage = "登录成功";
-                    updateInfo();
+                    //updateInfo();
                 } else if((responseMessage.length() != 0) && (!responseMessage.contains("err_code"))) {
-                    updateInfo();
+                    //updateInfo();
                 }
                 if(login1()) {
-                    // FIXME the pattern of keeplive status might be incorrect
-                    /*
-                    int i = 0;
-                    for(i = 0; i < 5; i++){
-                        if(!keeplive1()){
-                            Message msg1 = new Message();
-                            msg1.obj = responseMessage;
-                            handler.sendMessage(msg1);
-                            break;
-                        }
-                    }
-                    */
                     loginState = LOGIN_MODE_1;
                 } else
                     responseMessage = findMessage(responseMessage, LOGIN_STATUS, LOGIN_MESSAGE);
