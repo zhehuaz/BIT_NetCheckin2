@@ -31,16 +31,13 @@ public class WifiChangedListener extends BroadcastReceiver implements ConnTestCa
         
         mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         if(!mWifiManager.isWifiEnabled()) {
+            callBackToService(context, LoginService.STOP_LISTEN);
             return;
         }
 
         // turn on the wifi
         if(LoginService.isKeepAlive())
-        {
-            Intent service = new Intent(context, LoginService.class);
-            service.setAction(LoginService.START_LISTEN);
-            IBinder binder = peekService(context, service);
-        }
+            callBackToService(context, LoginService.START_LISTEN);
 
 
         mWifiInfo = mWifiManager.getConnectionInfo();
@@ -48,7 +45,13 @@ public class WifiChangedListener extends BroadcastReceiver implements ConnTestCa
         if(LoginHelper.isAutoLogin(currentSSID)){
             ConnTest.test(WifiChangedListener.this);
         }
-        
+    }
+
+    private void callBackToService(Context context, String action){
+        Log.d(TAG, "Message to service " + action);
+        Intent service = new Intent(context, LoginService.class);
+        service.setAction(action);
+        context.startService(service);
     }
 
     @Override
