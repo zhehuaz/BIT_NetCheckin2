@@ -1,8 +1,14 @@
 package org.bitnp.netcheckin2.ui;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.Binder;
+import android.os.IBinder;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -13,12 +19,15 @@ import org.bitnp.netcheckin2.R;
 import org.bitnp.netcheckin2.network.LoginHelper;
 import org.bitnp.netcheckin2.service.LoginService;
 import org.bitnp.netcheckin2.network.LoginStateListener;
+import org.bitnp.netcheckin2.service.NetworkState;
 import org.bitnp.netcheckin2.util.NotifTools;
 import org.bitnp.netcheckin2.util.SharedPreferencesManager;
 
 
 
 public class MainActivity extends ActionBarActivity implements LoginStateListener{
+
+    private static final String TAG = "MainActivity";
 
     SharedPreferencesManager manager = new SharedPreferencesManager(MainActivity.this);
     String username;
@@ -28,14 +37,25 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
     Button buttonLogin, buttonLogout;
     ImageButton showSettings;
 
+    LoginService loginService;
+
+    ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            loginService = ((LoginService.LoginServiceBinder)service).getLoginService();
+            status.setText(((loginService.getStatus() == NetworkState.OFFLINE) ? "未登录" : "已登录"));
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Intent intent = new Intent(MainActivity.this, LoginService.class);
-        intent.setAction(LoginService.START_LISTEN);
-        this.startService(intent);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         username = manager.getUsername();
         if(username.length() == 0){
             Intent i = new Intent(MainActivity.this, LoginActivity.class);
@@ -43,6 +63,12 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
         }
 
         initUI();
+
+        Intent intent = new Intent(MainActivity.this, LoginService.class);
+        intent.setAction(LoginService.START_LISTEN);
+        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+
+
     }
 
     private void initUI() {
@@ -53,7 +79,6 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
         currentUser = (TextView) findViewById(R.id.textView5);
         showSettings = (ImageButton) findViewById(R.id.imageButton);
 
-        status.setText((LoginHelper.getLoginState() == 0 ? "未登录" : "已登录"));
         progressBar.setVisibility(View.INVISIBLE);
 
         currentUser.setText(username);
@@ -90,6 +115,18 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
         });
 
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "on Resume");
+        if(loginService != null)
+            status.setText(((loginService.getStatus() == NetworkState.OFFLINE) ? "未登录" : "已登录"));
+        else {
+            status.setText(((LoginHelper.getLoginState() == LoginHelper.OFFLINE) ? "未登录" : "已登录"));
+            Log.e(TAG, "login service is null");
+        }
     }
 
     void setProgress(boolean show){

@@ -1,7 +1,10 @@
 package org.bitnp.netcheckin2.service;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiManager;
+import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
@@ -25,11 +28,11 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
 
     private boolean listeningFlag = false;
 
-    public static NetworkState getStatus() {
+    public NetworkState getStatus() {
         return status;
     }
 
-    private static NetworkState status;
+    private NetworkState status = NetworkState.OFFLINE;
 
     private SharedPreferencesManager mManager;
     private static boolean keepAliveFlag;
@@ -46,9 +49,17 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
 
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
         Log.d(TAG, "Get intent in onBind " + intent.getAction());
-        throw new UnsupportedOperationException("Not yet implemented");
+
+
+        return new LoginServiceBinder();
+    }
+
+    public class LoginServiceBinder extends Binder{
+
+        public LoginService getLoginService(){
+            return LoginService.this;
+        }
     }
 
     public static boolean isKeepAlive() {
@@ -61,7 +72,7 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
 
     @Override
     public void onCreate() {
-        Log.v(TAG, "Service started");
+        Log.d(TAG, "Service started");
         mManager = new SharedPreferencesManager(this.getApplicationContext());
         timer = new Timer(true);
         LoginHelper.registerListener(this);
@@ -113,7 +124,8 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
     }
 
     private void startListen(){
-        if(keepAliveFlag && (listeningFlag == false)) {
+        if(keepAliveFlag && !listeningFlag
+        && ((WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE)).isWifiEnabled() ) {
             timerTask = new TimerTask() {
                 @Override
                 public void run() {
@@ -122,8 +134,8 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
                 }
             };
             timer.schedule(timerTask, 0, interval);
+            listeningFlag = true;
         }
-        listeningFlag = true;
     }
 
     private void stopListen(){
@@ -132,6 +144,7 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
             timerTask = null;
         }
         listeningFlag = false;
+        status = NetworkState.OFFLINE;
     }
 
     @Override
