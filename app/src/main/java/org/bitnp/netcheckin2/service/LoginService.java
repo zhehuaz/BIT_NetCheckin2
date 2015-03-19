@@ -22,6 +22,8 @@ public class LoginService extends Service implements ConnTestCallBack{
 
     public final static String STOP_LISTEN = "STOP_LISTEN";
 
+    private boolean listeningFlag = false;
+
     private SharedPreferencesManager mManager;
     private static boolean keepAliveFlag;
     private static long interval;
@@ -52,13 +54,7 @@ public class LoginService extends Service implements ConnTestCallBack{
         Log.v(TAG, "Service started");
         mManager = new SharedPreferencesManager(this.getApplicationContext());
         timer = new Timer(true);
-        timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                Log.d(TAG, "Run in timer task");
-                ConnTest.test(LoginService.this);
-            }
-        };
+
         /*
         interval = mManager.getAutoCheckTime();
         keepAliveFlag = mManager.getIsAutoCheck();
@@ -69,17 +65,25 @@ public class LoginService extends Service implements ConnTestCallBack{
         // TODO
 
         LoginHelper.setAccount(mManager.getUsername(), mManager.getPassword());
-
-        startListen();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "receive message in onStartCommand " + intent.getAction());
-        switch (intent.getAction()){
-            case START_LISTEN : startListen();break;
-            case STOP_LISTEN : stopListen();break;
-            default : Log.e(TAG, "Unknown action received");
+        if(intent != null) {
+            Log.d(TAG, "receive message in onStartCommand " + intent.getAction());
+            String action = intent.getAction();
+            if (action != null) {
+                switch (action) {
+                    case START_LISTEN:
+                        startListen();
+                        break;
+                    case STOP_LISTEN:
+                        stopListen();
+                        break;
+                    default:
+                        Log.e(TAG, "Unknown action received");
+                }
+            }
         }
         return super.onStartCommand(intent, flags, startId);
     }
@@ -93,11 +97,24 @@ public class LoginService extends Service implements ConnTestCallBack{
     }
 
     private void startListen(){
-        if(keepAliveFlag)
+        if(keepAliveFlag && (listeningFlag == false)) {
+            timerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    Log.d(TAG, "Run in timer task");
+                    ConnTest.test(LoginService.this);
+                }
+            };
             timer.schedule(timerTask, 0, interval);
+        }
+        listeningFlag = true;
     }
 
     private void stopListen(){
-        timerTask.cancel();
+        if(timerTask != null){
+            timerTask.cancel();
+            timerTask = null;
+        }
+        listeningFlag = false;
     }
 }

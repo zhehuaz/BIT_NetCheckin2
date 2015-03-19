@@ -42,6 +42,7 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Intent intent = new Intent(MainActivity.this, LoginService.class);
+        intent.setAction(LoginService.START_LISTEN);
         this.startService(intent);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
