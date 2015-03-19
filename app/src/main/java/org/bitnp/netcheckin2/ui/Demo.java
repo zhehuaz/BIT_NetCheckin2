@@ -72,8 +72,8 @@ public class Demo extends ActionBarActivity {
         @Override
         public void handleMessage(Message m) {
             super.handleMessage(m);
-            Log.v(TAG, helper.getErrorMessage());
-            msg.setText(helper.getErrorMessage());
+            //Log.v(TAG, helper.getErrorMessage());
+            //msg.setText(helper.getErrorMessage());
             state.setText(helper.getLoginState()+"");
         }
     };

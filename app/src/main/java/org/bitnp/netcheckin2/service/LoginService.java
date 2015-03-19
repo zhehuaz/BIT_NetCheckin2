@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import org.bitnp.netcheckin2.network.LoginHelper;
+import org.bitnp.netcheckin2.network.LoginStateListener;
 import org.bitnp.netcheckin2.util.ConnTest;
 import org.bitnp.netcheckin2.util.ConnTestCallBack;
 import org.bitnp.netcheckin2.util.SharedPreferencesManager;
@@ -14,7 +15,7 @@ import org.bitnp.netcheckin2.util.SharedPreferencesManager;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class LoginService extends Service implements ConnTestCallBack{
+public class LoginService extends Service implements ConnTestCallBack,LoginStateListener{
 
     private final static String TAG = "LoginService";
 
@@ -54,6 +55,7 @@ public class LoginService extends Service implements ConnTestCallBack{
         Log.v(TAG, "Service started");
         mManager = new SharedPreferencesManager(this.getApplicationContext());
         timer = new Timer(true);
+        LoginHelper.registerListener(this);
 
         /*
         interval = mManager.getAutoCheckTime();
@@ -116,5 +118,24 @@ public class LoginService extends Service implements ConnTestCallBack{
             timerTask = null;
         }
         listeningFlag = false;
+    }
+
+    @Override
+    public void onLoginStateChanged(String message, int state) {
+        Log.d(TAG, "Login state is : " + message);
+
+        switch (state) {
+            case LoginHelper.OFFLINE:
+                stopListen();
+                break;
+            case LoginHelper.LOGIN_MODE_1:
+                Log.i(TAG, "login in mode 1");
+                break;
+            case LoginHelper.LOGIN_MODE_2:
+                Log.i(TAG, "login in mode 2");
+                break;
+            default:
+                Log.e(TAG, "unknown login state");
+        }
     }
 }
