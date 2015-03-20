@@ -85,17 +85,14 @@ public class LoginHelper {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                loginState = LOGIN_MODE_1;
                 if(login2()){
                     getLoginState2();
                     loginState = LOGIN_MODE_2;
                     responseMessage = "登录成功";
-                    //updateInfo();
                 } else if((responseMessage.length() != 0) && (!responseMessage.contains("err_code"))) {
-                    //updateInfo();
                 }
-                if(login1()) {
-                    loginState = LOGIN_MODE_1;
-                } else
+                if(!login1())
                     responseMessage = findMessage(responseMessage, LOGIN_STATUS, LOGIN_MESSAGE);
                 updateInfo();
             }

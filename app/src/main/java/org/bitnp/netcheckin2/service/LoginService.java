@@ -23,8 +23,14 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
 
     private final static String TAG = "LoginService";
 
-    public final static String START_LISTEN = "START LISTEN";
-    public final static String STOP_LISTEN = "STOP_LISTEN";
+    public final static String ACTION_START_LISTEN = "START LISTEN";
+    public final static String ACTION_STOP_LISTEN = "STOP LISTEN";
+    public final static String ACTION_STATE_CHANGE = "STATE CHANGE";
+
+    public final static String ACTION_DO_TEST = "DO TEST";
+
+    /** Force logout and login */
+    public final static String ACTION_RE_LOGIN = "RE LOGIN";
 
     private boolean listeningFlag = false;
 
@@ -38,6 +44,8 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
     private static boolean keepAliveFlag;
     private static boolean autoLogoutFlag;
     private static long interval;
+
+    Intent broadcast;
 
     private NotifTools mNotifTools;
 
@@ -60,6 +68,7 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
         public LoginService getLoginService(){
             return LoginService.this;
         }
+
     }
 
     public static boolean isKeepAlive() {
@@ -77,7 +86,7 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
         timer = new Timer(true);
         LoginHelper.registerListener(this);
         mNotifTools = NotifTools.getInstance(this.getApplicationContext());
-
+        broadcast = new Intent();
         /*
         interval = mManager.getAutoCheckTime();
         keepAliveFlag = mManager.getIsAutoCheck();
@@ -99,11 +108,14 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
             String action = intent.getAction();
             if (action != null) {
                 switch (action) {
-                    case START_LISTEN:
+                    case ACTION_START_LISTEN:
                         startListen();
                         break;
-                    case STOP_LISTEN:
+                    case ACTION_STOP_LISTEN:
                         stopListen();
+                        break;
+                    case ACTION_DO_TEST:
+                        ConnTest.test(this);
                         break;
                     default:
                         Log.e(TAG, "Unknown action received");
@@ -117,10 +129,19 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
     public void onTestOver(boolean result) {
         Log.d(TAG, "Connection test : " + (result ? "Connected" : "Disconnected"));
         if(!result){
+            if(status == NetworkState.ONLINE) {
+                broadcast.setAction(ACTION_STATE_CHANGE);
+                sendBroadcast(broadcast);
+            }
             status = NetworkState.OFFLINE;
             LoginHelper.asyncLogin();
-        } else
+        } else {
+            if(status == NetworkState.OFFLINE) {
+                broadcast.setAction(ACTION_STATE_CHANGE);
+                sendBroadcast(broadcast);
+            }
             status = NetworkState.ONLINE;
+        }
     }
 
     private void startListen(){
@@ -135,6 +156,8 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
             };
             timer.schedule(timerTask, 0, interval);
             listeningFlag = true;
+
+
         }
     }
 
@@ -144,6 +167,7 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
             timerTask = null;
         }
         listeningFlag = false;
+
         status = NetworkState.OFFLINE;
     }
 
@@ -151,32 +175,23 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
     public void onLoginStateChanged(String message, int state) {
         Log.d(TAG, "Login state is : " + message);
 
-        switch (state) {
-            case LoginHelper.OFFLINE:
-                status = NetworkState.OFFLINE;
-                stopListen();
-                mNotifTools.sendSimpleNotification(getApplicationContext(), "已断开", "点击查看详情");
-                break;
-            case LoginHelper.LOGIN_MODE_1:
-                Log.i(TAG, "login in mode 1");
-                status = NetworkState.ONLINE;
-                startListen();
-                if(autoLogoutFlag && message.equals("该帐号的登录人数已超过限额\n" +
-                        "如果怀疑帐号被盗用，请联系管理员。")){
-                    //TODO notification
-                    mNotifTools.sendButtonNotification(getApplicationContext(), "是否强制断开", message);
-                }
-                else
-                    mNotifTools.sendSimpleNotification(getApplicationContext(), message, "点击查看详情");
-                break;
-            case LoginHelper.LOGIN_MODE_2:
-                Log.i(TAG, "login in mode 2");
-                status = NetworkState.ONLINE;
-                startListen();
-                mNotifTools.sendSimpleNotification(getApplicationContext(), message, "点击查看详情");
-                break;
-            default:
-                Log.e(TAG, "unknown login state");
+        if(state ==  LoginHelper.OFFLINE) {
+            status = NetworkState.OFFLINE;
+            stopListen();
+            mNotifTools.sendSimpleNotification(getApplicationContext(), "已断开", "点击查看详情");
         }
+        else if((state == LoginHelper.LOGIN_MODE_1) || (state == LoginHelper.LOGIN_MODE_2)) {
+            Log.i(TAG, "login in mode 1");
+            status = NetworkState.ONLINE;
+            startListen();
+            if (autoLogoutFlag && message.equals("该帐号的登录人数已超过限额\n" +
+                    "如果怀疑帐号被盗用，请联系管理员。")) {
+                mNotifTools.sendButtonNotification(getApplicationContext(), "是否强制断开", message);
+            } else
+                mNotifTools.sendSimpleNotification(getApplicationContext(), message, "点击查看详情");
+        }
+        else
+            Log.e(TAG, "unknown login state");
+
     }
 }

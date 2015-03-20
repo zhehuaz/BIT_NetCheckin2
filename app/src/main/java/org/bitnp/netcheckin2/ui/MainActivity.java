@@ -4,7 +4,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Binder;
 import android.os.IBinder;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -18,14 +17,12 @@ import android.widget.TextView;
 import org.bitnp.netcheckin2.R;
 import org.bitnp.netcheckin2.network.LoginHelper;
 import org.bitnp.netcheckin2.service.LoginService;
-import org.bitnp.netcheckin2.network.LoginStateListener;
 import org.bitnp.netcheckin2.service.NetworkState;
-import org.bitnp.netcheckin2.util.NotifTools;
 import org.bitnp.netcheckin2.util.SharedPreferencesManager;
 
 
 
-public class MainActivity extends ActionBarActivity implements LoginStateListener{
+public class MainActivity extends ActionBarActivity {
 
     private static final String TAG = "MainActivity";
 
@@ -65,7 +62,7 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
         initUI();
 
         Intent intent = new Intent(MainActivity.this, LoginService.class);
-        intent.setAction(LoginService.START_LISTEN);
+        intent.setAction(LoginService.ACTION_START_LISTEN);
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
 
 
@@ -144,9 +141,5 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
     }
 
 
-    @Override
-    public void onLoginStateChanged(String message, int state) {
-        setProgress(false);
-        status.setText(message);
-    }
+
 }

@@ -29,14 +29,14 @@ public class WifiChangedListener extends BroadcastReceiver {
         
         mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         if(!mWifiManager.isWifiEnabled()) {
-            callBackToService(context, LoginService.STOP_LISTEN);
+            callBackToService(context, LoginService.ACTION_STOP_LISTEN);
             return;
         }
 
         mWifiInfo = mWifiManager.getConnectionInfo();
         String currentSSID = mWifiInfo.getSSID();
         if(LoginHelper.isAutoLogin(currentSSID) && LoginService.isKeepAlive()){
-            callBackToService(context, LoginService.START_LISTEN);
+            callBackToService(context, LoginService.ACTION_DO_TEST);
         }
     }
 
