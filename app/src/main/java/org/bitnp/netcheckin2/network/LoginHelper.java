@@ -126,9 +126,8 @@ public class LoginHelper {
             public void run() {
                 if(forceLogout()){
                     loginState = OFFLINE;
+                    responseMessage = "LOGOUT_OK";
                 }
-                Message msg = new Message();
-                msg.obj = responseMessage;
                 updateInfo();
             }
         }).start();

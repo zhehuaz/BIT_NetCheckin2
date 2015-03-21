@@ -46,12 +46,11 @@ public class NotifTools {
 
 
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+                    .setAutoCancel(true)
                     .setContentTitle(title)
                     .setContentText(content)
                     .setTicker(title)
                     .setContentIntent(pd)
-                            //.setWhen(System.currentTimeMillis())
-                            //.setPriority(Notification.PRIORITY_DEFAULT)
                     .setSmallIcon(R.mipmap.ic_launcher);
             //.setContentIntent(PendingIntent.getActivity(context,1,new Intent(context, MainActivity.class),Intent.));
             mNotificationManager.notify(0, mBuilder.build());
@@ -70,6 +69,7 @@ public class NotifTools {
             PendingIntent pConIntent = PendingIntent.getService(context, 0, conIntent, 0);
 
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+                    .setAutoCancel(true)
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setContentTitle(title)
                     .setContentText(content)
