@@ -1,8 +1,10 @@
 package org.bitnp.netcheckin2.ui;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.v7.app.ActionBarActivity;
@@ -34,13 +36,31 @@ public class MainActivity extends ActionBarActivity {
     Button buttonLogin, buttonLogout;
     ImageButton showSettings;
 
+    StateChangeReceiver stateChangeReceiver;
+
+    Intent intent;
     LoginService loginService;
+
+    public class StateChangeReceiver extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "network state change received");
+            if(intent != null) {
+                String command = intent.getStringExtra("command");
+                if(command.equals(LoginService.ACTION_STATE_CHANGE))
+                    if(LoginService.getStatus() == NetworkState.ONLINE)
+                        status.setText("已登录");
+                    else
+                        status.setText("未登录");
+            }
+        }
+    }
 
     ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             loginService = ((LoginService.LoginServiceBinder)service).getLoginService();
-            status.setText(((loginService.getStatus() == NetworkState.OFFLINE) ? "未登录" : "已登录"));
+            status.setText(((LoginService.getStatus() == NetworkState.OFFLINE) ? "未登录" : "已登录"));
         }
 
         @Override
@@ -59,12 +79,18 @@ public class MainActivity extends ActionBarActivity {
             startActivity(i);
         }
 
+        stateChangeReceiver = new StateChangeReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(LoginService.BROADCAST_ACTION);
+        registerReceiver(stateChangeReceiver, intentFilter);
+
+
         initUI();
 
-        Intent intent = new Intent(MainActivity.this, LoginService.class);
+        intent = new Intent(MainActivity.this, LoginService.class);
         intent.setAction(LoginService.ACTION_DO_TEST);
+        //Nothing to do with service object now...
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-
 
     }
 
@@ -118,12 +144,15 @@ public class MainActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "on Resume");
-        if(loginService != null)
-            status.setText(((loginService.getStatus() == NetworkState.OFFLINE) ? "未登录" : "已登录"));
-        else {
-            status.setText(((LoginHelper.getLoginState() == LoginHelper.OFFLINE) ? "未登录" : "已登录"));
-            Log.e(TAG, "login service is null");
-        }
+        status.setText(((LoginService.getStatus() == NetworkState.OFFLINE) ? "未登录" : "已登录"));
+    }
+
+    @Override
+    protected void onDestroy() {
+        unbindService(serviceConnection);
+        unregisterReceiver(stateChangeReceiver);
+        super.onDestroy();
+
     }
 
     void setProgress(boolean show){
@@ -139,7 +168,5 @@ public class MainActivity extends ActionBarActivity {
             buttonLogout.setClickable(true);
         }
     }
-
-
 
 }
