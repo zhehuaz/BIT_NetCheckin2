@@ -63,7 +63,7 @@ public class NotifTools {
     public void sendButtonNotification(Context context, String title, String content){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
             Intent proIntent = new Intent(context, LoginService.class);
-            Intent conIntent = new Intent(context, LoginService.class);
+            Intent conIntent = new Intent(context, MainActivity.class);
             proIntent.setAction(LoginService.ACTION_RE_LOGIN);
             PendingIntent pProIntent = PendingIntent.getActivity(context, 0, proIntent, 0);
             PendingIntent pConIntent = PendingIntent.getService(context, 0, conIntent, 0);
@@ -74,8 +74,8 @@ public class NotifTools {
                     .setContentTitle(title)
                     .setContentText(content)
                     .setTicker(content)
-                    .addAction(R.drawable.abc_btn_check_to_on_mtrl_015, "好", pConIntent)
-                    .addAction(R.drawable.abc_btn_check_material, "不", pProIntent);
+                    .addAction(R.drawable.abc_btn_check_to_on_mtrl_015, "好", pProIntent)
+                    .addAction(R.drawable.abc_btn_check_material, "不", pConIntent);
 
             mNotificationManager.notify(0, mBuilder.build());
         } else {
