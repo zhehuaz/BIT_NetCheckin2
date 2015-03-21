@@ -106,4 +106,15 @@ public class SharedPreferencesManager {
         editor.putStringSet("autoLogin_SSD", set);
         editor.commit();
     }
+
+    public void addCustomSSID(String ssid){
+        SharedPreferences sp;
+        sp = context.getSharedPreferences("autoLogin_SSID", Context.MODE_PRIVATE);
+        Set<String> set ;
+        set = sp.getStringSet("autoLogin_SSID", null);
+        if(set != null)
+            set.add(ssid);
+        sp.edit().putStringSet("autoLogin_SSID", set)
+                .apply();
+    }
 }

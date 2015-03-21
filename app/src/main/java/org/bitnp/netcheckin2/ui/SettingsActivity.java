@@ -112,8 +112,10 @@ public class SettingsActivity extends ActionBarActivity {
                                     .setPositiveButton("添加", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            ssidList.add(edit.getText().toString());
+                                            String newSSID = edit.getText().toString();
+                                            ssidList.add(newSSID);
                                             ((BaseAdapter)listView.getAdapter()).notifyDataSetChanged();
+                                            manager.addCustomSSID(newSSID);
                                         }
                                     })
                                     .setNegativeButton("取消", null)
@@ -128,7 +130,7 @@ public class SettingsActivity extends ActionBarActivity {
                     text.setText(ssidList.get(position));
                     return text;
                 }
-            };
+            }
         });
 
     }

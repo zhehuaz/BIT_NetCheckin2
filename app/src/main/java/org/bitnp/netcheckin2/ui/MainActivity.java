@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -22,6 +23,8 @@ import org.bitnp.netcheckin2.service.LoginService;
 import org.bitnp.netcheckin2.service.NetworkState;
 import org.bitnp.netcheckin2.util.SharedPreferencesManager;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -35,7 +38,8 @@ public class MainActivity extends ActionBarActivity {
     TextView status, currentUser;
     Button buttonLogin, buttonLogout;
     ImageButton showSettings;
-
+    ListView SSIDListView;
+    ArrayList<HashMap<String, String>> SSIDList = new ArrayList<HashMap<String, String>>();
     StateChangeReceiver stateChangeReceiver;
 
     Intent intent;
@@ -101,6 +105,7 @@ public class MainActivity extends ActionBarActivity {
         buttonLogout = (Button) findViewById(R.id.button6);
         currentUser = (TextView) findViewById(R.id.textView5);
         showSettings = (ImageButton) findViewById(R.id.imageButton);
+        SSIDListView = (ListView) findViewById(R.id.ls_SSID);
 
         progressBar.setVisibility(View.INVISIBLE);
 
@@ -137,14 +142,15 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
+        //SSIDList =
+
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "on Resume");
-        status.setText(((LoginService.getStatus() == NetworkState.OFFLINE) ? "未登录" : "已登录"));
+
     }
 
     @Override
