@@ -93,7 +93,7 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
         autoLogoutFlag = mManager.getIsAutoLogout();
         */
         //TODO only for debug
-        interval = 5 * 60 * 1000;
+        interval = 30 * 1000;
         keepAliveFlag = true;
         autoLogoutFlag = true;
         // TODO
@@ -178,7 +178,7 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
         if(state ==  LoginHelper.OFFLINE) {
             status = NetworkState.OFFLINE;
             stopListen();
-            mNotifTools.sendSimpleNotification(getApplicationContext(), "已断开", "点击查看详情");
+            mNotifTools.sendSimpleNotification(getApplicationContext(), "离线状态", "点击查看详情");
         }
         else if((state == LoginHelper.LOGIN_MODE_1) || (state == LoginHelper.LOGIN_MODE_2)) {
             Log.i(TAG, "login in mode 1");
@@ -187,7 +187,7 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
             if (autoLogoutFlag && message.equals("该帐号的登录人数已超过限额\n" +
                     "如果怀疑帐号被盗用，请联系管理员。")) {
                 mNotifTools.sendButtonNotification(getApplicationContext(), "是否强制断开", message);
-            } else
+            } else if(!message.equals("") && (message.length() < 60))
                 mNotifTools.sendSimpleNotification(getApplicationContext(), message, "点击查看详情");
         }
         else

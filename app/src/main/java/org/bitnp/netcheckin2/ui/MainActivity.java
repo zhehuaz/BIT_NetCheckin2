@@ -62,7 +62,7 @@ public class MainActivity extends ActionBarActivity {
         initUI();
 
         Intent intent = new Intent(MainActivity.this, LoginService.class);
-        intent.setAction(LoginService.ACTION_START_LISTEN);
+        intent.setAction(LoginService.ACTION_DO_TEST);
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
 
 
