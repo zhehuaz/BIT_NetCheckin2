@@ -106,6 +106,9 @@ public class HttpRequest {
      */
     public static String sendPost(String url, String param) {
         Log.v(TAG, "post\nurl = "+url+"\nparam = "+param);
+
+
+
         PrintWriter out = null;
         BufferedReader in = null;
         String result = "";

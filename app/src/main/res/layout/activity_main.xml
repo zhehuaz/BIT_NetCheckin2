@@ -10,62 +10,83 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/relativeLayout">
+        android:layout_height="320dp"
+        android:background="@color/material_deep_teal_500"
+        android:id="@+id/layout_upper">
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/relativeLayout">
 
-        <TextView
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:paddingTop="48dp"
+                android:paddingBottom="48dp"
+                android:text="status"
+                android:textColor="#FFFFFF"
+                android:id="@+id/textView6"
+                android:layout_centerHorizontal="true" />
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/progressBar"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:indeterminate="false" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:paddingTop="48dp"
-            android:paddingBottom="48dp"
-            android:text="status"
-            android:id="@+id/textView6"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerInParent="true"
+            android:id="@+id/layout_user">
 
-        <ProgressBar
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/progressBar"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:indeterminate="false" />
+            <org.bitnp.netcheckin2.ui.CircleImageView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@mipmap/bg"
+                android:id="@+id/image_icon"/>
 
-    </RelativeLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/relativeLayout"
-        android:id="@+id/linearLayout"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="当前账户："
-            android:id="@+id/textView4" />
+        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="username"
-            android:id="@+id/textView5" />
-    </LinearLayout>
+            android:id="@+id/textView5"
+            android:textColor="#FFFFFF"
+            android:layout_below="@+id/layout_user"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
 
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_lower"
+        android:layout_below="@+id/layout_upper">
+
+     <ListView
+         android:layout_width="fill_parent"
+         android:layout_height="fill_parent"
+         android:id="@+id/ls_SSID">
+
+
+         </ListView>
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayout"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="24dp">
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="24dp"
+        android:id="@+id/linearLayout2">
 
         <Button
             android:layout_width="match_parent"
@@ -73,6 +94,7 @@
             android:text="登录"
             android:id="@+id/button5"
             android:layout_weight="1.0"
+
             />
 
         <Button
@@ -83,4 +105,12 @@
             android:id="@+id/button6" />
     </LinearLayout>
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButton"
+        android:layout_above="@+id/linearLayout2"
+        android:layout_alignParentRight="true"
+        android:src="@android:drawable/ic_menu_manage" />
+    </RelativeLayout>
 </RelativeLayout>

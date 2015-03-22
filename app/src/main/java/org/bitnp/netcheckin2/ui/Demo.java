@@ -35,7 +35,6 @@ public class Demo extends ActionBarActivity {
         msg=(TextView)findViewById(R.id.textView);
         state=(TextView)findViewById(R.id.textView2);
 
-        helper.setHandler(handler);
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,7 +62,7 @@ public class Demo extends ActionBarActivity {
         set.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                helper.setAccount(u.getText().toString(), p.getText().toString());
+                //helper.setAccount(u.getText().toString(), p.getText().toString());
             }
         });
     }
@@ -73,8 +72,8 @@ public class Demo extends ActionBarActivity {
         @Override
         public void handleMessage(Message m) {
             super.handleMessage(m);
-            Log.v(TAG, helper.getErrorMessage());
-            msg.setText(helper.getErrorMessage());
+            //Log.v(TAG, helper.getErrorMessage());
+            //msg.setText(helper.getErrorMessage());
             state.setText(helper.getLoginState()+"");
         }
     };

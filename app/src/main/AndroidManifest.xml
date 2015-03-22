@@ -27,12 +27,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.Demo"
             android:label="@string/title_activity_demo" >
         </activity>
-
         <activity
             android:name=".ui.LoginActivity"
             android:label="@string/title_activity_login"
@@ -46,8 +44,22 @@
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="org.bitnp.netcheckin2.ui.MAIN_START" />
             </intent-filter>
         </receiver>
+
+        <service
+            android:name=".service.LoginService"
+            android:enabled="true"
+            android:exported="true" >
+            <action android:name="android.intent.action.BOOT_COMPLETED" />
+        </service>
+
+        <activity
+            android:name=".ui.SettingsActivity"
+            android:label="@string/title_activity_settings" >
+        </activity>
+
     </application>
 
 </manifest>

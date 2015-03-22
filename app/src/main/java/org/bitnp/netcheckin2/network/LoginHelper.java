@@ -1,11 +1,10 @@
 package org.bitnp.netcheckin2.network;
 
-import android.os.Handler;
 import android.os.Message;
 
 import org.bitnp.netcheckin2.util.MD5;
 
-import java.security.MessageDigest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,9 +14,9 @@ import java.util.regex.Pattern;
  */
 public class LoginHelper {
 
-    String TAG = "LoginHelper";
+    private final static String TAG = "LoginHelper";
 
-    private static int LOGIN_MODE_1 = 0x1, LOGIN_MODE_2 = 0x2, OFFLINE = 0x0;
+    public final static int LOGIN_MODE_1 = 0x1, LOGIN_MODE_2 = 0x2, OFFLINE = 0x0;
 
     private static String username, password;
 
@@ -25,9 +24,9 @@ public class LoginHelper {
 
     private static int loginState = OFFLINE;
 
-    private static String errorMessage;
+    private static String responseMessage;
 
-    private static Handler handler;
+    private static ArrayList<LoginStateListener> listeners = new ArrayList<LoginStateListener>();
 
     static Pattern VALID_UID, VALID_KEEPLIVE_STATUS;
 
@@ -69,11 +68,15 @@ public class LoginHelper {
 
     public static void reset(){
         loginState = OFFLINE;
-        handler.sendEmptyMessage(0);
+
     }
 
-    public static void setHandler(Handler handler){
-        LoginHelper.handler = handler;
+    public static boolean registerListener(LoginStateListener listener){
+        return listeners.add(listener);
+    }
+
+    public static boolean unRegisterLisener(LoginStateListener listener){
+        return listeners.remove(listener);
     }
 
     public static void asyncLogin(){
@@ -82,43 +85,16 @@ public class LoginHelper {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                loginState = LOGIN_MODE_1;
                 if(login2()){
                     getLoginState2();
-
                     loginState = LOGIN_MODE_2;
-                    Message msg = new Message();
-                    msg.obj = "登录成功";
-                    handler.sendMessage(msg);
-                } else if((errorMessage.length() != 0) && (!errorMessage.contains("err_code"))) {
-                    Message msg = new Message();
-                    msg.obj = errorMessage;
-                    handler.sendMessage(msg);
-                } else {
-                    if(login1()) {
-                        //FIXME: the pattern of keeplive status might be incorrect
-                        /*
-                        int i = 0;
-                        for(i = 0; i < 5; i++){
-                            if(!keeplive1()){
-                                Message msg1 = new Message();
-                                msg1.obj = errorMessage;
-                                handler.sendMessage(msg1);
-                                break;
-                            }
-                        }
-                        */
-                        loginState = LOGIN_MODE_1;
-
-                        Message msg = new Message();
-                        msg.obj = errorMessage;
-                        handler.sendMessage(msg);
-
-                    } else {
-                        Message msg = new Message();
-                        msg.obj = findMessage(errorMessage, LOGIN_STATUS, LOGIN_MESSAGE);
-                        handler.sendMessage(msg);
-                    }
+                    responseMessage = "登录成功";
+                } else if((responseMessage.length() != 0) && (!responseMessage.contains("err_code"))) {
                 }
+                if(!login1())
+                    responseMessage = findMessage(responseMessage, LOGIN_STATUS, LOGIN_MESSAGE);
+                updateInfo();
             }
         }).start();
     }
@@ -130,23 +106,15 @@ public class LoginHelper {
             @Override
             public void run() {
                 if(loginState == LOGIN_MODE_1){
-                    if(logout1()){
+                    if(logout1()) {
                         loginState = OFFLINE;
-                        Message msg = new Message();
-                        msg.obj = "注销成功";
-                        handler.sendMessage(msg);
-                    } else {
-                        Message msg = new Message();
-                        msg.obj = errorMessage;
-                        handler.sendMessage(msg);
+                        updateInfo();
                     }
                 } else {
-                    if(logout2()){
+                    if(logout2()) {
                         loginState = OFFLINE;
+                        updateInfo();
                     }
-                    Message msg = new Message();
-                    msg.obj = errorMessage;
-                    handler.sendMessage(msg);
                 }
             }
         }).start();
@@ -158,12 +126,17 @@ public class LoginHelper {
             public void run() {
                 if(forceLogout()){
                     loginState = OFFLINE;
+                    responseMessage = "LOGOUT_OK";
                 }
-                Message msg = new Message();
-                msg.obj = errorMessage;
-                handler.sendMessage(msg);
+                updateInfo();
             }
         }).start();
+    }
+
+    private static void updateInfo(){
+        for(LoginStateListener i:listeners){
+            i.onLoginStateChanged(responseMessage, loginState);
+        }
     }
 
     private static String findMessage(String s, String[] status, String[] message) {
@@ -184,10 +157,10 @@ public class LoginHelper {
         if(matcher.matches()){
             uid = res;
             //this.loginState = LOGIN_MODE_1;
-            errorMessage = "认证成功";
+            responseMessage = "认证成功";
             return true;
         } else {
-            errorMessage = findMessage(res, LOGIN_STATUS, LOGIN_MESSAGE);
+            responseMessage = findMessage(res, LOGIN_STATUS, LOGIN_MESSAGE);
             return false;
         }
     }
@@ -200,7 +173,7 @@ public class LoginHelper {
         if(res.contains("login_ok")||res.contains("help.html")){
             return true;
         } else {
-            errorMessage = res;
+            responseMessage = res;
             return false;
         }
     }
@@ -212,7 +185,7 @@ public class LoginHelper {
             params.put("uid",uid);
             String res = HttpRequest.sendPost(url, params);
             System.out.println(res);
-            errorMessage = findMessage(res, LOGOUT_STATUS, LOGOUT_MESSAGE);
+            responseMessage = findMessage(res, LOGOUT_STATUS, LOGOUT_MESSAGE);
             if(res.equals("logout_ok")){
                 uid = "";
                 return true;
@@ -228,7 +201,7 @@ public class LoginHelper {
             String url = "http://10.0.0.55/cgi-bin/srun_portal";
             String param = "action=logout";
             String res = HttpRequest.sendPost(url, param);
-            errorMessage = res;
+            responseMessage = res;
             if (res.contains("注销成功")) {
                 //this.loginState = OFFLINE;
                 return true;
@@ -249,7 +222,7 @@ public class LoginHelper {
         if(matcher.matches())
             return true;
         else{
-            errorMessage = findMessage(res, KEEPLIVE_STATUS, KEEPLIVE_MESSAGE);
+            responseMessage = findMessage(res, KEEPLIVE_STATUS, KEEPLIVE_MESSAGE);
             return false;
         }
     }
@@ -257,7 +230,7 @@ public class LoginHelper {
     private static boolean forceLogout(){
         String url = "http://10.0.0.55/cgi-bin/force_logout";
         String res = HttpRequest.sendPost(url, "username="+ username +"&password="+ password +"&drop=" + "0" + "&type=1&n=1");
-        errorMessage = findMessage(res, LOGOUT_STATUS, LOGOUT_MESSAGE);
+        responseMessage = findMessage(res, LOGOUT_STATUS, LOGOUT_MESSAGE);
         return res.equals("logout_ok");
     }
 
@@ -269,12 +242,8 @@ public class LoginHelper {
         return loginState;
     }
 
-    public static String getErrorMessage(){
-        return errorMessage;
+    public static String getresponseMessage(){
+        return responseMessage;
     }
-    
-    public static boolean isAutoLogin(String SSID){
-        // TODO check Auto Login SSID
-        return true;
-    }
+
 }
