@@ -26,34 +26,26 @@
         android:layout_alignParentStart="true"
         android:checked="false" />
 
+    <CheckBox
+        android:layout_below="@+id/checkBox3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="人数慢时自动强退"
+        android:id="@+id/cb_auto_flogout"
+
+        />
+
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="numberDecimal"
         android:ems="10"
         android:id="@+id/editText3"
-        android:layout_below="@+id/checkBox3"
+        android:layout_below="@+id/cb_auto_flogout"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:hint="时间间隔"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="校园网无线 SSID"
-        android:id="@+id/textView7"
-        android:layout_below="@+id/editText3"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="24dp" />
-
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/listView"
-        android:layout_below="@+id/textView7"
-        android:layout_centerHorizontal="true" />
 
     <Button
         style="?android:attr/buttonStyleSmall"

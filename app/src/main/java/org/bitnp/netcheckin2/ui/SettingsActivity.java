@@ -30,7 +30,6 @@ public class SettingsActivity extends ActionBarActivity {
 
     CheckBox autoLogin, autoCheck;
     EditText autoCheckTime;
-    ListView listView;
 
     ArrayList<String> ssidList;
 
@@ -57,7 +56,6 @@ public class SettingsActivity extends ActionBarActivity {
         autoLogin = (CheckBox) findViewById(R.id.checkBox2);
         autoCheck = (CheckBox) findViewById(R.id.checkBox3);
         autoCheckTime = (EditText) findViewById(R.id.editText3);
-        listView = (ListView) findViewById(R.id.listView);
 
         ssidList = manager.getAllCustomSSID();
 
@@ -85,53 +83,7 @@ public class SettingsActivity extends ActionBarActivity {
 
         autoLogin.setChecked(manager.getIsAutoLogin());
 
-        listView.setAdapter(new BaseAdapter() {
-            @Override
-            public int getCount() {
-                return ssidList.size() >= 5 ? 5 : ssidList.size() + 1;
-            }
 
-            @Override
-            public Object getItem(int position) {return null;}
-
-            @Override
-            public long getItemId(int position) {return 0;}
-
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                if(position >= ssidList.size()){
-                    Button b = new Button(SettingsActivity.this);
-                    b.setText("+");
-                    b.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            final EditText edit = new EditText(SettingsActivity.this);
-
-                            AlertDialog.Builder dialog = new AlertDialog.Builder(SettingsActivity.this)
-                                    .setView(edit)
-                                    .setPositiveButton("添加", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            String newSSID = edit.getText().toString();
-                                            ssidList.add(newSSID);
-                                            ((BaseAdapter)listView.getAdapter()).notifyDataSetChanged();
-                                            manager.addCustomSSID(newSSID);
-                                        }
-                                    })
-                                    .setNegativeButton("取消", null)
-                                    .setTitle("自定义SSID");
-                            dialog.show();
-
-                        }
-                    });
-                    return b;
-                } else {
-                    TextView text = new TextView(SettingsActivity.this);
-                    text.setText(ssidList.get(position));
-                    return text;
-                }
-            }
-        });
 
     }
 
