@@ -245,10 +245,5 @@ public class LoginHelper {
     public static String getresponseMessage(){
         return responseMessage;
     }
-    
-    public static boolean isAutoLogin(String SSID){
-        // TODO check Auto Login SSID
-        return true;
-    }
 
 }

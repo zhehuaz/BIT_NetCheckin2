@@ -12,6 +12,7 @@ import org.bitnp.netcheckin2.network.LoginHelper;
 import org.bitnp.netcheckin2.service.LoginService;
 import org.bitnp.netcheckin2.util.ConnTest;
 import org.bitnp.netcheckin2.util.ConnTestCallBack;
+import org.bitnp.netcheckin2.util.SharedPreferencesManager;
 
 public class WifiChangedListener extends BroadcastReceiver {
     
@@ -37,7 +38,9 @@ public class WifiChangedListener extends BroadcastReceiver {
 
         mWifiInfo = mWifiManager.getConnectionInfo();
         String currentSSID = mWifiInfo.getSSID();
-        if(LoginHelper.isAutoLogin(currentSSID) && LoginService.isKeepAlive()){
+        Log.d(TAG, "Start to check ssid list");
+        if(new SharedPreferencesManager(context).isAutoLogin(currentSSID) && LoginService.isKeepAlive()){
+            Log.i(TAG, "WIFI check ok");
             callBackToService(context, LoginService.ACTION_DO_TEST);
         }
     }

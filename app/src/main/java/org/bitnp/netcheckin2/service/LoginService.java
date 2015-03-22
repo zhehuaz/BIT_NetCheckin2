@@ -56,10 +56,11 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
 
     @Override
     public IBinder onBind(Intent intent) {
-        Log.d(TAG, "Get intent in onBind " + intent.getAction());
-        if(intent.getAction().equals(LoginService.ACTION_DO_TEST))
-            ConnTest.test(this);
-
+        if(intent.getAction() != null) {
+            Log.d(TAG, "Get intent in onBind " + intent.getAction());
+            if (intent.getAction().equals(LoginService.ACTION_DO_TEST))
+                ConnTest.test(this);
+        }
         return new LoginServiceBinder();
     }
 

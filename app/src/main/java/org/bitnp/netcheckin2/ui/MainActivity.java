@@ -36,6 +36,8 @@ public class MainActivity extends ActionBarActivity {
 
     private static final String TAG = "MainActivity";
 
+    private static final String ACTION_MAINACTIVITY_START = "org.bitnp.netcheckin2.ui.MAIN_START";
+
     SharedPreferencesManager manager = new SharedPreferencesManager(MainActivity.this);
     String username;
 
@@ -101,6 +103,8 @@ public class MainActivity extends ActionBarActivity {
         //Nothing to do with service object now...
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
 
+        intent = new Intent(ACTION_MAINACTIVITY_START);
+        sendBroadcast(intent);
     }
 
     private void initUI() {

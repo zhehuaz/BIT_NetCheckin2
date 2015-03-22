@@ -44,6 +44,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="org.bitnp.netcheckin2.ui.MAIN_START" />
             </intent-filter>
         </receiver>
 
