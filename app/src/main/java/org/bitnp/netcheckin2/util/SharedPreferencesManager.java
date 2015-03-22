@@ -29,7 +29,7 @@ public class SharedPreferencesManager {
         SharedPreferences sp = context.getSharedPreferences("userinfo", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString("username", username);
-        editor.commit();
+        editor.apply();
     }
 
     public String getPassword(){
@@ -41,7 +41,7 @@ public class SharedPreferencesManager {
         SharedPreferences sp = context.getSharedPreferences("userinfo", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString("password", password);
-        editor.commit();
+        editor.apply();
     }
 
     public boolean getIsAutoLogin(){
@@ -53,7 +53,7 @@ public class SharedPreferencesManager {
         SharedPreferences sp = context.getSharedPreferences("configuration", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean("autologin", value);
-        editor.commit();
+        editor.apply();
     }
 
     public boolean getIsAutoCheck(){
@@ -65,7 +65,7 @@ public class SharedPreferencesManager {
         SharedPreferences sp = context.getSharedPreferences("configuration", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean("autocheck", value);
-        editor.commit();
+        editor.apply();
     }
 
     public long getAutoCheckTime(){
@@ -77,7 +77,7 @@ public class SharedPreferencesManager {
         SharedPreferences sp = context.getSharedPreferences("configuration", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putLong("autochecktime_millis", value);
-        editor.commit();
+        editor.apply();
     }
 
     public ArrayList<String> getAllCustomSSID(){
@@ -104,10 +104,14 @@ public class SharedPreferencesManager {
             set.add(i);
         }
         editor.putStringSet("autoLogin_SSD", set);
-        editor.commit();
+        editor.apply();
     }
 
-    public void addCustomSSID(String ssid){
+    /**
+     * @return if this ssid already exists, true means ssid is new
+     * */
+    public boolean addCustomSSID(String ssid){
+        boolean newFlag = true;
         SharedPreferences sp;
         sp = context.getSharedPreferences("autoLogin_SSID", Context.MODE_PRIVATE);
         Set<String> set ;
@@ -115,12 +119,16 @@ public class SharedPreferencesManager {
         Set<String> cpSet = new HashSet<String>();
         if(set != null) {
             for(String i : set){
-                cpSet.add(i);
+                if(i.equals(ssid))
+                    newFlag = false;
+                else
+                    cpSet.add(i);
             }
         }
         cpSet.add(ssid);
         sp.edit().putStringSet("autoLogin_SSID", cpSet)
                 .apply();
+        return newFlag;
     }
 
     public boolean isAutoLogin(String SSID){

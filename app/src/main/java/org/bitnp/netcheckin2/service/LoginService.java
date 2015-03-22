@@ -99,7 +99,7 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
         //TODO only for debug
         interval = 30 * 1000;
         keepAliveFlag = true;
-        autoLogoutFlag = true;
+        autoLogoutFlag = false;
         // TODO
 
         LoginHelper.setAccount(mManager.getUsername(), mManager.getPassword());
@@ -199,7 +199,10 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
             startListen();
             if (autoLogoutFlag && message.equals("该帐号的登录人数已超过限额\n" +
                     "如果怀疑帐号被盗用，请联系管理员。")) {
-                mNotifTools.sendButtonNotification(getApplicationContext(), "是否强制断开", "将登出所有在线用户，并在10秒后重新连接");
+                if(false == autoLogoutFlag)
+                    mNotifTools.sendButtonNotification(getApplicationContext(), "是否强制断开", "将登出所有在线用户，并在10秒后重新连接");
+                else
+                    LoginHelper.asyncForceLogout();
             } else if(!message.equals("") && (message.length() < 60))
                 mNotifTools.sendSimpleNotification(getApplicationContext(), message, "点击查看详情");
         }

@@ -12,6 +12,8 @@ import android.os.IBinder;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -31,6 +33,7 @@ import org.bitnp.netcheckin2.network.LoginHelper;
 import org.bitnp.netcheckin2.service.LoginService;
 import org.bitnp.netcheckin2.service.NetworkState;
 import org.bitnp.netcheckin2.util.SharedPreferencesManager;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,6 +92,8 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         username = manager.getUsername();
         if(username.length() == 0){
+            manager.addCustomSSID("BIT");
+            manager.addCustomSSID("BeijingLG");
             Intent i = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(i);
         }
@@ -134,12 +139,44 @@ public class MainActivity extends ActionBarActivity {
             public long getItemId(int position) {return 0;}
 
             @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
+            public View getView(int position, View view, ViewGroup parent) {
 
-                TextView text = new TextView(MainActivity.this);
+
+                view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.list_ssid, null);
+                TextView text = (TextView) view.findViewById(R.id.item_ssid);
                 text.setText(SSIDList.get(position));
-                text.setTextSize(45);
-                return text;
+
+                view.setOnTouchListener(new View.OnTouchListener() {
+
+                    private float lastX;
+                    private float lastY;
+
+
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+
+                        switch (event.getAction()) {
+                            case MotionEvent.ACTION_DOWN:
+                                lastX = event.getX();
+                                lastY = event.getY();
+                                break;
+                            case MotionEvent.ACTION_MOVE:
+                                float disX = event.getX() - lastX;
+                                float disY = event.getY() - lastY;
+                                if (Math.abs(disX) > Math.abs(disY)) {
+                                    v.setX(v.getX() + disX);
+                                    v.setAlpha(Math.max(0.1f, 1 - Math.abs(v.getX() / 200)));
+                                }
+                                lastX = event.getX();
+                                lastY = event.getY();
+                                break;
+
+
+                        }
+                        return false;
+                    }
+                });
+                return view;
             }
         });
 
@@ -163,8 +200,10 @@ public class MainActivity extends ActionBarActivity {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 String newSSID = edit.getText().toString();
-                                                manager.addCustomSSID(newSSID);
-                                                SSIDList.add(newSSID);
+                                                if(manager.addCustomSSID(newSSID) == true)
+                                                    SSIDList.add(newSSID);
+                                                else
+                                                    Toast.makeText(getApplicationContext(), "此SSID已存在", Toast.LENGTH_SHORT).show();
                                                 ((BaseAdapter) SSIDListView.getAdapter()).notifyDataSetChanged();
                                             }
                                         })
