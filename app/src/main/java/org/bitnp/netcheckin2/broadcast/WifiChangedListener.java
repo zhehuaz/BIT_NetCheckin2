@@ -28,6 +28,8 @@ public class WifiChangedListener extends BroadcastReceiver {
         Log.v(TAG, "Wifi status changed");
         
         mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        // TODO what's this?
+        mWifiManager.getWifiState();
         if(!mWifiManager.isWifiEnabled()) {
             callBackToService(context, LoginService.ACTION_STOP_LISTEN);
             return;

@@ -112,9 +112,14 @@ public class SharedPreferencesManager {
         sp = context.getSharedPreferences("autoLogin_SSID", Context.MODE_PRIVATE);
         Set<String> set ;
         set = sp.getStringSet("autoLogin_SSID", null);
-        if(set != null)
-            set.add(ssid);
-        sp.edit().putStringSet("autoLogin_SSID", set)
+        Set<String> cpSet = new HashSet<String>();
+        if(set != null) {
+            for(String i : set){
+                cpSet.add(i);
+            }
+        }
+        cpSet.add(ssid);
+        sp.edit().putStringSet("autoLogin_SSID", cpSet)
                 .apply();
     }
 }

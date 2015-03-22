@@ -115,7 +115,8 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
                 else if(action.equals(ACTION_STOP_LISTEN))
                     stopListen();
                 else if(action.equals(ACTION_DO_TEST))
-                    ConnTest.test(this);
+                    if(((WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE)).isWifiEnabled())
+                        ConnTest.test(this);
                 else if(action.equals(ACTION_RE_LOGIN))
                     LoginHelper.asyncForceLogout();
                 else

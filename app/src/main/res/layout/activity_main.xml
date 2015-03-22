@@ -25,6 +25,7 @@
                 android:paddingTop="48dp"
                 android:paddingBottom="48dp"
                 android:text="status"
+                android:textColor="#FFFFFF"
                 android:id="@+id/textView6"
                 android:layout_centerHorizontal="true" />
 
@@ -46,19 +47,23 @@
             android:layout_centerInParent="true"
             android:id="@+id/layout_user">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="当前账户："
-                android:id="@+id/textView4" />
+            <org.bitnp.netcheckin2.ui.CircleImageView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@mipmap/bg"
+                android:id="@+id/image_icon"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="username"
-                android:id="@+id/textView5" />
         </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="username"
+            android:id="@+id/textView5"
+            android:textColor="#FFFFFF"
+            android:layout_below="@+id/layout_user"
+            android:layout_centerHorizontal="true" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -89,6 +94,7 @@
             android:text="登录"
             android:id="@+id/button5"
             android:layout_weight="1.0"
+
             />
 
         <Button
