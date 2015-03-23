@@ -27,9 +27,11 @@ import android.widget.Toast;
 
 import com.linroid.filtermenu.library.FilterMenu;
 import com.linroid.filtermenu.library.FilterMenuLayout;
+import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
 
 import org.bitnp.netcheckin2.R;
 import org.bitnp.netcheckin2.network.LoginHelper;
+import org.bitnp.netcheckin2.network.LoginStateListener;
 import org.bitnp.netcheckin2.service.LoginService;
 import org.bitnp.netcheckin2.service.NetworkState;
 import org.bitnp.netcheckin2.util.SharedPreferencesManager;
@@ -39,7 +41,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements LoginStateListener{
 
     private static final String TAG = "MainActivity";
 
@@ -48,7 +50,7 @@ public class MainActivity extends ActionBarActivity {
     SharedPreferencesManager manager = new SharedPreferencesManager(MainActivity.this);
     String username;
 
-    ProgressBar progressBar;
+    //CircleProgressBar progressBar;
     TextView status, currentUser;
     ListView SSIDListView;
     ArrayList<String> SSIDList = new ArrayList<String>();
@@ -58,6 +60,11 @@ public class MainActivity extends ActionBarActivity {
     Intent intent;
     LoginService loginService;
 
+    @Override
+    public void onLoginStateChanged(String message, int state) {
+        //setProgress(false);
+    }
+
     public class StateChangeReceiver extends BroadcastReceiver{
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -65,10 +72,14 @@ public class MainActivity extends ActionBarActivity {
             if(intent != null) {
                 String command = intent.getStringExtra("command");
                 if(command.equals(LoginService.ACTION_STATE_CHANGE))
-                    if(LoginService.getStatus() == NetworkState.ONLINE)
+                    if(LoginService.getStatus() == NetworkState.ONLINE) {
                         status.setText("已登录");
-                    else
+                        setProgress(false);
+                    }
+                    else {
                         status.setText("未登录");
+                        setProgress(false);
+                    }
             }
         }
     }
@@ -103,6 +114,7 @@ public class MainActivity extends ActionBarActivity {
         intentFilter.addAction(LoginService.BROADCAST_ACTION);
         registerReceiver(stateChangeReceiver, intentFilter);
 
+        LoginHelper.registerListener(this);
 
         initUI();
 
@@ -116,12 +128,15 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void initUI() {
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        //progressBar = (CircleProgressBar) findViewById(R.id.progressBar);
         status = (TextView) findViewById(R.id.textView6);
         currentUser = (TextView) findViewById(R.id.textView5);
         SSIDListView = (ListView) findViewById(R.id.ls_SSID);
         SSIDList = manager.getAllCustomSSID();
-        progressBar.setVisibility(View.INVISIBLE);
+        //progressBar.setCircleBackgroundEnabled(false);
+        //progressBar.setColorSchemeColors(R.color.common_signin_btn_default_background);
+        //progressBar.setVisibility(View.GONE);
+
 
         currentUser.setText(username);
 
@@ -146,33 +161,23 @@ public class MainActivity extends ActionBarActivity {
                 TextView text = (TextView) view.findViewById(R.id.item_ssid);
                 text.setText(SSIDList.get(position));
 
-                view.setOnTouchListener(new View.OnTouchListener() {
-
-                    private float lastX;
-                    private float lastY;
-
-
+                view.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-
-                        switch (event.getAction()) {
-                            case MotionEvent.ACTION_DOWN:
-                                lastX = event.getX();
-                                lastY = event.getY();
-                                break;
-                            case MotionEvent.ACTION_MOVE:
-                                float disX = event.getX() - lastX;
-                                float disY = event.getY() - lastY;
-                                if (Math.abs(disX) > Math.abs(disY)) {
-                                    v.setX(v.getX() + disX);
-                                    v.setAlpha(Math.max(0.1f, 1 - Math.abs(v.getX() / 200)));
-                                }
-                                lastX = event.getX();
-                                lastY = event.getY();
-                                break;
-
-
-                        }
+                    public boolean onLongClick(View v) {
+                        final String ssid = ((TextView)v.findViewById(R.id.item_ssid)).getText().toString();
+                        new AlertDialog.Builder(MainActivity.this)
+                                .setTitle("确定要删除\"" + ssid + "\"?")
+                                .setPositiveButton("嗯", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        manager.deleteSSID(ssid);
+                                        SSIDList.remove(ssid);
+                                        ((BaseAdapter) SSIDListView.getAdapter()).notifyDataSetChanged();
+                                        Toast.makeText(getApplicationContext(), "删除成功", Toast.LENGTH_SHORT).show();
+                                    }
+                                })
+                                .setNegativeButton("等等", null)
+                                .show();
                         return false;
                     }
                 });
@@ -183,7 +188,7 @@ public class MainActivity extends ActionBarActivity {
         filterMenuLayout = (FilterMenuLayout) findViewById(R.id.filter_menu);
         new FilterMenu.Builder(this)
                 .addItem(R.drawable.ic_action_add)//添加SSID
-                .addItem(R.drawable.ic_action_clock)//登录
+                .addItem(R.drawable.ic_conn_l)//登录
                 .addItem(R.drawable.ic_action_io)//注销
                 .addItem(R.drawable.ic_action_info)//设置
                 .attach(filterMenuLayout)
@@ -191,7 +196,7 @@ public class MainActivity extends ActionBarActivity {
                     @Override
                     public void onMenuItemClick(View view, int i) {
                         switch (i) {
-                            case 0:
+                            case 0://添加SSID
                                 final EditText edit = new EditText(MainActivity.this);
 
                                 AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this)
@@ -211,7 +216,7 @@ public class MainActivity extends ActionBarActivity {
                                         .setTitle("自定义SSID");
                                 dialog.show();
                                 break;
-                            case 1:
+                            case 1://登录
                                 if (LoginService.getStatus() == NetworkState.OFFLINE) {
                                     setProgress(true);
                                     LoginHelper.asyncLogin();
@@ -219,7 +224,7 @@ public class MainActivity extends ActionBarActivity {
                                 else
                                     Toast.makeText(getApplicationContext(), "已登录", Toast.LENGTH_SHORT).show();
                                 break;
-                            case 2:
+                            case 2://注销
                                 setProgress(true);
                                 if (LoginService.getStatus() == NetworkState.OFFLINE) {
                                     LoginHelper.asyncForceLogout();
@@ -227,7 +232,7 @@ public class MainActivity extends ActionBarActivity {
                                     LoginHelper.asyncLogout();
                                 }
                                 break;
-                            case 3:
+                            case 3://设置
                                 Intent setting = new Intent();
                                 setting.setClass(MainActivity.this, SettingsActivity.class);
                                 startActivity(setting);
@@ -261,6 +266,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onDestroy() {
         unbindService(serviceConnection);
         unregisterReceiver(stateChangeReceiver);
+        LoginHelper.unRegisterLisener(this);
         super.onDestroy();
 
     }
@@ -268,12 +274,12 @@ public class MainActivity extends ActionBarActivity {
     void setProgress(boolean show){
         if(show) {
             status.setVisibility(View.INVISIBLE);
-            progressBar.setVisibility(View.VISIBLE);
+            //progressBar.setVisibility(View.VISIBLE);
             //buttonLogin.setClickable(false);
             //buttonLogout.setClickable(false);
         } else {
             status.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.INVISIBLE);
+            //progressBar.setVisibility(View.INVISIBLE);
             //buttonLogin.setClickable(true);
             //sbuttonLogout.setClickable(true);
         }

@@ -131,6 +131,19 @@ public class SharedPreferencesManager {
         return newFlag;
     }
 
+    public void deleteSSID(String SSID){
+        SharedPreferences sp = context.getSharedPreferences("autoLogin_SSID", Context.MODE_PRIVATE);
+        Set<String> set;
+        set = sp.getStringSet("autoLogin_SSID", new HashSet<String>());
+        Set<String> cpSet = new HashSet<>();
+        if(set != null){
+            for(String i : set)
+                if(!i.equals(SSID))
+                    cpSet.add(i);
+        }
+        sp.edit().putStringSet("autoLogin_SSID", cpSet).apply();
+    }
+
     public boolean isAutoLogin(String SSID){
         SharedPreferences sp;
         String trimedSSID = SSID.substring(1, SSID.length() - 1);
@@ -143,7 +156,5 @@ public class SharedPreferencesManager {
             }
         }
         return false;
-
-
     }
 }

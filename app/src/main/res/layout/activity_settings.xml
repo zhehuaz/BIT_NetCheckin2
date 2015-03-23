@@ -30,7 +30,7 @@
         android:layout_below="@+id/checkBox3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="人数慢时自动强退"
+        android:text="人数满时自动强退"
         android:id="@+id/cb_auto_flogout"
 
         />

@@ -31,14 +31,14 @@
                 android:id="@+id/textView6"
                 android:layout_centerHorizontal="true" />
 
-            <ProgressBar
-                style="?android:attr/progressBarStyleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+           <!-- <com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar
                 android:id="@+id/progressBar"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
-                android:indeterminate="false" />
+                android:indeterminate="false"
+                /> -->
 
         </RelativeLayout>
 
