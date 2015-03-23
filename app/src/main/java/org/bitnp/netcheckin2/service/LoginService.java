@@ -26,6 +26,7 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
 
     public final static String BROADCAST_ACTION = "org.bitnp.netcheckin2.LOGINSERVICE";
 
+    //FIXME action usage error!
     public final static String ACTION_START_LISTEN = "START LISTEN";
     public final static String ACTION_STOP_LISTEN = "STOP LISTEN";
     public final static String ACTION_STATE_CHANGE = "STATE CHANGE";
@@ -91,16 +92,16 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
         timer = new Timer(true);
         LoginHelper.registerListener(this);
         mNotifTools = NotifTools.getInstance(this.getApplicationContext());
-        /*
+
         interval = mManager.getAutoCheckTime();
         keepAliveFlag = mManager.getIsAutoCheck();
         autoLogoutFlag = mManager.getIsAutoLogout();
-        */
-        //TODO only for debug
+
+       /*  only for debug
         interval = 30 * 1000;
         keepAliveFlag = true;
         autoLogoutFlag = false;
-        // TODO
+       */
 
         LoginHelper.setAccount(mManager.getUsername(), mManager.getPassword());
     }
@@ -130,18 +131,14 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
     @Override
     public void onTestOver(boolean result) {
         Log.d(TAG, "Connection test : " + (result ? "Connected" : "Disconnected"));
-        if(!result){
-            if(status != NetworkState.OFFLINE) {
-                broadcastState();
-            }
+        if(!result && autoLogoutFlag){
             status = NetworkState.OFFLINE;
             LoginHelper.asyncLogin();
         } else {
-            if(status != NetworkState.ONLINE) {
-               broadcastState();
-            }
             status = NetworkState.ONLINE;
         }
+        broadcastState();
+
     }
 
     private void startListen(){
@@ -166,9 +163,10 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
         }
         listeningFlag = false;
 
-        if(status == NetworkState.ONLINE)
-            broadcastState();
+        //if(status == NetworkState.ONLINE)
         status = NetworkState.OFFLINE;
+        broadcastState();
+
     }
 
     private void broadcastState(){
@@ -183,24 +181,22 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
         Log.d(TAG, "Login state is : " + message);
 
         if(state ==  LoginHelper.OFFLINE) {
-            if(status != NetworkState.OFFLINE)
-                broadcastState();
-            status = NetworkState.OFFLINE;
 
+            status = NetworkState.OFFLINE;
+            broadcastState();
             stopListen();
             if(message.equals("LOGOUT_OK"))
                 mNotifTools.sendSimpleNotification(getApplicationContext(), "已断开", "点击查看详情");
         }
         else if((state == LoginHelper.LOGIN_MODE_1) || (state == LoginHelper.LOGIN_MODE_2)) {
             Log.i(TAG, "login in mode 1");
-            if(status != NetworkState.ONLINE)
-                broadcastState();
             status = NetworkState.ONLINE;
+            broadcastState();
             startListen();
             if (autoLogoutFlag && message.equals("该帐号的登录人数已超过限额\n" +
                     "如果怀疑帐号被盗用，请联系管理员。")) {
-                if(false == autoLogoutFlag)
-                    mNotifTools.sendButtonNotification(getApplicationContext(), "是否强制断开", "将登出所有在线用户，并在10秒后重新连接");
+                if(!autoLogoutFlag)
+                    mNotifTools.sendButtonNotification(getApplicationContext(), "是否强制断开", "将登出所有在线用户，并在一段时间后自动重连");
                 else
                     LoginHelper.asyncForceLogout();
             } else if(!message.equals("") && (message.length() < 60))

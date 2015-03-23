@@ -134,9 +134,10 @@ public class LoginHelper {
     }
 
     private static void updateInfo(){
-        for(LoginStateListener i:listeners){
-            i.onLoginStateChanged(responseMessage, loginState);
-        }
+        if(!responseMessage.equals(""))
+            for(LoginStateListener i:listeners){
+                i.onLoginStateChanged(responseMessage, loginState);
+            }
     }
 
     private static String findMessage(String s, String[] status, String[] message) {

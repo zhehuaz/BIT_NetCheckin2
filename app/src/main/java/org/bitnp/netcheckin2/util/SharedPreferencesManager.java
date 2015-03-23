@@ -14,6 +14,8 @@ import java.util.Set;
  */
 public class SharedPreferencesManager {
 
+    public final static String KEY_AUTO_LOGOUT = "auto_logout";
+
     Context context;
 
     public SharedPreferencesManager(Context context) {
@@ -70,7 +72,7 @@ public class SharedPreferencesManager {
 
     public long getAutoCheckTime(){
         SharedPreferences sp = context.getSharedPreferences("configuration", Context.MODE_PRIVATE);
-        return sp.getLong("autochecktime_millis", 900000);
+        return sp.getLong("autochecktime_millis", 30 * 1000);
     }
 
     public void setAutoCheckTime(long value){
@@ -156,5 +158,15 @@ public class SharedPreferencesManager {
             }
         }
         return false;
+    }
+
+    public boolean getIsAutoLogout(){
+        SharedPreferences sp = context.getSharedPreferences(KEY_AUTO_LOGOUT, Context.MODE_PRIVATE);
+        return sp.getBoolean(KEY_AUTO_LOGOUT, false);
+    }
+
+    public void setIsAutoLogout(boolean value){
+        SharedPreferences sp = context.getSharedPreferences(KEY_AUTO_LOGOUT, Context.MODE_PRIVATE);
+        sp.edit().putBoolean(KEY_AUTO_LOGOUT, value).apply();
     }
 }

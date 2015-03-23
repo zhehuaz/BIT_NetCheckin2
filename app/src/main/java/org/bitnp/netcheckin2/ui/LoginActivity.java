@@ -56,7 +56,6 @@ public class LoginActivity extends ActionBarActivity {
 
     EditText textUsername, textPassword;
     Button confirm;
-    CheckBox checkBox;
 
     String username, password;
 
@@ -72,7 +71,6 @@ public class LoginActivity extends ActionBarActivity {
         textUsername = (EditText) findViewById(R.id.username);
         textPassword = (EditText) findViewById(R.id.password);
         confirm = (Button) findViewById(R.id.sign_in);
-        checkBox = (CheckBox) findViewById(R.id.checkBox);
 
         SharedPreferencesManager manager = new SharedPreferencesManager(LoginActivity.this);
         textUsername.setText(manager.getUsername());

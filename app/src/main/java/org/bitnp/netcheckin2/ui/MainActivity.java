@@ -218,19 +218,21 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
                                 break;
                             case 1://登录
                                 if (LoginService.getStatus() == NetworkState.OFFLINE) {
-                                    setProgress(true);
+                                    //setProgress(true);
                                     LoginHelper.asyncLogin();
                                 }
                                 else
                                     Toast.makeText(getApplicationContext(), "已登录", Toast.LENGTH_SHORT).show();
                                 break;
                             case 2://注销
-                                setProgress(true);
+                                //setProgress(true);
+                                /*  FIXME login fail always
                                 if (LoginService.getStatus() == NetworkState.OFFLINE) {
                                     LoginHelper.asyncForceLogout();
                                 } else {
                                     LoginHelper.asyncLogout();
-                                }
+                                }*/
+                                LoginHelper.asyncForceLogout();
                                 break;
                             case 3://设置
                                 Intent setting = new Intent();
