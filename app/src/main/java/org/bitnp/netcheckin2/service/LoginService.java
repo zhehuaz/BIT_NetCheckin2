@@ -131,9 +131,10 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
     @Override
     public void onTestOver(boolean result) {
         Log.d(TAG, "Connection test : " + (result ? "Connected" : "Disconnected"));
-        if(!result && autoLogoutFlag){
+        if(!result){
             status = NetworkState.OFFLINE;
-            LoginHelper.asyncLogin();
+            if(keepAliveFlag)
+                LoginHelper.asyncLogin();
         } else {
             status = NetworkState.ONLINE;
         }
