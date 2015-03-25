@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -16,6 +17,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,6 +40,9 @@ import org.bitnp.netcheckin2.service.NetworkState;
 import org.bitnp.netcheckin2.util.SharedPreferencesManager;
 import org.w3c.dom.Text;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -71,7 +77,7 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
             Log.d(TAG, "network state change received");
             if(intent != null) {
                 String command = intent.getStringExtra("command");
-                if(command.equals(LoginService.ACTION_STATE_CHANGE))
+                if(command.equals(LoginService.COMMAND_STATE_CHANGE))
                     if(LoginService.getStatus() == NetworkState.ONLINE) {
                         status.setText("已登录");
                         setProgress(false);
@@ -105,8 +111,12 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
         if(username.length() == 0){
             manager.addCustomSSID("BIT");
             manager.addCustomSSID("BeijingLG");
+            manager.setIsAutoLogin(true);
+            manager.setIsAutoCheck(true);
+
             Intent i = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(i);
+            finish();
         }
 
         stateChangeReceiver = new StateChangeReceiver();
@@ -136,6 +146,36 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
         //progressBar.setCircleBackgroundEnabled(false);
         //progressBar.setColorSchemeColors(R.color.common_signin_btn_default_background);
         //progressBar.setVisibility(View.GONE);
+
+        // MiUI v6 immersive, official sample
+        Window window = getWindow();
+
+        Class clazz = window.getClass();
+        try {
+            int tranceFlag = 0;
+            int darkModeFlag = 0;
+            Class layoutParams = Class.forName("android.view.MiuiWindowManager$LayoutParams");
+
+            Field field = layoutParams.getField("EXTRA_FLAG_STATUS_BAR_TRANSPARENT");
+            tranceFlag = field.getInt(layoutParams);
+
+            field = layoutParams.getField("EXTRA_FLAG_STATUS_BAR_DARK_MODE");
+            darkModeFlag = field.getInt(layoutParams);
+
+            Method extraFlagField = clazz.getMethod("setExtraFlags", int.class, int.class);
+            //只需要状态栏透明
+            extraFlagField.invoke(window, tranceFlag, tranceFlag);
+            //状态栏透明且黑色字体 extraFlagField.invoke(window, tranceFlag | darkModeFlag, tranceFlag | darkModeFlag);
+            // 清除黑色字体
+            extraFlagField.invoke(window, 0, darkModeFlag); }
+        catch (NoSuchMethodException e) { e.printStackTrace(); }
+        catch (ClassNotFoundException e) { e.printStackTrace(); }
+        catch (NoSuchFieldException e) { e.printStackTrace(); }
+        catch (IllegalAccessException e) { e.printStackTrace(); }
+        catch (IllegalArgumentException e) { e.printStackTrace(); }
+        catch (InvocationTargetException e) { e.printStackTrace(); }
+
+        //MI UI v6
 
 
         currentUser.setText(username);
@@ -188,7 +228,7 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
         filterMenuLayout = (FilterMenuLayout) findViewById(R.id.filter_menu);
         new FilterMenu.Builder(this)
                 .addItem(R.drawable.ic_action_add)//添加SSID
-                .addItem(R.drawable.ic_conn_l)//登录
+                .addItem(R.drawable.ic_action_wifi)//登录
                 .addItem(R.drawable.ic_action_io)//注销
                 .addItem(R.drawable.ic_action_info)//设置
                 .attach(filterMenuLayout)
@@ -264,6 +304,7 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
 
     }
 
+
     @Override
     protected void onDestroy() {
         unbindService(serviceConnection);
@@ -271,6 +312,19 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
         LoginHelper.unRegisterLisener(this);
         super.onDestroy();
 
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(hasFocus){
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+                // translucent status bar
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                // translucent navigation bar
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            }
+        }
     }
 
     void setProgress(boolean show){

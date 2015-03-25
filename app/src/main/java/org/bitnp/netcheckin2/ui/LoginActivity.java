@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.ContentResolver;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -56,7 +57,6 @@ public class LoginActivity extends ActionBarActivity {
 
     EditText textUsername, textPassword;
     Button confirm;
-
     String username, password;
 
     static int USERNAME_ERROR = 0x1, PASSWORD_ERROR = 0x2, CONFIRMED = 0x0;
@@ -116,10 +116,14 @@ public class LoginActivity extends ActionBarActivity {
         }).start();
     }
 
+
+
     private void saveAccountInfo() {
         SharedPreferencesManager manager = new SharedPreferencesManager(LoginActivity.this);
         manager.setPassword(password);
         manager.setUsername(username);
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
         finish();
     }
 

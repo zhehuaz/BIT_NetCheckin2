@@ -17,44 +17,18 @@
         android:checked="false" />
 
     <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="定时检测连接状态"
-        android:id="@+id/checkBox3"
         android:layout_below="@+id/checkBox2"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:checked="false" />
-
-    <CheckBox
-        android:layout_below="@+id/checkBox3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="人数满时自动强退"
         android:id="@+id/cb_auto_flogout"
-
         />
 
-    <EditText
+    <TextView
+        android:layout_alignParentBottom="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="numberDecimal"
-        android:ems="10"
-        android:id="@+id/editText3"
-        android:layout_below="@+id/cb_auto_flogout"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:hint="时间间隔"/>
+        android:text="版本:Flyme测试版 0.1"/>
 
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="确定"
-        android:id="@+id/button7"
-        android:onClick="confirmTime"
-        android:layout_alignBottom="@+id/editText3"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
 </RelativeLayout>

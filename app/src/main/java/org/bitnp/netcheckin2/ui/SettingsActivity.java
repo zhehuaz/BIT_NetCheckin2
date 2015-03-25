@@ -28,14 +28,12 @@ import java.util.ArrayList;
 
 public class SettingsActivity extends ActionBarActivity {
 
-    CheckBox autoLogin, autoCheck;
-    EditText autoCheckTime;
-
-    ArrayList<String> ssidList;
-
+    CheckBox autoLogin;
+    //EditText autoCheckTime;
+    CheckBox autoLogout;
     SharedPreferencesManager manager;
 
-    public void confirmTime(View v){
+    /*public void confirmTime(View v){
         String s = autoCheckTime.getText().toString();
         long val = 0;
         try{
@@ -44,7 +42,7 @@ public class SettingsActivity extends ActionBarActivity {
         } catch (Exception e) {
             Toast.makeText(SettingsActivity.this, "Invalid format", Toast.LENGTH_SHORT).show();
         }
-    }
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,22 +52,24 @@ public class SettingsActivity extends ActionBarActivity {
         manager = new SharedPreferencesManager(SettingsActivity.this);
 
         autoLogin = (CheckBox) findViewById(R.id.checkBox2);
-        autoCheck = (CheckBox) findViewById(R.id.checkBox3);
-        autoCheckTime = (EditText) findViewById(R.id.editText3);
+        autoLogout = (CheckBox) findViewById(R.id.cb_auto_flogout);
 
-        ssidList = manager.getAllCustomSSID();
 
         autoLogin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 manager.setIsAutoLogin(isChecked);
-                if(isChecked)
-                    autoCheck.setClickable(true);
-                else
-                    autoCheck.setClickable(false);
             }
         });
 
+        autoLogout.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                manager.setIsAutoLogout(isChecked);
+            }
+        });
+
+/*
         autoCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -77,12 +77,12 @@ public class SettingsActivity extends ActionBarActivity {
                 autoCheckTime.setEnabled(isChecked);
                 autoCheckTime.setText(manager.getAutoCheckTime() + "");
             }
-        });
+        });*/
 
 
 
         autoLogin.setChecked(manager.getIsAutoLogin());
-
+        autoLogout.setChecked(manager.getIsAutoLogout());
 
 
     }

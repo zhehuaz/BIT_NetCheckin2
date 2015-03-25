@@ -12,7 +12,7 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="320dp"
+        android:layout_height="350dp"
         android:background="@color/material_deep_teal_500"
         android:id="@+id/layout_upper">
         <RelativeLayout
@@ -93,7 +93,7 @@
         custom:expandedRadius="96dp"
         custom:collapsedRadius="30dp"
         custom:centerRight="35dp"
-        custom:centerTop="320dp"
+        custom:centerTop="350dp"
         custom:primaryColor="#ff3163"
         custom:primaryDarkColor="#ce3d68">
     </com.linroid.filtermenu.library.FilterMenuLayout>

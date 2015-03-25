@@ -27,14 +27,14 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
     public final static String BROADCAST_ACTION = "org.bitnp.netcheckin2.LOGINSERVICE";
 
     //FIXME action usage error!
-    public final static String ACTION_START_LISTEN = "START LISTEN";
-    public final static String ACTION_STOP_LISTEN = "STOP LISTEN";
-    public final static String ACTION_STATE_CHANGE = "STATE CHANGE";
+    public final static String COMMAND_START_LISTEN = "START LISTEN";
+    public final static String COMMAND_STOP_LISTEN = "STOP LISTEN";
+    public final static String COMMAND_STATE_CHANGE = "STATE CHANGE";
 
-    public final static String ACTION_DO_TEST = "DO TEST";
+    public final static String COMMAND_DO_TEST = "DO TEST";
 
     /** Force logout and login */
-    public final static String ACTION_RE_LOGIN = "RE LOGIN";
+    public final static String COMMAND_RE_LOGIN = "RE LOGIN";
 
     private boolean listeningFlag = false;
 
@@ -59,7 +59,7 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
     public IBinder onBind(Intent intent) {
         if(intent.getAction() != null) {
             Log.d(TAG, "Get intent in onBind " + intent.getAction());
-            if (intent.getAction().equals(LoginService.ACTION_DO_TEST))
+            if (intent.getStringExtra("command").equals(LoginService.COMMAND_DO_TEST))
                 ConnTest.test(this);
         }
         return new LoginServiceBinder();
@@ -110,16 +110,16 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
     public int onStartCommand(Intent intent, int flags, int startId) {
         if(intent != null) {
             Log.d(TAG, "receive message in onStartCommand " + intent.getAction());
-            String action = intent.getAction();
+            String action = intent.getStringExtra("command");
             if (action != null) {
-                if(action.equals(ACTION_START_LISTEN))
+                if(action.equals(COMMAND_START_LISTEN))
                     startListen();
-                else if(action.equals(ACTION_STOP_LISTEN))
+                else if(action.equals(COMMAND_STOP_LISTEN))
                     stopListen();
-                else if(action.equals(ACTION_DO_TEST))
+                else if(action.equals(COMMAND_DO_TEST))
                     if(((WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE)).isWifiEnabled())
                         ConnTest.test(this);
-                else if(action.equals(ACTION_RE_LOGIN))
+                else if(action.equals(COMMAND_RE_LOGIN))
                     LoginHelper.asyncForceLogout();
                 else
                     Log.e(TAG, "Unknown action received");
@@ -172,7 +172,7 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
 
     private void broadcastState(){
         Log.v(TAG, "network status change");
-        broadcast.putExtra("command", ACTION_STATE_CHANGE);
+        broadcast.putExtra("command", COMMAND_STATE_CHANGE);
         Log.v(TAG, "broastcast action is " + broadcast.getAction());
         sendBroadcast(broadcast);
     }
