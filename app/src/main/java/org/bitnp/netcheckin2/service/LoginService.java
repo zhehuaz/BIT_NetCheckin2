@@ -26,14 +26,15 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
 
     public final static String BROADCAST_ACTION = "org.bitnp.netcheckin2.LOGINSERVICE";
 
-    public final static String ACTION_START_LISTEN = "START LISTEN";
-    public final static String ACTION_STOP_LISTEN = "STOP LISTEN";
-    public final static String ACTION_STATE_CHANGE = "STATE CHANGE";
+    //FIXME action usage error!
+    public final static String COMMAND_START_LISTEN = "START LISTEN";
+    public final static String COMMAND_STOP_LISTEN = "STOP LISTEN";
+    public final static String COMMAND_STATE_CHANGE = "STATE CHANGE";
 
-    public final static String ACTION_DO_TEST = "DO TEST";
+    public final static String COMMAND_DO_TEST = "DO TEST";
 
     /** Force logout and login */
-    public final static String ACTION_RE_LOGIN = "RE LOGIN";
+    public final static String COMMAND_RE_LOGIN = "RE LOGIN";
 
     private boolean listeningFlag = false;
 
@@ -58,7 +59,7 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
     public IBinder onBind(Intent intent) {
         if(intent.getAction() != null) {
             Log.d(TAG, "Get intent in onBind " + intent.getAction());
-            if (intent.getAction().equals(LoginService.ACTION_DO_TEST))
+            if (intent.getStringExtra("command").equals(LoginService.COMMAND_DO_TEST))
                 ConnTest.test(this);
         }
         return new LoginServiceBinder();
@@ -91,16 +92,16 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
         timer = new Timer(true);
         LoginHelper.registerListener(this);
         mNotifTools = NotifTools.getInstance(this.getApplicationContext());
-        /*
+
         interval = mManager.getAutoCheckTime();
         keepAliveFlag = mManager.getIsAutoCheck();
         autoLogoutFlag = mManager.getIsAutoLogout();
-        */
-        //TODO only for debug
+
+       /*  only for debug
         interval = 30 * 1000;
         keepAliveFlag = true;
-        autoLogoutFlag = true;
-        // TODO
+        autoLogoutFlag = false;
+       */
 
         LoginHelper.setAccount(mManager.getUsername(), mManager.getPassword());
     }
@@ -109,16 +110,16 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
     public int onStartCommand(Intent intent, int flags, int startId) {
         if(intent != null) {
             Log.d(TAG, "receive message in onStartCommand " + intent.getAction());
-            String action = intent.getAction();
+            String action = intent.getStringExtra("command");
             if (action != null) {
-                if(action.equals(ACTION_START_LISTEN))
+                if(action.equals(COMMAND_START_LISTEN))
                     startListen();
-                else if(action.equals(ACTION_STOP_LISTEN))
+                else if(action.equals(COMMAND_STOP_LISTEN))
                     stopListen();
-                else if(action.equals(ACTION_DO_TEST))
+                else if(action.equals(COMMAND_DO_TEST))
                     if(((WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE)).isWifiEnabled())
                         ConnTest.test(this);
-                else if(action.equals(ACTION_RE_LOGIN))
+                else if(action.equals(COMMAND_RE_LOGIN))
                     LoginHelper.asyncForceLogout();
                 else
                     Log.e(TAG, "Unknown action received");
@@ -131,17 +132,14 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
     public void onTestOver(boolean result) {
         Log.d(TAG, "Connection test : " + (result ? "Connected" : "Disconnected"));
         if(!result){
-            if(status != NetworkState.OFFLINE) {
-                broadcastState();
-            }
             status = NetworkState.OFFLINE;
-            LoginHelper.asyncLogin();
+            if(keepAliveFlag)
+                LoginHelper.asyncLogin();
         } else {
-            if(status != NetworkState.ONLINE) {
-               broadcastState();
-            }
             status = NetworkState.ONLINE;
         }
+        broadcastState();
+
     }
 
     private void startListen(){
@@ -166,14 +164,15 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
         }
         listeningFlag = false;
 
-        if(status == NetworkState.ONLINE)
-            broadcastState();
+        //if(status == NetworkState.ONLINE)
         status = NetworkState.OFFLINE;
+        broadcastState();
+
     }
 
     private void broadcastState(){
         Log.v(TAG, "network status change");
-        broadcast.putExtra("command", ACTION_STATE_CHANGE);
+        broadcast.putExtra("command", COMMAND_STATE_CHANGE);
         Log.v(TAG, "broastcast action is " + broadcast.getAction());
         sendBroadcast(broadcast);
     }
@@ -183,23 +182,24 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
         Log.d(TAG, "Login state is : " + message);
 
         if(state ==  LoginHelper.OFFLINE) {
-            if(status != NetworkState.OFFLINE)
-                broadcastState();
-            status = NetworkState.OFFLINE;
 
+            status = NetworkState.OFFLINE;
+            broadcastState();
             stopListen();
             if(message.equals("LOGOUT_OK"))
                 mNotifTools.sendSimpleNotification(getApplicationContext(), "已断开", "点击查看详情");
         }
         else if((state == LoginHelper.LOGIN_MODE_1) || (state == LoginHelper.LOGIN_MODE_2)) {
             Log.i(TAG, "login in mode 1");
-            if(status != NetworkState.ONLINE)
-                broadcastState();
             status = NetworkState.ONLINE;
+            broadcastState();
             startListen();
             if (autoLogoutFlag && message.equals("该帐号的登录人数已超过限额\n" +
                     "如果怀疑帐号被盗用，请联系管理员。")) {
-                mNotifTools.sendButtonNotification(getApplicationContext(), "是否强制断开", "将登出所有在线用户，并在10秒后重新连接");
+                if(!autoLogoutFlag)
+                    mNotifTools.sendButtonNotification(getApplicationContext(), "是否强制断开", "将登出所有在线用户，并在一段时间后自动重连");
+                else
+                    LoginHelper.asyncForceLogout();
             } else if(!message.equals("") && (message.length() < 60))
                 mNotifTools.sendSimpleNotification(getApplicationContext(), message, "点击查看详情");
         }

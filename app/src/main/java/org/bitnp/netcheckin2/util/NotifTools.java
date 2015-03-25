@@ -51,7 +51,7 @@ public class NotifTools {
                     .setContentText(content)
                     .setTicker(title)
                     .setContentIntent(pd)
-                    .setSmallIcon(R.mipmap.ic_launcher);
+                    .setSmallIcon(R.mipmap.logo);
             //.setContentIntent(PendingIntent.getActivity(context,1,new Intent(context, MainActivity.class),Intent.));
             mNotificationManager.notify(0, mBuilder.build());
         } else {
@@ -64,7 +64,7 @@ public class NotifTools {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
             Intent proIntent = new Intent(context, LoginService.class);
             Intent conIntent = new Intent(context, MainActivity.class);
-            proIntent.setAction(LoginService.ACTION_RE_LOGIN);
+            proIntent.putExtra("command",LoginService.COMMAND_RE_LOGIN);
             PendingIntent pProIntent = PendingIntent.getActivity(context, 0, proIntent, 0);
             PendingIntent pConIntent = PendingIntent.getService(context, 0, conIntent, 0);
 

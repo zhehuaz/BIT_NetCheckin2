@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:id="@+id/list_item" >
 <TextView
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:id="@+id/item_ssid"
-    android:textSize="35sp">
+    android:textSize="35sp"
+    android:text="null"
+    android:layout_marginLeft="22dp"
+    android:layout_marginTop="12dp"
+    android:layout_marginBottom="12dp"
+    android:textColor="@color/material_deep_teal_500"
+    >
 
     </TextView>
 </LinearLayout>

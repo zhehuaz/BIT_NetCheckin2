@@ -1,7 +1,9 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -10,7 +12,7 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="320dp"
+        android:layout_height="350dp"
         android:background="@color/material_deep_teal_500"
         android:id="@+id/layout_upper">
         <RelativeLayout
@@ -29,14 +31,14 @@
                 android:id="@+id/textView6"
                 android:layout_centerHorizontal="true" />
 
-            <ProgressBar
-                style="?android:attr/progressBarStyleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+           <!-- <com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar
                 android:id="@+id/progressBar"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
-                android:indeterminate="false" />
+                android:indeterminate="false"
+                /> -->
 
         </RelativeLayout>
 
@@ -66,6 +68,7 @@
             android:layout_centerHorizontal="true" />
     </RelativeLayout>
 
+
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -79,38 +82,20 @@
 
 
          </ListView>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="24dp"
-        android:id="@+id/linearLayout2">
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="登录"
-            android:id="@+id/button5"
-            android:layout_weight="1.0"
-
-            />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="注销"
-            android:layout_weight="1.0"
-            android:id="@+id/button6" />
-    </LinearLayout>
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageButton"
-        android:layout_above="@+id/linearLayout2"
-        android:layout_alignParentRight="true"
-        android:src="@android:drawable/ic_menu_manage" />
     </RelativeLayout>
+
+
+    <com.linroid.filtermenu.library.FilterMenuLayout
+        android:id="@+id/filter_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="8dp"
+        custom:expandedRadius="96dp"
+        custom:collapsedRadius="30dp"
+        custom:centerRight="35dp"
+        custom:centerTop="350dp"
+        custom:primaryColor="#ff3163"
+        custom:primaryDarkColor="#ce3d68">
+    </com.linroid.filtermenu.library.FilterMenuLayout>
+
 </RelativeLayout>

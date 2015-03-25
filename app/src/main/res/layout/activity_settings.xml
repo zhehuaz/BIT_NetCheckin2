@@ -17,52 +17,18 @@
         android:checked="false" />
 
     <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="定时检测连接状态"
-        android:id="@+id/checkBox3"
         android:layout_below="@+id/checkBox2"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:checked="false" />
-
-    <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="numberDecimal"
-        android:ems="10"
-        android:id="@+id/editText3"
-        android:layout_below="@+id/checkBox3"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:hint="时间间隔"/>
+        android:text="人数满时自动强退"
+        android:id="@+id/cb_auto_flogout"
+        />
 
     <TextView
+        android:layout_alignParentBottom="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="校园网无线 SSID"
-        android:id="@+id/textView7"
-        android:layout_below="@+id/editText3"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="24dp" />
+        android:text="版本:Flyme测试版 0.1"/>
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/listView"
-        android:layout_below="@+id/textView7"
-        android:layout_centerHorizontal="true" />
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="确定"
-        android:id="@+id/button7"
-        android:onClick="confirmTime"
-        android:layout_alignBottom="@+id/editText3"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
 </RelativeLayout>
