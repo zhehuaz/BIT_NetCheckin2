@@ -22,11 +22,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.bitnp.netcheckin2.R;
+import org.bitnp.netcheckin2.network.LoginHelper;
+import org.bitnp.netcheckin2.network.LoginStateListener;
 import org.bitnp.netcheckin2.util.SharedPreferencesManager;
 
 import java.util.ArrayList;
 
-public class SettingsActivity extends ActionBarActivity {
+public class SettingsActivity extends ActionBarActivity{
 
     CheckBox autoLogin;
     //EditText autoCheckTime;
@@ -109,4 +111,5 @@ public class SettingsActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

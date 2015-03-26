@@ -60,7 +60,7 @@ public class SharedPreferencesManager {
 
     public boolean getIsAutoCheck(){
         SharedPreferences sp = context.getSharedPreferences("configuration", Context.MODE_PRIVATE);
-        return sp.getBoolean("autocheck", false);
+        return true;//sp.getBoolean("autocheck", true);
     }
 
     public void setIsAutoCheck(boolean value){

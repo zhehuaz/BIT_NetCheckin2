@@ -109,8 +109,8 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if(intent != null) {
-            Log.d(TAG, "receive message in onStartCommand " + intent.getAction());
             String action = intent.getStringExtra("command");
+            Log.d(TAG, "receive message in onStartCommand " + action);
             if (action != null) {
                 if(action.equals(COMMAND_START_LISTEN))
                     startListen();
@@ -137,6 +137,7 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
                 LoginHelper.asyncLogin();
         } else {
             status = NetworkState.ONLINE;
+            startListen();
         }
         broadcastState();
 
@@ -173,7 +174,6 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
     private void broadcastState(){
         Log.v(TAG, "network status change");
         broadcast.putExtra("command", COMMAND_STATE_CHANGE);
-        Log.v(TAG, "broastcast action is " + broadcast.getAction());
         sendBroadcast(broadcast);
     }
 

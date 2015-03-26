@@ -16,7 +16,7 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/logo"
-        android:label="OpenAction"
+        android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
             android:name=".ui.MainActivity"
@@ -52,7 +52,9 @@
             android:name=".service.LoginService"
             android:enabled="true"
             android:exported="true" >
+            <intent-filter>
             <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
         </service>
 
         <activity

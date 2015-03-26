@@ -28,6 +28,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cengalabs.flatui.FlatUI;
 import com.linroid.filtermenu.library.FilterMenu;
 import com.linroid.filtermenu.library.FilterMenuLayout;
 import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
@@ -109,6 +110,8 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
         setContentView(R.layout.activity_main);
         username = manager.getUsername();
         if(username.length() == 0){
+            FlatUI.initDefaultValues(this);
+            FlatUI.setDefaultTheme(FlatUI.SAND);
             manager.addCustomSSID("BIT");
             manager.addCustomSSID("BeijingLG");
             manager.setIsAutoLogin(true);

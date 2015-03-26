@@ -1,6 +1,7 @@
 package org.bitnp.netcheckin2.network;
 
 import android.os.Message;
+import android.util.Log;
 
 import org.bitnp.netcheckin2.util.MD5;
 
@@ -87,7 +88,7 @@ public class LoginHelper {
             public void run() {
                 loginState = LOGIN_MODE_1;
                 if(login2()){
-                    getLoginState2();
+                    Log.v(TAG, getLoginState2());
                     loginState = LOGIN_MODE_2;
                     responseMessage = "登录成功";
                 } else if((responseMessage.length() != 0) && (!responseMessage.contains("err_code"))) {
@@ -131,6 +132,18 @@ public class LoginHelper {
                 updateInfo();
             }
         }).start();
+    }
+
+    public static void asyncGetState(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                responseMessage = getLoginState2();
+                updateInfo();
+            }
+        }).start();
+
+
     }
 
     private static void updateInfo(){
