@@ -194,7 +194,7 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
             status = NetworkState.ONLINE;
             broadcastState();
             startListen();
-            if (autoLogoutFlag && message.equals("该帐号的登录人数已超过限额\n" +
+            if (message.equals("该帐号的登录人数已超过限额\n" +
                     "如果怀疑帐号被盗用，请联系管理员。")) {
                 if(!autoLogoutFlag)
                     mNotifTools.sendButtonNotification(getApplicationContext(), "是否强制断开", "将登出所有在线用户，并在一段时间后自动重连");

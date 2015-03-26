@@ -53,8 +53,8 @@ public class SettingsActivity extends ActionBarActivity{
 
         manager = new SharedPreferencesManager(SettingsActivity.this);
 
-        autoLogin = (CheckBox) findViewById(R.id.checkBox2);
-        autoLogout = (CheckBox) findViewById(R.id.cb_auto_flogout);
+        autoLogin = (CheckBox) findViewById(R.id.cb_auto_login);
+        autoLogout = (CheckBox) findViewById(R.id.cb_auto_logout);
 
 
         autoLogin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

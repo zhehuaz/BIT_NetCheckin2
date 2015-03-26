@@ -110,6 +110,9 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
         setContentView(R.layout.activity_main);
         username = manager.getUsername();
         if(username.length() == 0){
+
+            /** first login
+            *  show login activity and add default settings */
             FlatUI.initDefaultValues(this);
             FlatUI.setDefaultTheme(FlatUI.SAND);
             manager.addCustomSSID("BIT");

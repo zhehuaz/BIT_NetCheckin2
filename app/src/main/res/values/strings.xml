@@ -6,4 +6,6 @@
     <string name="title_activity_demo">Demo</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="title_activity_main">MainAcitivity</string>
+
+    <string name="button_logout">退出帐号</string>
 </resources>

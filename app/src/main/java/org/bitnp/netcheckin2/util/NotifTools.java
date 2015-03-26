@@ -65,12 +65,12 @@ public class NotifTools {
             Intent proIntent = new Intent(context, LoginService.class);
             Intent conIntent = new Intent(context, MainActivity.class);
             proIntent.putExtra("command",LoginService.COMMAND_RE_LOGIN);
-            PendingIntent pProIntent = PendingIntent.getActivity(context, 0, proIntent, 0);
-            PendingIntent pConIntent = PendingIntent.getService(context, 0, conIntent, 0);
+            PendingIntent pProIntent = PendingIntent.getService(context, 0, proIntent, 0);
+            PendingIntent pConIntent = PendingIntent.getActivity(context, 0, conIntent, 0);
 
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
                     .setAutoCancel(true)
-                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setSmallIcon(R.mipmap.logo)
                     .setContentTitle(title)
                     .setContentText(content)
                     .setTicker(content)
