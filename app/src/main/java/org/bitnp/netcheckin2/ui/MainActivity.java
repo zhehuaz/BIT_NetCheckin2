@@ -14,24 +14,19 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cengalabs.flatui.FlatUI;
 import com.linroid.filtermenu.library.FilterMenu;
 import com.linroid.filtermenu.library.FilterMenuLayout;
-import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
 
 import org.bitnp.netcheckin2.R;
 import org.bitnp.netcheckin2.network.LoginHelper;
@@ -39,25 +34,21 @@ import org.bitnp.netcheckin2.network.LoginStateListener;
 import org.bitnp.netcheckin2.service.LoginService;
 import org.bitnp.netcheckin2.service.NetworkState;
 import org.bitnp.netcheckin2.util.SharedPreferencesManager;
-import org.w3c.dom.Text;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 
 public class MainActivity extends ActionBarActivity implements LoginStateListener{
 
     private static final String TAG = "MainActivity";
 
-    private static final String ACTION_MAINACTIVITY_START = "org.bitnp.netcheckin2.ui.MAIN_START";
 
     SharedPreferencesManager manager = new SharedPreferencesManager(MainActivity.this);
     String username;
 
-    //CircleProgressBar progressBar;
     TextView status, currentUser;
     ListView SSIDListView;
     ArrayList<String> SSIDList = new ArrayList<String>();
@@ -69,7 +60,6 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
 
     @Override
     public void onLoginStateChanged(String message, int state) {
-        //setProgress(false);
     }
 
     public class StateChangeReceiver extends BroadcastReceiver{
@@ -128,30 +118,31 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
         stateChangeReceiver = new StateChangeReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(LoginService.BROADCAST_ACTION);
+
+        /** Prepare to receive messages from LoginService*/
         registerReceiver(stateChangeReceiver, intentFilter);
 
+        /** Prepare to receive messages from LoginHelper*/
         LoginHelper.registerListener(this);
 
         initUI();
 
+        /** Bind service*/
         intent = new Intent(MainActivity.this, LoginService.class);
         //intent.setAction(LoginService.ACTION_DO_TEST);
         //Nothing to do with service object now...
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
 
-        intent = new Intent(ACTION_MAINACTIVITY_START);
+        /** Send a broadcast to WifiChangedReceiver*/
+        intent = new Intent(GlobalConstant.ACTION_BROADCAST_FROM_MAIN);
         sendBroadcast(intent);
     }
 
     private void initUI() {
-        //progressBar = (CircleProgressBar) findViewById(R.id.progressBar);
         status = (TextView) findViewById(R.id.textView6);
         currentUser = (TextView) findViewById(R.id.textView5);
         SSIDListView = (ListView) findViewById(R.id.ls_SSID);
         SSIDList = manager.getAllCustomSSID();
-        //progressBar.setCircleBackgroundEnabled(false);
-        //progressBar.setColorSchemeColors(R.color.common_signin_btn_default_background);
-        //progressBar.setVisibility(View.GONE);
 
         // MiUI v6 immersive, official sample
         Window window = getWindow();
@@ -254,7 +245,7 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
                                                 if(manager.addCustomSSID(newSSID) == true)
                                                     SSIDList.add(newSSID);
                                                 else
-                                                    Toast.makeText(getApplicationContext(), "此SSID已存在", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(getApplicationContext(), "此SSID已存在或列表已满", Toast.LENGTH_SHORT).show();
                                                 ((BaseAdapter) SSIDListView.getAdapter()).notifyDataSetChanged();
                                             }
                                         })
@@ -264,7 +255,6 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
                                 break;
                             case 1://登录
                                 if (LoginService.getStatus() == NetworkState.OFFLINE) {
-                                    //setProgress(true);
                                     LoginHelper.asyncLogin();
                                 }
                                 else

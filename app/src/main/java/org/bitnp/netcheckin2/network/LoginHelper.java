@@ -86,6 +86,7 @@ public class LoginHelper {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Log.v(TAG, "try to login");
                 loginState = LOGIN_MODE_1;
                 if(login2()){
                     Log.v(TAG, getLoginState2());

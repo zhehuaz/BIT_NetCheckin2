@@ -16,6 +16,16 @@ public class SharedPreferencesManager {
 
     public final static String KEY_AUTO_LOGOUT = "auto_logout";
 
+    public void setListener(PreferenceChangedListener listener) {
+        this.listener = listener;
+    }
+
+    private void updatePreference(PreferenceChangedListener.PreferenceKey key){
+        if(listener != null)
+            listener.onPreferenceChanged(key);
+    }
+
+    PreferenceChangedListener listener;
     Context context;
 
     public SharedPreferencesManager(Context context) {
@@ -32,6 +42,7 @@ public class SharedPreferencesManager {
         SharedPreferences.Editor editor = sp.edit();
         editor.putString("username", username);
         editor.apply();
+        updatePreference(PreferenceChangedListener.PreferenceKey.USERNAME);
     }
 
     public String getPassword(){
@@ -44,6 +55,7 @@ public class SharedPreferencesManager {
         SharedPreferences.Editor editor = sp.edit();
         editor.putString("password", password);
         editor.apply();
+        updatePreference(PreferenceChangedListener.PreferenceKey.PASSWORD);
     }
 
     public boolean getIsAutoLogin(){
@@ -56,6 +68,7 @@ public class SharedPreferencesManager {
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean("autologin", value);
         editor.apply();
+        updatePreference(PreferenceChangedListener.PreferenceKey.IS_AUTO_LOGIN);
     }
 
     public boolean getIsAutoCheck(){
@@ -68,11 +81,12 @@ public class SharedPreferencesManager {
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean("autocheck", value);
         editor.apply();
+        updatePreference(PreferenceChangedListener.PreferenceKey.IS_KEEPALIVE);
     }
 
     public long getAutoCheckTime(){
         SharedPreferences sp = context.getSharedPreferences("configuration", Context.MODE_PRIVATE);
-        return sp.getLong("autochecktime_millis", 30 * 1000);
+        return sp.getLong("autochecktime_millis", 20 * 1000);
     }
 
     public void setAutoCheckTime(long value){
@@ -80,6 +94,7 @@ public class SharedPreferencesManager {
         SharedPreferences.Editor editor = sp.edit();
         editor.putLong("autochecktime_millis", value);
         editor.apply();
+        updatePreference(PreferenceChangedListener.PreferenceKey.INTERVAL);
     }
 
     public ArrayList<String> getAllCustomSSID(){
@@ -118,6 +133,8 @@ public class SharedPreferencesManager {
         sp = context.getSharedPreferences("autoLogin_SSID", Context.MODE_PRIVATE);
         Set<String> set ;
         set = sp.getStringSet("autoLogin_SSID", new HashSet<String>());
+        if(set.size() >= 10)
+            return false;
         Set<String> cpSet = new HashSet<String>();
         if(set != null) {
             for(String i : set){
@@ -151,13 +168,8 @@ public class SharedPreferencesManager {
         String trimedSSID = SSID.substring(1, SSID.length() - 1);
         sp = context.getSharedPreferences("autoLogin_SSID", Context.MODE_PRIVATE);
         Set<String> set = sp.getStringSet("autoLogin_SSID", new HashSet<String>());
-        if(set != null){
-            for(String i : set){
-                if(i.equals(trimedSSID))
-                    return true;
-            }
-        }
-        return false;
+
+        return set.contains(trimedSSID);
     }
 
     public boolean getIsAutoLogout(){
@@ -168,5 +180,6 @@ public class SharedPreferencesManager {
     public void setIsAutoLogout(boolean value){
         SharedPreferences sp = context.getSharedPreferences(KEY_AUTO_LOGOUT, Context.MODE_PRIVATE);
         sp.edit().putBoolean(KEY_AUTO_LOGOUT, value).apply();
+        updatePreference(PreferenceChangedListener.PreferenceKey.IS_AUTO_LOGOUT);
     }
 }

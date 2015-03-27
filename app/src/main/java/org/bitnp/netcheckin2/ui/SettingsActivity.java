@@ -21,6 +21,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cengalabs.flatui.views.FlatButton;
+
 import org.bitnp.netcheckin2.R;
 import org.bitnp.netcheckin2.network.LoginHelper;
 import org.bitnp.netcheckin2.network.LoginStateListener;
@@ -34,6 +36,7 @@ public class SettingsActivity extends ActionBarActivity{
     //EditText autoCheckTime;
     CheckBox autoLogout;
     SharedPreferencesManager manager;
+    FlatButton logoutButton;
 
     /*public void confirmTime(View v){
         String s = autoCheckTime.getText().toString();
@@ -55,7 +58,7 @@ public class SettingsActivity extends ActionBarActivity{
 
         autoLogin = (CheckBox) findViewById(R.id.cb_auto_login);
         autoLogout = (CheckBox) findViewById(R.id.cb_auto_logout);
-
+        logoutButton = (FlatButton) findViewById(R.id.bt_logout);
 
         autoLogin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -71,6 +74,14 @@ public class SettingsActivity extends ActionBarActivity{
             }
         });
 
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                manager.setUsername("");
+                manager.setPassword("");
+                finish();
+            }
+        });
 /*
         autoCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -112,4 +123,9 @@ public class SettingsActivity extends ActionBarActivity{
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onDestroy() {
+
+        super.onDestroy();
+    }
 }

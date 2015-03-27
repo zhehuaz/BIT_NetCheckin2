@@ -14,19 +14,19 @@ import org.bitnp.netcheckin2.network.LoginStateListener;
 import org.bitnp.netcheckin2.util.ConnTest;
 import org.bitnp.netcheckin2.util.ConnTestCallBack;
 import org.bitnp.netcheckin2.util.NotifTools;
+import org.bitnp.netcheckin2.util.PreferenceChangedListener;
 import org.bitnp.netcheckin2.util.SharedPreferencesManager;
 
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class LoginService extends Service implements ConnTestCallBack,LoginStateListener{
+public class LoginService extends Service implements ConnTestCallBack, LoginStateListener, PreferenceChangedListener{
 
     private final static String TAG = "LoginService";
 
     public final static String BROADCAST_ACTION = "org.bitnp.netcheckin2.LOGINSERVICE";
 
-    //FIXME action usage error!
     public final static String COMMAND_START_LISTEN = "START LISTEN";
     public final static String COMMAND_STOP_LISTEN = "STOP LISTEN";
     public final static String COMMAND_STATE_CHANGE = "STATE CHANGE";
@@ -44,8 +44,9 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
     private static boolean keepAliveFlag;
     private static boolean autoLogoutFlag;
     private static long interval;
+    private static boolean autoLoginFLag;
 
-    Intent broadcast = new Intent(BROADCAST_ACTION);;
+    Intent broadcast = new Intent(BROADCAST_ACTION);
 
     private NotifTools mNotifTools;
 
@@ -68,6 +69,7 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
     public static NetworkState getStatus() {
         return status;
     }
+
 
     public class LoginServiceBinder extends Binder{
 
@@ -96,6 +98,7 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
         interval = mManager.getAutoCheckTime();
         keepAliveFlag = mManager.getIsAutoCheck();
         autoLogoutFlag = mManager.getIsAutoLogout();
+        autoLoginFLag = mManager.getIsAutoLogin();
 
        /*  only for debug
         interval = 30 * 1000;
@@ -133,7 +136,7 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
         Log.d(TAG, "Connection test : " + (result ? "Connected" : "Disconnected"));
         if(!result){
             status = NetworkState.OFFLINE;
-            if(keepAliveFlag)
+            if(autoLoginFLag)
                 LoginHelper.asyncLogin();
         } else {
             status = NetworkState.ONLINE;
@@ -205,6 +208,21 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
         }
         else
             Log.e(TAG, "unknown login state");
+    }
 
+    @Override
+    public void onPreferenceChanged(PreferenceKey key) {
+        switch (key){
+            case IS_AUTO_LOGIN:
+                autoLoginFLag = mManager.getIsAutoLogin();
+            case IS_AUTO_LOGOUT:
+                autoLogoutFlag = mManager.getIsAutoLogout();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.e(TAG, "service destroyed");
+        super.onDestroy();
     }
 }

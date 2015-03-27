@@ -46,9 +46,9 @@
             android:layout_height="53sp" android:hint="用户名"
             android:inputType="textEmailAddress" android:maxLines="1"
             android:singleLine="true"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
             android:textColorHint="#9FFFFFFF"
-
+            android:textColor="#FFFFFF"
            />
         <com.cengalabs.flatui.views.FlatEditText
             android:id="@+id/password" android:layout_width="match_parent"
@@ -57,7 +57,8 @@
             android:maxLines="1"
             android:singleLine="true"
             android:textColorHint="#9FFFFFFF"
-            android:layout_margin="10dp"
+            android:textColor="#FFFFFF"
+            android:layout_margin="5dp"
             />
 
 
@@ -70,6 +71,7 @@
             android:text="@string/prompt_login"
             android:layout_marginLeft="80dp"
             android:layout_marginRight="80dp"
+            android:textSize="18sp"
             android:background="@drawable/abc_switch_thumb_material"
             />
 
