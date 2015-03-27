@@ -3,6 +3,7 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/FilterMenu" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/FlatUI" vcs="Git" />
   </component>
 </project>
 

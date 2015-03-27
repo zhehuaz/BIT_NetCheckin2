@@ -74,8 +74,8 @@ public class NotifTools {
                     .setContentTitle(title)
                     .setContentText(content)
                     .setTicker(content)
-                    .addAction(R.drawable.abc_btn_check_to_on_mtrl_015, "好", pProIntent)
-                    .addAction(R.drawable.abc_btn_check_material, "不", pConIntent);
+                    .addAction(R.drawable.ic_action_ok, "好", pProIntent)
+                    .addAction(R.drawable.ic_action_no, "不", pConIntent);
 
             mNotificationManager.notify(0, mBuilder.build());
         } else {
