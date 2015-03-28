@@ -3,6 +3,8 @@ package org.bitnp.netcheckin2.ui;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -37,6 +39,7 @@ public class SettingsActivity extends ActionBarActivity{
     CheckBox autoLogout;
     SharedPreferencesManager manager;
     FlatButton logoutButton;
+    FlatButton submitButton;
 
     /*public void confirmTime(View v){
         String s = autoCheckTime.getText().toString();
@@ -59,6 +62,7 @@ public class SettingsActivity extends ActionBarActivity{
         autoLogin = (CheckBox) findViewById(R.id.cb_auto_login);
         autoLogout = (CheckBox) findViewById(R.id.cb_auto_logout);
         logoutButton = (FlatButton) findViewById(R.id.bt_logout);
+        submitButton = (FlatButton) findViewById(R.id.bt_submit);
 
         autoLogin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -80,6 +84,16 @@ public class SettingsActivity extends ActionBarActivity{
                 manager.setUsername("");
                 manager.setPassword("");
                 finish();
+            }
+        });
+
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                Uri uri = Uri.parse("mailto:zhehuaxiao@gmail.com?subject=" + Uri.encode("Issues in BITion"));
+                intent.setData(uri);
+                startActivity(Intent.createChooser(intent, "Send Email"));
             }
         });
 /*

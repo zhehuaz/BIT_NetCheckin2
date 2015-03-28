@@ -172,7 +172,7 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
         catch (IllegalArgumentException e) { e.printStackTrace(); }
         catch (InvocationTargetException e) { e.printStackTrace(); }
 
-        //MI UI v6
+        //~MI UI v6
 
 
         currentUser.setText(username);

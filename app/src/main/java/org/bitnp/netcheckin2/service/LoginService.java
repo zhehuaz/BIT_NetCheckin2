@@ -3,6 +3,7 @@ package org.bitnp.netcheckin2.service;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Binder;
 import android.os.IBinder;
@@ -58,11 +59,9 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
 
     @Override
     public IBinder onBind(Intent intent) {
-        if(intent.getAction() != null) {
-            Log.d(TAG, "Get intent in onBind " + intent.getAction());
-            if (intent.getStringExtra("command").equals(LoginService.COMMAND_DO_TEST))
+            Log.d(TAG, "Get intent in onBind");
+            //if (intent.getStringExtra("command").equals(LoginService.COMMAND_DO_TEST))
                 ConnTest.test(this);
-        }
         return new LoginServiceBinder();
     }
 
@@ -85,6 +84,18 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
 
     public static long getInterval() {
         return interval;
+    }
+
+    public boolean isAutoLogin(){
+        WifiManager mWifiManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        String currentSSID = mWifiManager.getConnectionInfo().getSSID();
+        if(!mManager.isAutoLogin(currentSSID))
+            return false;
+        if(!mWifiManager.isWifiEnabled())
+            return false;
+        if(!autoLoginFLag)
+            return false;
+        return true;
     }
 
     @Override
@@ -131,12 +142,15 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
         return super.onStartCommand(intent, flags, startId);
     }
 
+
+
+
     @Override
     public void onTestOver(boolean result) {
         Log.d(TAG, "Connection test : " + (result ? "Connected" : "Disconnected"));
         if(!result){
             status = NetworkState.OFFLINE;
-            if(autoLoginFLag)
+            if(isAutoLogin())
                 LoginHelper.asyncLogin();
         } else {
             status = NetworkState.ONLINE;

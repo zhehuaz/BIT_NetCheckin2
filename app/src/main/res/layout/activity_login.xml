@@ -30,10 +30,12 @@
         android:layout_centerHorizontal="true"/>
 
     <org.bitnp.netcheckin2.ui.CircleImageView
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
         android:src="@mipmap/logo"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        android:id="@+id/view"
+        android:elevation="5dp"/>
 
     </RelativeLayout>
     <LinearLayout android:id="@+id/email_login_form" android:layout_width="match_parent"
@@ -41,27 +43,40 @@
         android:layout_above="@+id/tv_hint"
         >
 
-        <com.cengalabs.flatui.views.FlatEditText
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#5FFFFFFF">
+
+
+        <org.bitnp.netcheckin2.ui.CustomEditText
             android:id="@+id/username" android:layout_width="match_parent"
-            android:layout_height="53sp" android:hint="用户名"
+            android:layout_height="wrap_content" android:hint="用户名"
             android:inputType="textEmailAddress" android:maxLines="1"
             android:singleLine="true"
-            android:layout_margin="5dp"
             android:textColorHint="#9FFFFFFF"
             android:textColor="#FFFFFF"
+            android:textSize="@dimen/edittext_text_size"
+            android:layout_marginTop="@dimen/edittext_margin"
+            android:drawableLeft="@drawable/abc_switch_thumb_material"
+            android:drawableRight="@drawable/ic_action_no"
            />
-        <com.cengalabs.flatui.views.FlatEditText
+
+        <org.bitnp.netcheckin2.ui.CustomEditText
             android:id="@+id/password" android:layout_width="match_parent"
-            android:layout_height="53sp" android:hint="密码"
+            android:layout_height="wrap_content" android:hint="密码"
             android:imeOptions="actionUnspecified" android:inputType="textPassword"
             android:maxLines="1"
             android:singleLine="true"
             android:textColorHint="#9FFFFFFF"
             android:textColor="#FFFFFF"
-            android:layout_margin="5dp"
+            android:textSize="@dimen/edittext_text_size"
+            android:drawableLeft="@drawable/abc_switch_thumb_material"
+            android:drawableRight="@drawable/ic_action_no"
             />
 
-
+        </LinearLayout>
 
         <com.cengalabs.flatui.views.FlatButton
             android:id="@+id/sign_in" style="?android:textAppearanceSmall"
@@ -71,8 +86,9 @@
             android:text="@string/prompt_login"
             android:layout_marginLeft="80dp"
             android:layout_marginRight="80dp"
-            android:textSize="18sp"
+            android:textSize="@dimen/edittext_text_size"
             android:background="@drawable/abc_switch_thumb_material"
+            android:elevation="15dp"
             />
 
     </LinearLayout>

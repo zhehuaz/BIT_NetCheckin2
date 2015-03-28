@@ -91,7 +91,7 @@
         android:layout_height="match_parent"
         android:elevation="8dp"
         custom:expandedRadius="96dp"
-        custom:collapsedRadius="30dp"
+        custom:collapsedRadius="26dp"
         custom:centerRight="35dp"
         custom:centerTop="350dp"
         custom:primaryColor="#ff3163"
