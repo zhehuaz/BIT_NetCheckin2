@@ -3,6 +3,7 @@ package org.bitnp.netcheckin2.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.preference.Preference;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -56,6 +57,19 @@ public class SharedPreferencesManager {
         editor.putString("password", password);
         editor.apply();
         updatePreference(PreferenceChangedListener.PreferenceKey.PASSWORD);
+    }
+
+    public void setUID(String uid){
+        SharedPreferences sp = context.getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+        sp.edit()
+            .putString("uid", uid)
+            .apply();
+        updatePreference(PreferenceChangedListener.PreferenceKey.UID);
+    }
+
+    public String getUID(){
+        SharedPreferences sp = context.getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+        return sp.getString("uid", "");
     }
 
     public boolean getIsAutoLogin(){

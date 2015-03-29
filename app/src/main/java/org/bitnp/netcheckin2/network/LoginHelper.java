@@ -29,7 +29,7 @@ public class LoginHelper {
 
     private static ArrayList<LoginStateListener> listeners = new ArrayList<LoginStateListener>();
 
-    static Pattern VALID_UID, VALID_KEEPLIVE_STATUS;
+    static Pattern VALID_UID, VALID_KEEPLIVE_STATUS, VALID_BALANCE, VALID_COMMA;
 
     public static String[] LOGIN_STATUS = {
             "user_tab_error","username_error" ,"non_auth_error" ,"password_error" ,"status_error",
@@ -60,6 +60,8 @@ public class LoginHelper {
     static{
         VALID_UID = Pattern.compile("^[\\d]+$");
         VALID_KEEPLIVE_STATUS = Pattern.compile("^[\\d]+,[\\d]+,[\\d]+,[\\d]+");
+        VALID_BALANCE = Pattern.compile("[\\d,?]*(?=Bytes)");
+        VALID_COMMA = Pattern.compile(",");
     }
 
     public static void setAccount(String u, String p){
@@ -140,6 +142,7 @@ public class LoginHelper {
             @Override
             public void run() {
                 responseMessage = getLoginState2();
+
                 updateInfo();
             }
         }).start();
@@ -253,12 +256,36 @@ public class LoginHelper {
         return HttpRequest.sendPost("http://10.0.0.55/cgi-bin/rad_user_info", "");
     }
 
-    public static int getLoginState(){
-        return loginState;
+
+    /**
+     * @return unit is GB
+     * */
+    public static float getBalance(String uid){
+        String response = "";
+        response = HttpRequest.sendGet("http://10.0.0.55/user_info.php",  "uid=" + uid);
+        if(response.length() > 5) {
+            //  [\d,?]*(?=Bytes)
+            Matcher matcher = VALID_BALANCE.matcher(response);
+            if(matcher.find()){
+                response = matcher.group();
+            }
+            matcher = VALID_COMMA.matcher(response);
+            response = matcher.replaceAll("");
+            float result = Float.parseFloat(response);
+            Log.i(TAG, "Get balance " + result);
+            result /= 1024 * 1024 * 1024;
+            return result;
+        }
+        Log.e(TAG, "Can't get balance");
+        return 0;
     }
 
     public static String getresponseMessage(){
         return responseMessage;
+    }
+
+    public static String getUid() {
+        return uid;
     }
 
 }

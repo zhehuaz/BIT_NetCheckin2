@@ -3,12 +3,9 @@ package org.bitnp.netcheckin2.service;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.bitnp.netcheckin2.network.LoginHelper;
 import org.bitnp.netcheckin2.network.LoginStateListener;
@@ -18,11 +15,12 @@ import org.bitnp.netcheckin2.util.NotifTools;
 import org.bitnp.netcheckin2.util.PreferenceChangedListener;
 import org.bitnp.netcheckin2.util.SharedPreferencesManager;
 
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class LoginService extends Service implements ConnTestCallBack, LoginStateListener, PreferenceChangedListener{
+
+    private final static double INF = 1e-4;
 
     private final static String TAG = "LoginService";
 
@@ -46,6 +44,7 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
     private static boolean autoLogoutFlag;
     private static long interval;
     private static boolean autoLoginFLag;
+    private static String uid;
 
     Intent broadcast = new Intent(BROADCAST_ACTION);
 
@@ -54,28 +53,18 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
     private Timer timer;
     private TimerTask timerTask;
 
+    public static float getmBalance() {
+        return mBalance;
+    }
+
+    private static float mBalance;
+
     public LoginService() {
     }
 
-    @Override
-    public IBinder onBind(Intent intent) {
-            Log.d(TAG, "Get intent in onBind");
-            //if (intent.getStringExtra("command").equals(LoginService.COMMAND_DO_TEST))
-                ConnTest.test(this);
-        return new LoginServiceBinder();
-    }
 
     public static NetworkState getStatus() {
         return status;
-    }
-
-
-    public class LoginServiceBinder extends Binder{
-
-        public LoginService getLoginService(){
-            return LoginService.this;
-        }
-
     }
 
     public static boolean isKeepAlive() {
@@ -110,12 +99,9 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
         keepAliveFlag = mManager.getIsAutoCheck();
         autoLogoutFlag = mManager.getIsAutoLogout();
         autoLoginFLag = mManager.getIsAutoLogin();
+        uid = mManager.getUID();
 
-       /*  only for debug
-        interval = 30 * 1000;
-        keepAliveFlag = true;
-        autoLogoutFlag = false;
-       */
+        updateBalance();
 
         LoginHelper.setAccount(mManager.getUsername(), mManager.getPassword());
     }
@@ -131,8 +117,10 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
                 else if(action.equals(COMMAND_STOP_LISTEN))
                     stopListen();
                 else if(action.equals(COMMAND_DO_TEST))
-                    if(((WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE)).isWifiEnabled())
+                    if(((WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE)).isWifiEnabled()) {
                         ConnTest.test(this);
+                        updateBalance();
+                    }
                 else if(action.equals(COMMAND_RE_LOGIN))
                     LoginHelper.asyncForceLogout();
                 else
@@ -155,6 +143,7 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
         } else {
             status = NetworkState.ONLINE;
             startListen();
+            updateBalance();
         }
         broadcastState();
 
@@ -168,6 +157,7 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
                 public void run() {
                     Log.d(TAG, "Run in timer task");
                     ConnTest.test(LoginService.this);
+                    updateBalance();
                 }
             };
             timer.schedule(timerTask, 0, interval);
@@ -210,6 +200,11 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
             Log.i(TAG, "login in mode 1");
             status = NetworkState.ONLINE;
             broadcastState();
+            uid = LoginHelper.getUid();
+            mManager.setUID(uid);
+
+            updateBalance();
+
             startListen();
             if (message.equals("该帐号的登录人数已超过限额\n" +
                     "如果怀疑帐号被盗用，请联系管理员。")) {
@@ -238,5 +233,17 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
     public void onDestroy() {
         Log.e(TAG, "service destroyed");
         super.onDestroy();
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    private void updateBalance(){
+        float balance = LoginHelper.getBalance(uid);
+        if(balance > INF){
+            mBalance = balance;
+        }
     }
 }

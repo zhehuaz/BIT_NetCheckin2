@@ -29,8 +29,6 @@ public class WifiChangedReceiver extends BroadcastReceiver {
         Log.v(TAG, "Wifi status changed");
         
         mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-        // TODO what's this?
-        mWifiManager.getWifiState();
         if(!mWifiManager.isWifiEnabled()) {
             callBackToService(context, LoginService.COMMAND_STOP_LISTEN);
             return;
@@ -39,7 +37,7 @@ public class WifiChangedReceiver extends BroadcastReceiver {
         mWifiInfo = mWifiManager.getConnectionInfo();
         String currentSSID = mWifiInfo.getSSID();
         Log.d(TAG, "Start to check ssid list");
-        if(new SharedPreferencesManager(context).isAutoLogin(currentSSID) && LoginService.isKeepAlive()){
+        if(new SharedPreferencesManager(context).isAutoLogin(currentSSID)){
             Log.i(TAG, "WIFI check ok");
             callBackToService(context, LoginService.COMMAND_DO_TEST);
         }

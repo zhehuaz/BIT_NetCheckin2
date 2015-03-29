@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cengalabs.flatui.FlatUI;
 import com.linroid.filtermenu.library.FilterMenu;
 import com.linroid.filtermenu.library.FilterMenuLayout;
 
@@ -41,7 +42,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 
-public class MainActivity extends ActionBarActivity implements LoginStateListener{
+public class MainActivity extends ActionBarActivity{
 
     private static final String TAG = "MainActivity";
 
@@ -59,9 +60,6 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
     Intent intent;
     LoginService loginService;
 
-    @Override
-    public void onLoginStateChanged(String message, int state) {
-    }
 
     public class StateChangeReceiver extends BroadcastReceiver{
         @Override
@@ -70,40 +68,20 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
             if(intent != null) {
                 String command = intent.getStringExtra("command");
                 if(command.equals(LoginService.COMMAND_STATE_CHANGE))
-                    if(LoginService.getStatus() == NetworkState.ONLINE) {
-                        status.setText("已登录");
-                        setProgress(false);
-                    }
-                    else {
-                        status.setText("未登录");
-                        setProgress(false);
-                    }
+                    setProgress();
             }
         }
     }
-
-    ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            loginService = ((LoginService.LoginServiceBinder)service).getLoginService();
-            status.setText(((LoginService.getStatus() == NetworkState.OFFLINE) ? "未登录" : "已登录"));
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         username = manager.getUsername();
-       /* if(username.length() == 0){
+        if(username.length() == 0){
 
-            *//** first login
-            *  show login activity and add default settings *//*
+            /** first login
+            *  show login activity and add default settings */
             FlatUI.initDefaultValues(this);
             FlatUI.setDefaultTheme(FlatUI.SAND);
             manager.addCustomSSID("BIT");
@@ -114,7 +92,7 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
             Intent i = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(i);
             finish();
-        }*/
+        }
 
         stateChangeReceiver = new StateChangeReceiver();
         IntentFilter intentFilter = new IntentFilter();
@@ -123,20 +101,19 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
         /** Prepare to receive messages from LoginService*/
         registerReceiver(stateChangeReceiver, intentFilter);
 
-        /** Prepare to receive messages from LoginHelper*/
-        LoginHelper.registerListener(this);
-
         initUI();
 
-        /** Bind service*/
+        /** start service*/
         intent = new Intent(MainActivity.this, LoginService.class);
-        //intent.setAction(LoginService.ACTION_DO_TEST);
+        intent.putExtra("command", LoginService.COMMAND_DO_TEST);
         //Nothing to do with service object now...
-        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+        startService(intent);
 
         /** Send a broadcast to WifiChangedReceiver*/
         intent = new Intent(GlobalConstant.ACTION_BROADCAST_FROM_MAIN);
         sendBroadcast(intent);
+
+        setProgress();
     }
 
     private void initUI() {
@@ -305,9 +282,7 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
 
     @Override
     protected void onDestroy() {
-        unbindService(serviceConnection);
         unregisterReceiver(stateChangeReceiver);
-        LoginHelper.unRegisterLisener(this);
         super.onDestroy();
 
     }
@@ -325,17 +300,19 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
         }
     }
 
-    void setProgress(boolean show){
-        if(show) {
-            status.setVisibility(View.INVISIBLE);
-            //progressBar.setVisibility(View.VISIBLE);
-            //buttonLogin.setClickable(false);
-            //buttonLogout.setClickable(false);
+    protected void setProgress(){
+        Log.d(TAG, "Set progress is called to set balance");
+        if(LoginService.getStatus() == NetworkState.OFFLINE){
+            waveProgress.setProgress(100);
+            waveProgress.setProgressTxt("未登录");
+            status.setText("");
         } else {
-            status.setVisibility(View.VISIBLE);
-            //progressBar.setVisibility(View.INVISIBLE);
-            //buttonLogin.setClickable(true);
-            //sbuttonLogout.setClickable(true);
+            float fBalance = LoginService.getmBalance();
+            String balance = fBalance + "";
+            balance = balance.substring(0, (balance.length() > 4 ? 4 : balance.length()));
+            waveProgress.setProgress((int) ((fBalance > 30 ? 30 : fBalance) / 30 * 100));
+            waveProgress.setProgressTxt(balance + " G");
+            status.setText("已登录");
         }
     }
 

@@ -6,7 +6,7 @@ package org.bitnp.netcheckin2.util;
 public interface PreferenceChangedListener {
 
     public enum PreferenceKey{
-        USERNAME, PASSWORD, IS_AUTO_LOGIN, IS_AUTO_LOGOUT, IS_KEEPALIVE, INTERVAL
+        USERNAME, PASSWORD, IS_AUTO_LOGIN, IS_AUTO_LOGOUT, IS_KEEPALIVE, INTERVAL, UID
     }
 
     public void onPreferenceChanged(PreferenceKey key);

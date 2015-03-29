@@ -47,6 +47,10 @@ public class WaterWaveProgress extends View {
 	// 是否显示进度条 //是否显示进度百分比
 	private boolean mShowProgress = false, mShowNumerical = true;
 
+
+
+    private String progressTxt = "";
+
 	/** 产生波浪效果的因子 */
 	private long mWaveFactor = 0L;
 	/** 正在执行波浪动画 */
@@ -270,7 +274,8 @@ public class WaterWaveProgress extends View {
 			waveHeight = newWaveHeight;
 		}
 		if (mShowNumerical) {
-			String progressTxt = String.format("%.0f", (mProgress*1f) / mMaxProgress
+            if(progressTxt.equals(""))
+		        progressTxt = String.format("%.0f", (mProgress*1f) / mMaxProgress
 					* 100f)
 					+ "%";
 			float mTxtWidth = mTextPaint.measureText(progressTxt, 0,
@@ -439,5 +444,9 @@ public class WaterWaveProgress extends View {
 	public void setProgress2WaterWidth(float mProgress2WaterWidth) {
 		this.mProgress2WaterWidth = mProgress2WaterWidth;
 	}
+
+    public void setProgressTxt(String progressTxt) {
+        this.progressTxt = progressTxt;
+    }
 
 }
