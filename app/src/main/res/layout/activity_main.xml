@@ -13,7 +13,7 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="350dp"
-        android:background="@color/material_deep_teal_500"
+        android:background="@color/sky_primary"
         android:id="@+id/layout_upper">
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -49,12 +49,17 @@
             android:layout_centerInParent="true"
             android:id="@+id/layout_user">
 
-            <org.bitnp.netcheckin2.ui.CircleImageView
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:src="@mipmap/bg"
-                android:id="@+id/image_icon"/>
 
+            <org.bitnp.netcheckin2.ui.wave_progress.WaterWaveProgress
+                android:layout_width="170dp"
+                android:layout_height="170dp"
+                android:id="@+id/prg_show"
+                custom:progress="35"
+                custom:maxProgress="100"
+                custom:waterWaveBgColor="#70FFFFFF"
+                custom:showProgress="false"
+
+                />
         </LinearLayout>
 
         <TextView

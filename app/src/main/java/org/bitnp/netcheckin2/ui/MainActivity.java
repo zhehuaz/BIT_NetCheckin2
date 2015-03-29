@@ -24,7 +24,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.cengalabs.flatui.FlatUI;
 import com.linroid.filtermenu.library.FilterMenu;
 import com.linroid.filtermenu.library.FilterMenuLayout;
 
@@ -33,6 +32,7 @@ import org.bitnp.netcheckin2.network.LoginHelper;
 import org.bitnp.netcheckin2.network.LoginStateListener;
 import org.bitnp.netcheckin2.service.LoginService;
 import org.bitnp.netcheckin2.service.NetworkState;
+import org.bitnp.netcheckin2.ui.wave_progress.WaterWaveProgress;
 import org.bitnp.netcheckin2.util.SharedPreferencesManager;
 
 import java.lang.reflect.Field;
@@ -54,6 +54,7 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
     ArrayList<String> SSIDList = new ArrayList<String>();
     StateChangeReceiver stateChangeReceiver;
     FilterMenuLayout filterMenuLayout;
+    WaterWaveProgress waveProgress;
 
     Intent intent;
     LoginService loginService;
@@ -99,10 +100,10 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         username = manager.getUsername();
-        if(username.length() == 0){
+       /* if(username.length() == 0){
 
-            /** first login
-            *  show login activity and add default settings */
+            *//** first login
+            *  show login activity and add default settings *//*
             FlatUI.initDefaultValues(this);
             FlatUI.setDefaultTheme(FlatUI.SAND);
             manager.addCustomSSID("BIT");
@@ -113,7 +114,7 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
             Intent i = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(i);
             finish();
-        }
+        }*/
 
         stateChangeReceiver = new StateChangeReceiver();
         IntentFilter intentFilter = new IntentFilter();
@@ -142,6 +143,7 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
         status = (TextView) findViewById(R.id.textView6);
         currentUser = (TextView) findViewById(R.id.textView5);
         SSIDListView = (ListView) findViewById(R.id.ls_SSID);
+        waveProgress = (WaterWaveProgress) findViewById(R.id.prg_show);
         SSIDList = manager.getAllCustomSSID();
 
         // MiUI v6 immersive, official sample
@@ -176,7 +178,7 @@ public class MainActivity extends ActionBarActivity implements LoginStateListene
 
 
         currentUser.setText(username);
-
+        waveProgress.setRingWidth((float)0.01);
 
         SSIDListView.setAdapter(new BaseAdapter() {
             @Override
