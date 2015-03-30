@@ -4,36 +4,34 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
-import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.bitnp.netcheckin2.network.LoginHelper;
 import org.bitnp.netcheckin2.network.LoginStateListener;
 import org.bitnp.netcheckin2.util.ConnTest;
 import org.bitnp.netcheckin2.util.ConnTestCallBack;
+import org.bitnp.netcheckin2.util.Global;
 import org.bitnp.netcheckin2.util.NotifTools;
+import org.bitnp.netcheckin2.util.PreferenceChangedListener;
 import org.bitnp.netcheckin2.util.SharedPreferencesManager;
 
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class LoginService extends Service implements ConnTestCallBack,LoginStateListener{
-
+public class LoginService extends Service implements ConnTestCallBack, LoginStateListener, PreferenceChangedListener{
     private final static String TAG = "LoginService";
 
     public final static String BROADCAST_ACTION = "org.bitnp.netcheckin2.LOGINSERVICE";
 
-    public final static String ACTION_START_LISTEN = "START LISTEN";
-    public final static String ACTION_STOP_LISTEN = "STOP LISTEN";
-    public final static String ACTION_STATE_CHANGE = "STATE CHANGE";
+    public final static String COMMAND_START_LISTEN = "START LISTEN";
+    public final static String COMMAND_STOP_LISTEN = "STOP LISTEN";
+    public final static String COMMAND_STATE_CHANGE = "STATE CHANGE";
 
-    public final static String ACTION_DO_TEST = "DO TEST";
+    public final static String COMMAND_DO_TEST = "DO TEST";
 
     /** Force logout and login */
-    public final static String ACTION_RE_LOGIN = "RE LOGIN";
+    public final static String COMMAND_RE_LOGIN = "RE LOGIN";
 
     private boolean listeningFlag = false;
 
@@ -43,37 +41,28 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
     private static boolean keepAliveFlag;
     private static boolean autoLogoutFlag;
     private static long interval;
+    private static boolean autoLoginFLag;
+    private static String uid;
 
-    Intent broadcast = new Intent(BROADCAST_ACTION);;
+    Intent broadcast = new Intent(BROADCAST_ACTION);
 
     private NotifTools mNotifTools;
 
     private Timer timer;
     private TimerTask timerTask;
 
+    public static float getmBalance() {
+        return mBalance;
+    }
+
+    private static float mBalance;
+
     public LoginService() {
     }
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        if(intent.getAction() != null) {
-            Log.d(TAG, "Get intent in onBind " + intent.getAction());
-            if (intent.getAction().equals(LoginService.ACTION_DO_TEST))
-                ConnTest.test(this);
-        }
-        return new LoginServiceBinder();
-    }
 
     public static NetworkState getStatus() {
         return status;
-    }
-
-    public class LoginServiceBinder extends Binder{
-
-        public LoginService getLoginService(){
-            return LoginService.this;
-        }
-
     }
 
     public static boolean isKeepAlive() {
@@ -84,6 +73,18 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
         return interval;
     }
 
+    public boolean isAutoLogin(){
+        WifiManager mWifiManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        String currentSSID = mWifiManager.getConnectionInfo().getSSID();
+        if(!mManager.isAutoLogin(currentSSID))
+            return false;
+        if(!mWifiManager.isWifiEnabled())
+            return false;
+        if(!autoLoginFLag)
+            return false;
+        return true;
+    }
+
     @Override
     public void onCreate() {
         Log.d(TAG, "Service started");
@@ -91,16 +92,14 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
         timer = new Timer(true);
         LoginHelper.registerListener(this);
         mNotifTools = NotifTools.getInstance(this.getApplicationContext());
-        /*
+
         interval = mManager.getAutoCheckTime();
         keepAliveFlag = mManager.getIsAutoCheck();
         autoLogoutFlag = mManager.getIsAutoLogout();
-        */
-        //TODO only for debug
-        interval = 30 * 1000;
-        keepAliveFlag = true;
-        autoLogoutFlag = true;
-        // TODO
+        autoLoginFLag = mManager.getIsAutoLogin();
+        uid = mManager.getUID();
+
+        updateBalance();
 
         LoginHelper.setAccount(mManager.getUsername(), mManager.getPassword());
     }
@@ -108,17 +107,19 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if(intent != null) {
-            Log.d(TAG, "receive message in onStartCommand " + intent.getAction());
-            String action = intent.getAction();
+            String action = intent.getStringExtra("command");
+            Log.d(TAG, "receive message in onStartCommand " + action);
             if (action != null) {
-                if(action.equals(ACTION_START_LISTEN))
+                if(action.equals(COMMAND_START_LISTEN))
                     startListen();
-                else if(action.equals(ACTION_STOP_LISTEN))
+                else if(action.equals(COMMAND_STOP_LISTEN))
                     stopListen();
-                else if(action.equals(ACTION_DO_TEST))
-                    if(((WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE)).isWifiEnabled())
+                else if(action.equals(COMMAND_DO_TEST))
+                    if(((WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE)).isWifiEnabled()) {
                         ConnTest.test(this);
-                else if(action.equals(ACTION_RE_LOGIN))
+                        updateBalance();
+                    }
+                else if(action.equals(COMMAND_RE_LOGIN))
                     LoginHelper.asyncForceLogout();
                 else
                     Log.e(TAG, "Unknown action received");
@@ -127,21 +128,23 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
         return super.onStartCommand(intent, flags, startId);
     }
 
+
+
+
     @Override
     public void onTestOver(boolean result) {
         Log.d(TAG, "Connection test : " + (result ? "Connected" : "Disconnected"));
         if(!result){
-            if(status != NetworkState.OFFLINE) {
-                broadcastState();
-            }
             status = NetworkState.OFFLINE;
-            LoginHelper.asyncLogin();
+            if(isAutoLogin())
+                LoginHelper.asyncLogin();
         } else {
-            if(status != NetworkState.ONLINE) {
-               broadcastState();
-            }
             status = NetworkState.ONLINE;
+            startListen();
+            updateBalance();
         }
+        broadcastState();
+
     }
 
     private void startListen(){
@@ -152,6 +155,7 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
                 public void run() {
                     Log.d(TAG, "Run in timer task");
                     ConnTest.test(LoginService.this);
+                    updateBalance();
                 }
             };
             timer.schedule(timerTask, 0, interval);
@@ -166,15 +170,15 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
         }
         listeningFlag = false;
 
-        if(status == NetworkState.ONLINE)
-            broadcastState();
+        //if(status == NetworkState.ONLINE)
         status = NetworkState.OFFLINE;
+        broadcastState();
+
     }
 
     private void broadcastState(){
         Log.v(TAG, "network status change");
-        broadcast.putExtra("command", ACTION_STATE_CHANGE);
-        Log.v(TAG, "broastcast action is " + broadcast.getAction());
+        broadcast.putExtra("command", COMMAND_STATE_CHANGE);
         sendBroadcast(broadcast);
     }
 
@@ -183,28 +187,61 @@ public class LoginService extends Service implements ConnTestCallBack,LoginState
         Log.d(TAG, "Login state is : " + message);
 
         if(state ==  LoginHelper.OFFLINE) {
-            if(status != NetworkState.OFFLINE)
-                broadcastState();
-            status = NetworkState.OFFLINE;
 
+            status = NetworkState.OFFLINE;
+            broadcastState();
             stopListen();
             if(message.equals("LOGOUT_OK"))
                 mNotifTools.sendSimpleNotification(getApplicationContext(), "已断开", "点击查看详情");
         }
         else if((state == LoginHelper.LOGIN_MODE_1) || (state == LoginHelper.LOGIN_MODE_2)) {
             Log.i(TAG, "login in mode 1");
-            if(status != NetworkState.ONLINE)
-                broadcastState();
             status = NetworkState.ONLINE;
+            broadcastState();
+            uid = LoginHelper.getUid();
+            mManager.setUID(uid);
+
+            updateBalance();
+
             startListen();
-            if (autoLogoutFlag && message.equals("该帐号的登录人数已超过限额\n" +
+            if (message.equals("该帐号的登录人数已超过限额\n" +
                     "如果怀疑帐号被盗用，请联系管理员。")) {
-                mNotifTools.sendButtonNotification(getApplicationContext(), "是否强制断开", "将登出所有在线用户，并在10秒后重新连接");
+                if(!autoLogoutFlag)
+                    mNotifTools.sendButtonNotification(getApplicationContext(), "是否强制断开", "将登出所有在线用户，并在一段时间后自动重连");
+                else
+                    LoginHelper.asyncForceLogout();
             } else if(!message.equals("") && (message.length() < 60))
                 mNotifTools.sendSimpleNotification(getApplicationContext(), message, "点击查看详情");
         }
         else
             Log.e(TAG, "unknown login state");
+    }
 
+    @Override
+    public void onPreferenceChanged(PreferenceKey key) {
+        switch (key){
+            case IS_AUTO_LOGIN:
+                autoLoginFLag = mManager.getIsAutoLogin();
+            case IS_AUTO_LOGOUT:
+                autoLogoutFlag = mManager.getIsAutoLogout();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.e(TAG, "service destroyed");
+        super.onDestroy();
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    private void updateBalance(){
+        float balance = LoginHelper.getBalance(uid);
+        if(balance > Global.INF){
+            mBalance = balance;
+        }
     }
 }

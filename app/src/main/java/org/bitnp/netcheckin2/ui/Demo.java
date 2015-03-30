@@ -74,7 +74,7 @@ public class Demo extends ActionBarActivity {
             super.handleMessage(m);
             //Log.v(TAG, helper.getErrorMessage());
             //msg.setText(helper.getErrorMessage());
-            state.setText(helper.getLoginState()+"");
+            //state.setText(helper.getLoginState()+"");
         }
     };
 }

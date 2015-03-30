@@ -3,6 +3,7 @@ package org.bitnp.netcheckin2.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.preference.Preference;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -14,6 +15,18 @@ import java.util.Set;
  */
 public class SharedPreferencesManager {
 
+    public final static String KEY_AUTO_LOGOUT = "auto_logout";
+
+    public void setListener(PreferenceChangedListener listener) {
+        this.listener = listener;
+    }
+
+    private void updatePreference(PreferenceChangedListener.PreferenceKey key){
+        if(listener != null)
+            listener.onPreferenceChanged(key);
+    }
+
+    PreferenceChangedListener listener;
     Context context;
 
     public SharedPreferencesManager(Context context) {
@@ -29,7 +42,8 @@ public class SharedPreferencesManager {
         SharedPreferences sp = context.getSharedPreferences("userinfo", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString("username", username);
-        editor.commit();
+        editor.apply();
+        updatePreference(PreferenceChangedListener.PreferenceKey.USERNAME);
     }
 
     public String getPassword(){
@@ -41,7 +55,21 @@ public class SharedPreferencesManager {
         SharedPreferences sp = context.getSharedPreferences("userinfo", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString("password", password);
-        editor.commit();
+        editor.apply();
+        updatePreference(PreferenceChangedListener.PreferenceKey.PASSWORD);
+    }
+
+    public void setUID(String uid){
+        SharedPreferences sp = context.getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+        sp.edit()
+            .putString("uid", uid)
+            .apply();
+        updatePreference(PreferenceChangedListener.PreferenceKey.UID);
+    }
+
+    public String getUID(){
+        SharedPreferences sp = context.getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+        return sp.getString("uid", "");
     }
 
     public boolean getIsAutoLogin(){
@@ -53,31 +81,34 @@ public class SharedPreferencesManager {
         SharedPreferences sp = context.getSharedPreferences("configuration", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean("autologin", value);
-        editor.commit();
+        editor.apply();
+        updatePreference(PreferenceChangedListener.PreferenceKey.IS_AUTO_LOGIN);
     }
 
     public boolean getIsAutoCheck(){
         SharedPreferences sp = context.getSharedPreferences("configuration", Context.MODE_PRIVATE);
-        return sp.getBoolean("autocheck", false);
+        return true;//sp.getBoolean("autocheck", true);
     }
 
     public void setIsAutoCheck(boolean value){
         SharedPreferences sp = context.getSharedPreferences("configuration", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean("autocheck", value);
-        editor.commit();
+        editor.apply();
+        updatePreference(PreferenceChangedListener.PreferenceKey.IS_KEEPALIVE);
     }
 
     public long getAutoCheckTime(){
         SharedPreferences sp = context.getSharedPreferences("configuration", Context.MODE_PRIVATE);
-        return sp.getLong("autochecktime_millis", 900000);
+        return sp.getLong("autochecktime_millis", 20 * 1000);
     }
 
     public void setAutoCheckTime(long value){
         SharedPreferences sp = context.getSharedPreferences("configuration", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putLong("autochecktime_millis", value);
-        editor.commit();
+        editor.apply();
+        updatePreference(PreferenceChangedListener.PreferenceKey.INTERVAL);
     }
 
     public ArrayList<String> getAllCustomSSID(){
@@ -104,23 +135,46 @@ public class SharedPreferencesManager {
             set.add(i);
         }
         editor.putStringSet("autoLogin_SSD", set);
-        editor.commit();
+        editor.apply();
     }
 
-    public void addCustomSSID(String ssid){
+    /**
+     * @return if this ssid already exists, true means ssid is new
+     * */
+    public boolean addCustomSSID(String ssid){
+        boolean newFlag = true;
         SharedPreferences sp;
         sp = context.getSharedPreferences("autoLogin_SSID", Context.MODE_PRIVATE);
         Set<String> set ;
         set = sp.getStringSet("autoLogin_SSID", new HashSet<String>());
+        if(set.size() >= 10)
+            return false;
         Set<String> cpSet = new HashSet<String>();
         if(set != null) {
             for(String i : set){
-                cpSet.add(i);
+                if(i.equals(ssid))
+                    newFlag = false;
+                else
+                    cpSet.add(i);
             }
         }
         cpSet.add(ssid);
         sp.edit().putStringSet("autoLogin_SSID", cpSet)
                 .apply();
+        return newFlag;
+    }
+
+    public void deleteSSID(String SSID){
+        SharedPreferences sp = context.getSharedPreferences("autoLogin_SSID", Context.MODE_PRIVATE);
+        Set<String> set;
+        set = sp.getStringSet("autoLogin_SSID", new HashSet<String>());
+        Set<String> cpSet = new HashSet<>();
+        if(set != null){
+            for(String i : set)
+                if(!i.equals(SSID))
+                    cpSet.add(i);
+        }
+        sp.edit().putStringSet("autoLogin_SSID", cpSet).apply();
     }
 
     public boolean isAutoLogin(String SSID){
@@ -128,14 +182,18 @@ public class SharedPreferencesManager {
         String trimedSSID = SSID.substring(1, SSID.length() - 1);
         sp = context.getSharedPreferences("autoLogin_SSID", Context.MODE_PRIVATE);
         Set<String> set = sp.getStringSet("autoLogin_SSID", new HashSet<String>());
-        if(set != null){
-            for(String i : set){
-                if(i.equals(trimedSSID))
-                    return true;
-            }
-        }
-        return false;
 
+        return set.contains(trimedSSID);
+    }
 
+    public boolean getIsAutoLogout(){
+        SharedPreferences sp = context.getSharedPreferences(KEY_AUTO_LOGOUT, Context.MODE_PRIVATE);
+        return sp.getBoolean(KEY_AUTO_LOGOUT, false);
+    }
+
+    public void setIsAutoLogout(boolean value){
+        SharedPreferences sp = context.getSharedPreferences(KEY_AUTO_LOGOUT, Context.MODE_PRIVATE);
+        sp.edit().putBoolean(KEY_AUTO_LOGOUT, value).apply();
+        updatePreference(PreferenceChangedListener.PreferenceKey.IS_AUTO_LOGOUT);
     }
 }

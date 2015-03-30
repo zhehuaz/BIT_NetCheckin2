@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.ContentResolver;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -38,12 +39,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cengalabs.flatui.FlatUI;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bitnp.netcheckin2.R;
 import org.bitnp.netcheckin2.network.HttpRequest;
+import org.bitnp.netcheckin2.network.LoginHelper;
 import org.bitnp.netcheckin2.util.SharedPreferencesManager;
 
 /**
@@ -56,11 +60,13 @@ public class LoginActivity extends ActionBarActivity {
 
     EditText textUsername, textPassword;
     Button confirm;
-    CheckBox checkBox;
-
     String username, password;
 
-    static int USERNAME_ERROR = 0x1, PASSWORD_ERROR = 0x2, CONFIRMED = 0x0;
+    private final static int ERROR_USERNAME = 0x1;
+    private final static int ERROR_PASSWORD = 0x2;
+    private final static int CONFIRMED = 0x0;
+    private final static int ERROR_UNKNOWN = 0x3;
+    private final static int ERROR_LOGOUT = 0x4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +78,6 @@ public class LoginActivity extends ActionBarActivity {
         textUsername = (EditText) findViewById(R.id.username);
         textPassword = (EditText) findViewById(R.id.password);
         confirm = (Button) findViewById(R.id.sign_in);
-        checkBox = (CheckBox) findViewById(R.id.checkBox);
 
         SharedPreferencesManager manager = new SharedPreferencesManager(LoginActivity.this);
         textUsername.setText(manager.getUsername());
@@ -107,21 +112,28 @@ public class LoginActivity extends ActionBarActivity {
                 String res = HttpRequest.sendPost(url, "username=" + username + "&password=" + password + "&drop=" + "0" + "&type=1&n=1");
                 Message msg = new Message();
                 if(res.equals("username_error")){
-                    msg.what = USERNAME_ERROR;
+                    msg.what = ERROR_USERNAME;
                 } else if(res.equals("password_error")){
-                    msg.what = PASSWORD_ERROR;
-                } else {
+                    msg.what = ERROR_PASSWORD;
+                } else if(res.equals("logout_ok") || res.equals("logout_error")){
                     msg.what = CONFIRMED;
+                } else {
+                    msg.what = ERROR_UNKNOWN;
                 }
                 handler.sendMessage(msg);
             }
         }).start();
     }
 
+
+
     private void saveAccountInfo() {
         SharedPreferencesManager manager = new SharedPreferencesManager(LoginActivity.this);
         manager.setPassword(password);
         manager.setUsername(username);
+        LoginHelper.setAccount(username, password);
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
         finish();
     }
 
@@ -164,19 +176,25 @@ public class LoginActivity extends ActionBarActivity {
             super.handleMessage(msg);
             confirm.setClickable(true);
             switch (msg.what){
-                case 0:
+                case CONFIRMED:
                     Toast.makeText(LoginActivity.this, "验证成功", Toast.LENGTH_SHORT).show();
                     showProgress(false);
                     saveAccountInfo();
                     break;
-                case 1:
+                case ERROR_USERNAME:
                     Toast.makeText(LoginActivity.this, "用户名错误", Toast.LENGTH_SHORT).show();
                     showProgress(false);
                     break;
-                case 2:
+                case ERROR_PASSWORD:
                     Toast.makeText(LoginActivity.this, "密码错误", Toast.LENGTH_SHORT).show();
                     showProgress(false);
                     break;
+                case ERROR_LOGOUT:
+                    Toast.makeText(LoginActivity.this, "检测到未登录，在尝试登录", Toast.LENGTH_SHORT).show();
+                    LoginHelper.asyncLogin();
+                default:
+                    Toast.makeText(LoginActivity.this, "连接失败,请检查网络\n如果不是网络问题，请联系我zhehuaxiao@gmail.com", Toast.LENGTH_LONG).show();
+                    showProgress(false);
             }
         }
 

@@ -1,12 +1,24 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:gravity="center_horizontal"
-    android:orientation="vertical" android:paddingBottom="@dimen/activity_vertical_margin"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:flatui="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:id="@+id/root"
-    tools:context="org.bitnp.netcheckin2.ui.LoginActivity">
+    tools:context="org.bitnp.netcheckin2.ui.LoginActivity"
+    android:background="@color/wallet_holo_blue_light">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/layout_login_upper"
+        android:layout_above="@+id/email_login_form"
+        >
 
     <!-- Login progress -->
 
@@ -17,36 +29,67 @@
         android:visibility="invisible"
         android:layout_centerHorizontal="true"/>
 
+    <org.bitnp.netcheckin2.ui.CircleImageView
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:src="@mipmap/logo_flat"
+        android:layout_centerInParent="true"
+        android:id="@+id/view"
+        android:elevation="5dp"/>
+
+    </RelativeLayout>
     <LinearLayout android:id="@+id/email_login_form" android:layout_width="match_parent"
         android:layout_height="wrap_content" android:orientation="vertical"
-        android:layout_below="@+id/login_progress"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_above="@+id/tv_hint"
+        >
 
-        <EditText android:id="@+id/username" android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:hint="username"
-            android:inputType="textEmailAddress" android:maxLines="1"
-            android:singleLine="true" >
-            <requestFocus></requestFocus>
-            </EditText>
-
-        <EditText android:id="@+id/password" android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:hint="password"
-            android:imeActionId="@+id/login"
-            android:imeOptions="actionUnspecified" android:inputType="textPassword"
-            android:maxLines="1" android:singleLine="true" />
-
-        <CheckBox
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="保存账户信息"
-            android:id="@+id/checkBox"
-            android:checked="true" />
+            android:orientation="vertical"
+            android:background="#5FFFFFFF">
 
-        <Button android:id="@+id/sign_in" style="?android:textAppearanceSmall"
+
+        <org.bitnp.netcheckin2.ui.CustomEditText
+            android:id="@+id/username" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:hint="用户名"
+            android:inputType="textEmailAddress" android:maxLines="1"
+            android:singleLine="true"
+            android:textColorHint="#9FFFFFFF"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/edittext_text_size"
+            android:layout_marginTop="@dimen/edittext_margin"
+            android:drawableLeft="@drawable/abc_switch_thumb_material"
+            android:drawableRight="@drawable/ic_action_no"
+           />
+
+        <org.bitnp.netcheckin2.ui.CustomEditText
+            android:id="@+id/password" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:hint="密码"
+            android:imeOptions="actionUnspecified" android:inputType="textPassword"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColorHint="#9FFFFFFF"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/edittext_text_size"
+            android:drawableLeft="@drawable/abc_switch_thumb_material"
+            android:drawableRight="@drawable/ic_action_no"
+            />
+
+        </LinearLayout>
+
+        <com.cengalabs.flatui.views.FlatButton
+            android:id="@+id/sign_in" style="?android:textAppearanceSmall"
             android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" android:text="确定"
-            android:textStyle="bold" />
+            android:layout_marginTop="16dp"
+            android:textStyle="bold"
+            android:text="@string/prompt_login"
+            android:layout_marginLeft="80dp"
+            android:layout_marginRight="80dp"
+            android:textSize="@dimen/edittext_text_size"
+            android:background="@drawable/abc_switch_thumb_material"
+            android:elevation="15dp"
+            />
 
     </LinearLayout>
 
@@ -54,10 +97,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="提示：验证账户时将在校园网强制注销当前账户"
-        android:id="@+id/textView3"
+        android:textColor="#FFFFFF"
+        android:id="@+id/tv_hint"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
-
+        android:layout_centerHorizontal="true"/>
 </RelativeLayout>
 
 
