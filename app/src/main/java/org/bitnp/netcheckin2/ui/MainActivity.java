@@ -34,6 +34,7 @@ import org.bitnp.netcheckin2.network.LoginStateListener;
 import org.bitnp.netcheckin2.service.LoginService;
 import org.bitnp.netcheckin2.service.NetworkState;
 import org.bitnp.netcheckin2.ui.wave_progress.WaterWaveProgress;
+import org.bitnp.netcheckin2.util.Global;
 import org.bitnp.netcheckin2.util.SharedPreferencesManager;
 
 import java.lang.reflect.Field;
@@ -308,6 +309,11 @@ public class MainActivity extends ActionBarActivity{
             status.setText("");
         } else {
             float fBalance = LoginService.getmBalance();
+            if(fBalance < Global.INF)
+            {
+                waveProgress.setProgress(0);
+                waveProgress.setProgressTxt("未知");
+            }
             String balance = fBalance + "";
             balance = balance.substring(0, (balance.length() > 4 ? 4 : balance.length()));
             waveProgress.setProgress((int) ((fBalance > 30 ? 30 : fBalance) / 30 * 100));

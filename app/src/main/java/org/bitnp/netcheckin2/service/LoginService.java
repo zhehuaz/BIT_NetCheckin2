@@ -11,6 +11,7 @@ import org.bitnp.netcheckin2.network.LoginHelper;
 import org.bitnp.netcheckin2.network.LoginStateListener;
 import org.bitnp.netcheckin2.util.ConnTest;
 import org.bitnp.netcheckin2.util.ConnTestCallBack;
+import org.bitnp.netcheckin2.util.Global;
 import org.bitnp.netcheckin2.util.NotifTools;
 import org.bitnp.netcheckin2.util.PreferenceChangedListener;
 import org.bitnp.netcheckin2.util.SharedPreferencesManager;
@@ -19,9 +20,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class LoginService extends Service implements ConnTestCallBack, LoginStateListener, PreferenceChangedListener{
-
-    private final static double INF = 1e-4;
-
     private final static String TAG = "LoginService";
 
     public final static String BROADCAST_ACTION = "org.bitnp.netcheckin2.LOGINSERVICE";
@@ -242,7 +240,7 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
 
     private void updateBalance(){
         float balance = LoginHelper.getBalance(uid);
-        if(balance > INF){
+        if(balance > Global.INF){
             mBalance = balance;
         }
     }
