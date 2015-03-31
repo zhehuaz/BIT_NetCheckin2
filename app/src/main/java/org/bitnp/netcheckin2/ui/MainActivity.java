@@ -124,7 +124,7 @@ public class MainActivity extends ActionBarActivity{
         waveProgress = (WaterWaveProgress) findViewById(R.id.prg_show);
         SSIDList = manager.getAllCustomSSID();
 
-        // MiUI v6 immersive, official sample
+        /*// MiUI v6 immersive, official sample
         Window window = getWindow();
 
         Class clazz = window.getClass();
@@ -152,7 +152,7 @@ public class MainActivity extends ActionBarActivity{
         catch (IllegalArgumentException e) { e.printStackTrace(); }
         catch (InvocationTargetException e) { e.printStackTrace(); }
 
-        //~MI UI v6
+        //~MI UI v6*/
 
 
         currentUser.setText(username);
