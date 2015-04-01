@@ -1,6 +1,5 @@
 package org.bitnp.netcheckin2.util;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
@@ -11,7 +10,6 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import org.bitnp.netcheckin2.R;
-import org.bitnp.netcheckin2.network.LoginHelper;
 import org.bitnp.netcheckin2.service.LoginService;
 import org.bitnp.netcheckin2.ui.MainActivity;
 

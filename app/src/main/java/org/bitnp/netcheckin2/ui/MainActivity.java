@@ -2,21 +2,17 @@ package org.bitnp.netcheckin2.ui;
 
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.os.Build;
-import android.os.IBinder;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
@@ -25,21 +21,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cengalabs.flatui.FlatUI;
+import com.google.android.gms.games.internal.constants.MilestoneState;
 import com.linroid.filtermenu.library.FilterMenu;
 import com.linroid.filtermenu.library.FilterMenuLayout;
+import com.xiaomi.mistatistic.sdk.MiStatInterface;
 
 import org.bitnp.netcheckin2.R;
 import org.bitnp.netcheckin2.network.LoginHelper;
-import org.bitnp.netcheckin2.network.LoginStateListener;
 import org.bitnp.netcheckin2.service.LoginService;
 import org.bitnp.netcheckin2.service.NetworkState;
 import org.bitnp.netcheckin2.ui.wave_progress.WaterWaveProgress;
 import org.bitnp.netcheckin2.util.Global;
 import org.bitnp.netcheckin2.util.SharedPreferencesManager;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 
@@ -47,6 +41,9 @@ public class MainActivity extends ActionBarActivity{
 
     private static final String TAG = "MainActivity";
 
+    /* Used for Xiaomi States service */
+    private static final String appID = "2882303761517318026";
+    private static final String appKey = "5261731875026";
 
     SharedPreferencesManager manager = new SharedPreferencesManager(MainActivity.this);
     String username;
@@ -78,6 +75,13 @@ public class MainActivity extends ActionBarActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        /** Xiaomi States API*/
+        MiStatInterface.initialize(this.getApplicationContext(), appID, appKey, "default channel");
+        MiStatInterface.setUploadPolicy(MiStatInterface.UPLOAD_POLICY_WIFI_ONLY, 0);
+        MiStatInterface.enableLog();
+        MiStatInterface.enableExceptionCatcher(false);
+
         username = manager.getUsername();
         if(username.length() == 0){
 

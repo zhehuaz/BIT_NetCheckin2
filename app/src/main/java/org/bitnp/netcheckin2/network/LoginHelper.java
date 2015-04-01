@@ -1,6 +1,5 @@
 package org.bitnp.netcheckin2.network;
 
-import android.os.Message;
 import android.util.Log;
 
 import org.bitnp.netcheckin2.util.MD5;

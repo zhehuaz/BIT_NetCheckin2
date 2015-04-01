@@ -1,36 +1,19 @@
 package org.bitnp.netcheckin2.ui;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cengalabs.flatui.views.FlatButton;
 
 import org.bitnp.netcheckin2.R;
-import org.bitnp.netcheckin2.network.LoginHelper;
-import org.bitnp.netcheckin2.network.LoginStateListener;
 import org.bitnp.netcheckin2.util.SharedPreferencesManager;
-
-import java.util.ArrayList;
 
 public class SettingsActivity extends ActionBarActivity{
 

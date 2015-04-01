@@ -5,13 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.os.IBinder;
 import android.util.Log;
 
-import org.bitnp.netcheckin2.network.LoginHelper;
 import org.bitnp.netcheckin2.service.LoginService;
-import org.bitnp.netcheckin2.util.ConnTest;
-import org.bitnp.netcheckin2.util.ConnTestCallBack;
 import org.bitnp.netcheckin2.util.SharedPreferencesManager;
 
 public class WifiChangedReceiver extends BroadcastReceiver {
