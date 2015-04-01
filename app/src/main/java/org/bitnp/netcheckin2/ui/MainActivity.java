@@ -41,7 +41,7 @@ public class MainActivity extends ActionBarActivity{
 
     private static final String TAG = "MainActivity";
 
-    /* Used for Xiaomi States service */
+    /** Used for Xiaomi States service */
     private static final String appID = "2882303761517318026";
     private static final String appKey = "5261731875026";
 
@@ -56,8 +56,6 @@ public class MainActivity extends ActionBarActivity{
     WaterWaveProgress waveProgress;
 
     Intent intent;
-    LoginService loginService;
-
 
     public class StateChangeReceiver extends BroadcastReceiver{
         @Override
@@ -81,23 +79,6 @@ public class MainActivity extends ActionBarActivity{
         MiStatInterface.setUploadPolicy(MiStatInterface.UPLOAD_POLICY_WIFI_ONLY, 0);
         MiStatInterface.enableLog();
         MiStatInterface.enableExceptionCatcher(false);
-
-        username = manager.getUsername();
-        if(username.length() == 0){
-
-            /** first login
-            *  show login activity and add default settings */
-            FlatUI.initDefaultValues(this);
-            FlatUI.setDefaultTheme(FlatUI.SAND);
-            manager.addCustomSSID("BIT");
-            manager.addCustomSSID("BeijingLG");
-            manager.setIsAutoLogin(true);
-            manager.setIsAutoCheck(true);
-
-            Intent i = new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(i);
-            finish();
-        }
 
         stateChangeReceiver = new StateChangeReceiver();
         IntentFilter intentFilter = new IntentFilter();
@@ -280,6 +261,22 @@ public class MainActivity extends ActionBarActivity{
 
     @Override
     protected void onResume() {
+        username = manager.getUsername();
+        if(username.length() == 0){
+
+            /** first login
+             *  show login activity and add default settings */
+            FlatUI.initDefaultValues(this);
+            FlatUI.setDefaultTheme(FlatUI.SAND);
+            manager.addCustomSSID("BIT");
+            manager.addCustomSSID("BeijingLG");
+            manager.setIsAutoLogin(true);
+            manager.setIsAutoCheck(true);
+
+            Intent i = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(i);
+            finish();
+        }
         super.onResume();
 
     }
@@ -308,7 +305,7 @@ public class MainActivity extends ActionBarActivity{
     protected void setProgress(){
         Log.d(TAG, "Set progress is called to set balance");
         if(LoginService.getStatus() == NetworkState.OFFLINE){
-            waveProgress.setProgress(100);
+            waveProgress.setProgress(50);
             waveProgress.setProgressTxt("未登录");
             status.setText("");
         } else {
