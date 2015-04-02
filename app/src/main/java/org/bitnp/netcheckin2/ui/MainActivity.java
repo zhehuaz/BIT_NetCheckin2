@@ -109,6 +109,7 @@ public class MainActivity extends ActionBarActivity{
         waveProgress = (WaterWaveProgress) findViewById(R.id.prg_show);
         SSIDList = manager.getAllCustomSSID();
 
+
         /*// MiUI v6 immersive, official sample
         Window window = getWindow();
 
@@ -140,7 +141,7 @@ public class MainActivity extends ActionBarActivity{
         //~MI UI v6*/
 
 
-        currentUser.setText(username);
+
         waveProgress.setRingWidth((float)0.01);
 
         SSIDListView.setAdapter(new BaseAdapter() {
@@ -267,7 +268,7 @@ public class MainActivity extends ActionBarActivity{
             /** first login
              *  show login activity and add default settings */
             FlatUI.initDefaultValues(this);
-            FlatUI.setDefaultTheme(FlatUI.SAND);
+            FlatUI.setDefaultTheme(FlatUI.BLOOD);
             manager.addCustomSSID("BIT");
             manager.addCustomSSID("BeijingLG");
             manager.setIsAutoLogin(true);
@@ -277,6 +278,8 @@ public class MainActivity extends ActionBarActivity{
             startActivity(i);
             finish();
         }
+        currentUser.setText(username);
+        setProgress();
         super.onResume();
 
     }

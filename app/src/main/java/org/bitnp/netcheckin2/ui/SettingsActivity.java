@@ -13,27 +13,16 @@ import android.widget.CompoundButton;
 import com.cengalabs.flatui.views.FlatButton;
 
 import org.bitnp.netcheckin2.R;
+import org.bitnp.netcheckin2.network.LoginHelper;
 import org.bitnp.netcheckin2.util.SharedPreferencesManager;
 
 public class SettingsActivity extends ActionBarActivity{
 
     CheckBox autoLogin;
-    //EditText autoCheckTime;
     CheckBox autoLogout;
     SharedPreferencesManager manager;
     FlatButton logoutButton;
     FlatButton submitButton;
-
-    /*public void confirmTime(View v){
-        String s = autoCheckTime.getText().toString();
-        long val = 0;
-        try{
-            val = Long.parseLong(s);
-            manager.setAutoCheckTime(val);
-        } catch (Exception e) {
-            Toast.makeText(SettingsActivity.this, "Invalid format", Toast.LENGTH_SHORT).show();
-        }
-    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +53,7 @@ public class SettingsActivity extends ActionBarActivity{
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                LoginHelper.asyncForceLogout();
                 manager.setUsername("");
                 manager.setPassword("");
                 finish();
