@@ -76,7 +76,7 @@ public class MainActivity extends ActionBarActivity{
 
         /** Xiaomi States API*/
         MiStatInterface.initialize(this.getApplicationContext(), appID, appKey, "default channel");
-        MiStatInterface.setUploadPolicy(MiStatInterface.UPLOAD_POLICY_WIFI_ONLY, 0);
+        MiStatInterface.setUploadPolicy(MiStatInterface.UPLOAD_POLICY_DEVELOPMENT, 0);
         MiStatInterface.enableLog();
         MiStatInterface.enableExceptionCatcher(false);
 

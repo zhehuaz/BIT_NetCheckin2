@@ -11,6 +11,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import com.cengalabs.flatui.views.FlatButton;
+import com.xiaomi.mistatistic.sdk.MiStatInterface;
 
 import org.bitnp.netcheckin2.R;
 import org.bitnp.netcheckin2.network.LoginHelper;
@@ -63,6 +64,7 @@ public class SettingsActivity extends ActionBarActivity{
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MiStatInterface.triggerUploadManually();
                 Intent intent = new Intent(Intent.ACTION_SENDTO);
                 Uri uri = Uri.parse("mailto:zhehuaxiao@gmail.com?subject=" + Uri.encode("Issues in BITion"));
                 intent.setData(uri);
