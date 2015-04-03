@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -74,6 +75,10 @@ public class MainActivity extends ActionBarActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        intent = new Intent(MainActivity.this, LaunchActivity.class);
+        startActivity(intent);
+
+
         /** Xiaomi States API*/
         MiStatInterface.initialize(this.getApplicationContext(), appID, appKey, "default channel");
         MiStatInterface.setUploadPolicy(MiStatInterface.UPLOAD_POLICY_DEVELOPMENT, 0);
@@ -108,39 +113,6 @@ public class MainActivity extends ActionBarActivity{
         SSIDListView = (ListView) findViewById(R.id.ls_SSID);
         waveProgress = (WaterWaveProgress) findViewById(R.id.prg_show);
         SSIDList = manager.getAllCustomSSID();
-
-
-        /*// MiUI v6 immersive, official sample
-        Window window = getWindow();
-
-        Class clazz = window.getClass();
-        try {
-            int tranceFlag = 0;
-            int darkModeFlag = 0;
-            Class layoutParams = Class.forName("android.view.MiuiWindowManager$LayoutParams");
-
-            Field field = layoutParams.getField("EXTRA_FLAG_STATUS_BAR_TRANSPARENT");
-            tranceFlag = field.getInt(layoutParams);
-
-            field = layoutParams.getField("EXTRA_FLAG_STATUS_BAR_DARK_MODE");
-            darkModeFlag = field.getInt(layoutParams);
-
-            Method extraFlagField = clazz.getMethod("setExtraFlags", int.class, int.class);
-            //只需要状态栏透明
-            extraFlagField.invoke(window, tranceFlag, tranceFlag);
-            //状态栏透明且黑色字体 extraFlagField.invoke(window, tranceFlag | darkModeFlag, tranceFlag | darkModeFlag);
-            // 清除黑色字体
-            extraFlagField.invoke(window, 0, darkModeFlag); }
-        catch (NoSuchMethodException e) { e.printStackTrace(); }
-        catch (ClassNotFoundException e) { e.printStackTrace(); }
-        catch (NoSuchFieldException e) { e.printStackTrace(); }
-        catch (IllegalAccessException e) { e.printStackTrace(); }
-        catch (IllegalArgumentException e) { e.printStackTrace(); }
-        catch (InvocationTargetException e) { e.printStackTrace(); }
-
-        //~MI UI v6*/
-
-
 
         waveProgress.setRingWidth((float)0.01);
 
@@ -317,6 +289,7 @@ public class MainActivity extends ActionBarActivity{
             {
                 waveProgress.setProgress(0);
                 waveProgress.setProgressTxt("未知");
+                return ;
             }
             String balance = fBalance + "";
             balance = balance.substring(0, (balance.length() > 4 ? 4 : balance.length()));

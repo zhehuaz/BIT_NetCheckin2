@@ -270,9 +270,15 @@ public class LoginHelper {
             }
             matcher = VALID_COMMA.matcher(response);
             response = matcher.replaceAll("");
-            float result = Float.parseFloat(response);
-            Log.i(TAG, "Get balance " + result);
-            result /= 1024 * 1024 * 1024;
+            float result;
+            try {
+                result = Float.parseFloat(response);
+                Log.i(TAG, "Get balance " + result);
+                result /= 1024 * 1024 * 1024;
+            }
+            catch(NumberFormatException e){
+                result = 0;
+            }
             return result;
         }
         Log.e(TAG, "Can't get balance");

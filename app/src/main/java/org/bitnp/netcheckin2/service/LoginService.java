@@ -211,7 +211,9 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
                 else
                     LoginHelper.asyncForceLogout();
             } else if(!message.equals("") && (message.length() < 60))
-                mNotifTools.sendSimpleNotification(getApplicationContext(), message, "点击查看详情");
+                if((message.equals("认证成功") && (status != NetworkState.ONLINE))
+                    || !message.equals("认证成功"))
+                    mNotifTools.sendSimpleNotification(getApplicationContext(), message, "点击查看详情");
         }
         else
             Log.e(TAG, "unknown login state");

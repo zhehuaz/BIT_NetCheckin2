@@ -23,7 +23,6 @@ public class WifiChangedReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.v(TAG, "Wifi status changed");
-        
         mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         if(!mWifiManager.isWifiEnabled()) {
             callBackToService(context, LoginService.COMMAND_STOP_LISTEN);

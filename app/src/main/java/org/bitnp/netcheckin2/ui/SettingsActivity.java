@@ -64,6 +64,8 @@ public class SettingsActivity extends ActionBarActivity{
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //TODO only for debug
                 MiStatInterface.triggerUploadManually();
                 Intent intent = new Intent(Intent.ACTION_SENDTO);
                 Uri uri = Uri.parse("mailto:zhehuaxiao@gmail.com?subject=" + Uri.encode("Issues in BITion"));
@@ -71,17 +73,6 @@ public class SettingsActivity extends ActionBarActivity{
                 startActivity(Intent.createChooser(intent, "Send Email"));
             }
         });
-/*
-        autoCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                manager.setIsAutoCheck(isChecked);
-                autoCheckTime.setEnabled(isChecked);
-                autoCheckTime.setText(manager.getAutoCheckTime() + "");
-            }
-        });*/
-
-
 
         autoLogin.setChecked(manager.getIsAutoLogin());
         autoLogout.setChecked(manager.getIsAutoLogout());

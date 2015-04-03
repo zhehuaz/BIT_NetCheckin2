@@ -8,7 +8,6 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/logo"
@@ -38,9 +37,16 @@
             android:enabled="true"
             android:exported="true" >
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name="org.bitnp.netcheckin2.ui.MAIN_START" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".broadcast.BootCompleteReceiver"
+            android:enabled="true"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
@@ -48,14 +54,16 @@
             android:name=".service.LoginService"
             android:enabled="true"
             android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
         </service>
 
         <activity
             android:name=".ui.SettingsActivity"
             android:label="@string/title_activity_settings" >
+        </activity>
+        <activity
+            android:name=".ui.LaunchActivity"
+            android:label="@string/title_activity_lauch" >
+
         </activity>
     </application>
 

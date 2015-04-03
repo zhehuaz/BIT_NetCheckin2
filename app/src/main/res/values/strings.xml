@@ -9,4 +9,5 @@
 
     <string name="button_logout">退出帐号</string>
     <string name="button_submit">提交反馈</string>
+    <string name="title_activity_lauch">LauchActivity</string>
 </resources>

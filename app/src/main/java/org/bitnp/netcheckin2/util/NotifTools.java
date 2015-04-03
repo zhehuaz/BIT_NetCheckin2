@@ -1,5 +1,6 @@
 package org.bitnp.netcheckin2.util;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
@@ -62,12 +63,12 @@ public class NotifTools {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
             Intent proIntent = new Intent(context, LoginService.class);
             Intent conIntent = new Intent(context, MainActivity.class);
-            proIntent.putExtra("command",LoginService.COMMAND_RE_LOGIN);
+
+            proIntent.putExtra("command", LoginService.COMMAND_RE_LOGIN);
             PendingIntent pProIntent = PendingIntent.getService(context, 0, proIntent, 0);
             PendingIntent pConIntent = PendingIntent.getActivity(context, 0, conIntent, 0);
 
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-                    .setAutoCancel(true)
                     .setSmallIcon(R.mipmap.logo)
                     .setContentTitle(title)
                     .setContentText(content)
@@ -75,7 +76,9 @@ public class NotifTools {
                     .addAction(R.drawable.ic_action_ok, "好", pProIntent)
                     .addAction(R.drawable.ic_action_no, "不", pConIntent);
 
-            mNotificationManager.notify(0, mBuilder.build());
+            Notification notif = mBuilder.build();
+            notif.flags = Notification.FLAG_AUTO_CANCEL;
+            mNotificationManager.notify(0, notif);
         } else {
             Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
         }
