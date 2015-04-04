@@ -52,22 +52,31 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/tv_foot"
-        android:id="@+id/ly_bts">
+        android:id="@+id/ly_bts"
+        android:layout_margin="5dp">
 
-
-    <com.cengalabs.flatui.views.FlatButton
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/button_logout"
-        android:id="@+id/bt_logout"
-        android:layout_centerHorizontal="true"/>
+        <com.cengalabs.flatui.views.FlatButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/button_help"
+            android:layout_below="@+id/bt_logout"
+            android:id="@+id/bt_help"
+            />
+        <com.cengalabs.flatui.views.FlatButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/button_logout"
+            android:id="@+id/bt_logout"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
      </RelativeLayout>
     <TextView
         android:id="@+id/tv_foot"
         android:layout_alignParentBottom="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="版本:公开测试版 0.1.5"/>
+        android:text="版本:公开测试版 0.2/ LICENSE GPL v2"/>
 
 
 </RelativeLayout>

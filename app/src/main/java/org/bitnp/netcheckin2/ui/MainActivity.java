@@ -81,7 +81,7 @@ public class MainActivity extends ActionBarActivity{
 
         /** Xiaomi States API*/
         MiStatInterface.initialize(this.getApplicationContext(), appID, appKey, "default channel");
-        MiStatInterface.setUploadPolicy(MiStatInterface.UPLOAD_POLICY_DEVELOPMENT, 0);
+        MiStatInterface.setUploadPolicy(MiStatInterface.UPLOAD_POLICY_WIFI_ONLY, 0);
         MiStatInterface.enableLog();
         MiStatInterface.enableExceptionCatcher(false);
 
@@ -115,6 +115,8 @@ public class MainActivity extends ActionBarActivity{
         SSIDList = manager.getAllCustomSSID();
 
         waveProgress.setRingWidth((float)0.01);
+        waveProgress.setWaveSpeed((float)0.03);
+
 
         SSIDListView.setAdapter(new BaseAdapter() {
             @Override
@@ -282,19 +284,22 @@ public class MainActivity extends ActionBarActivity{
         if(LoginService.getStatus() == NetworkState.OFFLINE){
             waveProgress.setProgress(50);
             waveProgress.setProgressTxt("未登录");
+            waveProgress.setCrestCount((float)0.5);
+            waveProgress.setWaveSpeed((float)0.02);
             status.setText("");
         } else {
             float fBalance = LoginService.getmBalance();
+            waveProgress.setCrestCount((float)1.5);
             if(fBalance < Global.INF)
             {
                 waveProgress.setProgress(0);
                 waveProgress.setProgressTxt("未知");
-                return ;
+            } else {
+                String balance = fBalance + "";
+                balance = balance.substring(0, (balance.length() > 4 ? 4 : balance.length()));
+                waveProgress.setProgress((int) ((fBalance > 30 ? 30 : fBalance) / 30 * 100));
+                waveProgress.setProgressTxt(balance + " G");
             }
-            String balance = fBalance + "";
-            balance = balance.substring(0, (balance.length() > 4 ? 4 : balance.length()));
-            waveProgress.setProgress((int) ((fBalance > 30 ? 30 : fBalance) / 30 * 100));
-            waveProgress.setProgressTxt(balance + " G");
             status.setText("已登录");
         }
     }

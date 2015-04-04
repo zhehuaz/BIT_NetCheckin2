@@ -1,5 +1,7 @@
 package org.bitnp.netcheckin2.ui;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
@@ -24,6 +26,7 @@ public class SettingsActivity extends ActionBarActivity{
     SharedPreferencesManager manager;
     FlatButton logoutButton;
     FlatButton submitButton;
+    FlatButton helpButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +39,7 @@ public class SettingsActivity extends ActionBarActivity{
         autoLogout = (CheckBox) findViewById(R.id.cb_auto_logout);
         logoutButton = (FlatButton) findViewById(R.id.bt_logout);
         submitButton = (FlatButton) findViewById(R.id.bt_submit);
+        helpButton = (FlatButton) findViewById(R.id.bt_help);
 
         autoLogin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -64,9 +68,6 @@ public class SettingsActivity extends ActionBarActivity{
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //TODO only for debug
-                MiStatInterface.triggerUploadManually();
                 Intent intent = new Intent(Intent.ACTION_SENDTO);
                 Uri uri = Uri.parse("mailto:zhehuaxiao@gmail.com?subject=" + Uri.encode("Issues in BITion"));
                 intent.setData(uri);
@@ -74,10 +75,18 @@ public class SettingsActivity extends ActionBarActivity{
             }
         });
 
+        helpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(SettingsActivity.this)
+                        .setTitle(R.string.title_help_info)
+                        .setMessage(R.string.text_help_info);
+                dialog.show();
+            }
+        });
+
         autoLogin.setChecked(manager.getIsAutoLogin());
         autoLogout.setChecked(manager.getIsAutoLogout());
-
-
     }
 
 

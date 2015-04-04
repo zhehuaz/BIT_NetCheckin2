@@ -14,7 +14,7 @@
 
  Download
 ---
-Now available in 
+ Now available in
 
 *   [Flyme Store](http://app.flyme.cn/apps/public/detail?package_name=org.bitnp.netcheckin2)
 
@@ -22,9 +22,9 @@ Now available in
 
 *   [Mi Store](http://app.mi.com/detail/90070)
     
-*ATTENTION* New version is using Xiaomi States server, which may upload your device info and
+*Notice* New version is using Xiaomi States server, which may upload your device info and
 error log to Xiaomi Server so as to help promote your experience.
-Except that, any other info including BIT account won't be sent anywhere.
+Except that, any other personal information including BIT account won't be sent anywhere.
 
  Developers
 ---
@@ -32,9 +32,7 @@ Welcome to contribute to this app.Feel free to clone, fork, commit issues or wri
 
 Present BUG includes:
 
-1. In Buttion Notification, when a button is pressed, the notification won't be canceled(close),
-even if isAutoCancel(true) is called.
-2. Unable to show balance if user didn't logged in with this app(somewhere else like Browser).
+1. Unable to show balance if user didn't logged in with this app(somewhere else like Browser).
 Because I need UID to check balance, but I can't access it except from login response, 
 and it's labile unfortunately.
 
