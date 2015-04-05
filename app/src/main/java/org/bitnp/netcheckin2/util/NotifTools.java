@@ -31,6 +31,7 @@ public class NotifTools {
         return instance;
     }
 
+    // open MainAcitivity when clicked
     public void sendSimpleNotification(Context context, String title, String content){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 
@@ -58,6 +59,32 @@ public class NotifTools {
         }
     }
 
+    /**
+     * @param isToService this param doesn't effect the function, it marks different interfaces of functions
+     * */
+    public void sendSimpleNotification(Context context, String title, String content,boolean isToService){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+
+
+            mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            Intent proIntent = new Intent(context, LoginService.class);
+            proIntent.putExtra("command", LoginService.COMMAND_RE_LOGIN);
+            PendingIntent pProIntent = PendingIntent.getService(context, 0, proIntent, 0);
+
+
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+                    .setAutoCancel(true)
+                    .setContentTitle(title)
+                    .setContentText(content)
+                    .setTicker(title)
+                    .setContentIntent(pProIntent)
+                    .setSmallIcon(R.mipmap.logo);
+            mNotificationManager.notify(0, mBuilder.build());
+        } else {
+            Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     public void sendButtonNotification(Context context, String title, String content){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
@@ -70,15 +97,14 @@ public class NotifTools {
 
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
                     .setSmallIcon(R.mipmap.logo)
+                    .setAutoCancel(true)
                     .setContentTitle(title)
                     .setContentText(content)
                     .setTicker(content)
                     .addAction(R.drawable.ic_action_ok, "好", pProIntent)
                     .addAction(R.drawable.ic_action_no, "不", pConIntent);
 
-            Notification notif = mBuilder.build();
-            notif.flags = Notification.FLAG_AUTO_CANCEL;
-            mNotificationManager.notify(0, notif);
+            mNotificationManager.notify(0, mBuilder.build());
         } else {
             Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
         }

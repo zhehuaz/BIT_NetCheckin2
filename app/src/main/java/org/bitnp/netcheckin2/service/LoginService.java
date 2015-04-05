@@ -1,10 +1,12 @@
 package org.bitnp.netcheckin2.service;
 
+import android.app.Notification;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import org.bitnp.netcheckin2.network.LoginHelper;
@@ -114,13 +116,26 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
                     startListen();
                 else if(action.equals(COMMAND_STOP_LISTEN))
                     stopListen();
-                else if(action.equals(COMMAND_DO_TEST))
-                    if(((WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE)).isWifiEnabled()) {
+                else if(action.equals(COMMAND_DO_TEST)) {
+                    if (((WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE)).isWifiEnabled()) {
                         ConnTest.test(this);
                         updateBalance();
                     }
-                else if(action.equals(COMMAND_RE_LOGIN))
-                    LoginHelper.asyncForceLogout();
+                }
+                else if(action.equals(COMMAND_RE_LOGIN)) {
+                        LoginHelper.asyncForceLogout();
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    Thread.sleep(6000);
+                                    LoginHelper.asyncLogin();
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).start();
+                    }
                 else
                     Log.e(TAG, "Unknown action received");
             }
@@ -196,8 +211,6 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
         }
         else if((state == LoginHelper.LOGIN_MODE_1) || (state == LoginHelper.LOGIN_MODE_2)) {
             Log.i(TAG, "login in mode 1");
-            status = NetworkState.ONLINE;
-            broadcastState();
             uid = LoginHelper.getUid();
             mManager.setUID(uid);
 
@@ -207,11 +220,17 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
             if (message.equals("该帐号的登录人数已超过限额\n" +
                     "如果怀疑帐号被盗用，请联系管理员。")) {
                 if(!autoLogoutFlag)
-                    mNotifTools.sendButtonNotification(getApplicationContext(), "是否强制断开", "将登出所有在线用户，并在一段时间后自动重连");
+                    mNotifTools.sendSimpleNotification(getApplicationContext(), "是否强制断开", "点击登出所有在线用户，并在数秒后重连", true);
                 else
                     LoginHelper.asyncForceLogout();
-            } else if(!message.equals("") && (message.length() < 60))
+            } else if(!message.equals("") && (message.length() < 60)){
+                if(message.equals("认证成功") && status == NetworkState.OFFLINE)
                     mNotifTools.sendSimpleNotification(getApplicationContext(), message, "点击查看详情");
+                else
+                    mNotifTools.sendSimpleNotification(getApplicationContext(), message, "点击查看详情");
+            }
+            status = NetworkState.ONLINE;
+            broadcastState();
         }
         else
             Log.e(TAG, "unknown login state");

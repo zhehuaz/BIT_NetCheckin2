@@ -29,8 +29,7 @@ public class WifiChangedReceiver extends BroadcastReceiver {
             return;
         }
 
-        mWifiInfo = mWifiManager.getConnectionInfo();
-        String currentSSID = mWifiInfo.getSSID();
+        String currentSSID = mWifiManager.getConnectionInfo().getSSID();
         Log.d(TAG, "Start to check ssid list");
         if(new SharedPreferencesManager(context).isAutoLogin(currentSSID)){
             Log.i(TAG, "WIFI check ok");

@@ -75,10 +75,6 @@ public class MainActivity extends ActionBarActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        intent = new Intent(MainActivity.this, LaunchActivity.class);
-        startActivity(intent);
-
-
         /** Xiaomi States API*/
         MiStatInterface.initialize(this.getApplicationContext(), appID, appKey, "default channel");
         MiStatInterface.setUploadPolicy(MiStatInterface.UPLOAD_POLICY_WIFI_ONLY, 0);
@@ -105,6 +101,9 @@ public class MainActivity extends ActionBarActivity{
         sendBroadcast(intent);
 
         setProgress();
+
+        intent = new Intent(MainActivity.this, LaunchActivity.class);
+        startActivity(intent);
     }
 
     private void initUI() {
@@ -264,6 +263,11 @@ public class MainActivity extends ActionBarActivity{
         unregisterReceiver(stateChangeReceiver);
         super.onDestroy();
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     @Override
