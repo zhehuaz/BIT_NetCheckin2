@@ -14,12 +14,29 @@
 
  Download
 ---
-Now available in 
+ Now available in
+
 *   [Flyme Store](http://app.flyme.cn/apps/public/detail?package_name=org.bitnp.netcheckin2)
+
+*   [Wandoujia](http://www.wandoujia.com/apps/org.bitnp.netcheckin2)
+
+*   [Mi Store](http://app.mi.com/detail/90070)
     
+*Notice* New version is using Xiaomi States server, which may upload your device info and
+error log to Xiaomi Server so as to help promote your experience.
+Except that, any other personal information including BIT account won't be sent anywhere.
+
  Developers
 ---
 Welcome to contribute to this app.Feel free to clone, fork, commit issues or write docs.
+
+Present BUG includes:
+
+1. Unable to show balance if user didn't logged in with this app(somewhere else like Browser).
+Because I need UID to check balance, but I can't access it except from login response, 
+and it's labile unfortunately.
+
+THANKS a lot for helping fix them.
 
 Any questions, contact me @ zhehuaxiao at gmail
 or [zchang.me](http://zchang.me)

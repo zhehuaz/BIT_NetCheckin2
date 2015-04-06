@@ -5,13 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.os.IBinder;
 import android.util.Log;
 
-import org.bitnp.netcheckin2.network.LoginHelper;
 import org.bitnp.netcheckin2.service.LoginService;
-import org.bitnp.netcheckin2.util.ConnTest;
-import org.bitnp.netcheckin2.util.ConnTestCallBack;
 import org.bitnp.netcheckin2.util.SharedPreferencesManager;
 
 public class WifiChangedReceiver extends BroadcastReceiver {
@@ -27,15 +23,13 @@ public class WifiChangedReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.v(TAG, "Wifi status changed");
-        
         mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         if(!mWifiManager.isWifiEnabled()) {
             callBackToService(context, LoginService.COMMAND_STOP_LISTEN);
             return;
         }
 
-        mWifiInfo = mWifiManager.getConnectionInfo();
-        String currentSSID = mWifiInfo.getSSID();
+        String currentSSID = mWifiManager.getConnectionInfo().getSSID();
         Log.d(TAG, "Start to check ssid list");
         if(new SharedPreferencesManager(context).isAutoLogin(currentSSID)){
             Log.i(TAG, "WIFI check ok");

@@ -2,21 +2,18 @@ package org.bitnp.netcheckin2.ui;
 
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.os.Build;
-import android.os.IBinder;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
@@ -25,21 +22,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cengalabs.flatui.FlatUI;
+import com.google.android.gms.games.internal.constants.MilestoneState;
 import com.linroid.filtermenu.library.FilterMenu;
 import com.linroid.filtermenu.library.FilterMenuLayout;
+import com.xiaomi.mistatistic.sdk.MiStatInterface;
 
 import org.bitnp.netcheckin2.R;
 import org.bitnp.netcheckin2.network.LoginHelper;
-import org.bitnp.netcheckin2.network.LoginStateListener;
 import org.bitnp.netcheckin2.service.LoginService;
 import org.bitnp.netcheckin2.service.NetworkState;
 import org.bitnp.netcheckin2.ui.wave_progress.WaterWaveProgress;
 import org.bitnp.netcheckin2.util.Global;
 import org.bitnp.netcheckin2.util.SharedPreferencesManager;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 
@@ -47,6 +42,9 @@ public class MainActivity extends ActionBarActivity{
 
     private static final String TAG = "MainActivity";
 
+    /** Used for Xiaomi States service */
+    private static final String appID = "2882303761517318026";
+    private static final String appKey = "5261731875026";
 
     SharedPreferencesManager manager = new SharedPreferencesManager(MainActivity.this);
     String username;
@@ -59,8 +57,6 @@ public class MainActivity extends ActionBarActivity{
     WaterWaveProgress waveProgress;
 
     Intent intent;
-    LoginService loginService;
-
 
     public class StateChangeReceiver extends BroadcastReceiver{
         @Override
@@ -78,22 +74,12 @@ public class MainActivity extends ActionBarActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        username = manager.getUsername();
-        if(username.length() == 0){
 
-            /** first login
-            *  show login activity and add default settings */
-            FlatUI.initDefaultValues(this);
-            FlatUI.setDefaultTheme(FlatUI.SAND);
-            manager.addCustomSSID("BIT");
-            manager.addCustomSSID("BeijingLG");
-            manager.setIsAutoLogin(true);
-            manager.setIsAutoCheck(true);
-
-            Intent i = new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(i);
-            finish();
-        }
+        /** Xiaomi States API*/
+        MiStatInterface.initialize(this.getApplicationContext(), appID, appKey, "default channel");
+        MiStatInterface.setUploadPolicy(MiStatInterface.UPLOAD_POLICY_WIFI_ONLY, 0);
+        MiStatInterface.enableLog();
+        MiStatInterface.enableExceptionCatcher(false);
 
         stateChangeReceiver = new StateChangeReceiver();
         IntentFilter intentFilter = new IntentFilter();
@@ -115,6 +101,9 @@ public class MainActivity extends ActionBarActivity{
         sendBroadcast(intent);
 
         setProgress();
+
+        intent = new Intent(MainActivity.this, LaunchActivity.class);
+        startActivity(intent);
     }
 
     private void initUI() {
@@ -124,39 +113,9 @@ public class MainActivity extends ActionBarActivity{
         waveProgress = (WaterWaveProgress) findViewById(R.id.prg_show);
         SSIDList = manager.getAllCustomSSID();
 
-        // MiUI v6 immersive, official sample
-        Window window = getWindow();
-
-        Class clazz = window.getClass();
-        try {
-            int tranceFlag = 0;
-            int darkModeFlag = 0;
-            Class layoutParams = Class.forName("android.view.MiuiWindowManager$LayoutParams");
-
-            Field field = layoutParams.getField("EXTRA_FLAG_STATUS_BAR_TRANSPARENT");
-            tranceFlag = field.getInt(layoutParams);
-
-            field = layoutParams.getField("EXTRA_FLAG_STATUS_BAR_DARK_MODE");
-            darkModeFlag = field.getInt(layoutParams);
-
-            Method extraFlagField = clazz.getMethod("setExtraFlags", int.class, int.class);
-            //只需要状态栏透明
-            extraFlagField.invoke(window, tranceFlag, tranceFlag);
-            //状态栏透明且黑色字体 extraFlagField.invoke(window, tranceFlag | darkModeFlag, tranceFlag | darkModeFlag);
-            // 清除黑色字体
-            extraFlagField.invoke(window, 0, darkModeFlag); }
-        catch (NoSuchMethodException e) { e.printStackTrace(); }
-        catch (ClassNotFoundException e) { e.printStackTrace(); }
-        catch (NoSuchFieldException e) { e.printStackTrace(); }
-        catch (IllegalAccessException e) { e.printStackTrace(); }
-        catch (IllegalArgumentException e) { e.printStackTrace(); }
-        catch (InvocationTargetException e) { e.printStackTrace(); }
-
-        //~MI UI v6
-
-
-        currentUser.setText(username);
         waveProgress.setRingWidth((float)0.01);
+        waveProgress.setWaveSpeed((float)0.03);
+
 
         SSIDListView.setAdapter(new BaseAdapter() {
             @Override
@@ -276,6 +235,24 @@ public class MainActivity extends ActionBarActivity{
 
     @Override
     protected void onResume() {
+        username = manager.getUsername();
+        if(username.length() == 0){
+
+            /** first login
+             *  show login activity and add default settings */
+            FlatUI.initDefaultValues(this);
+            FlatUI.setDefaultTheme(FlatUI.BLOOD);
+            manager.addCustomSSID("BIT");
+            manager.addCustomSSID("BeijingLG");
+            manager.setIsAutoLogin(true);
+            manager.setIsAutoCheck(true);
+
+            Intent i = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(i);
+            finish();
+        }
+        currentUser.setText(username);
+        setProgress();
         super.onResume();
 
     }
@@ -286,6 +263,11 @@ public class MainActivity extends ActionBarActivity{
         unregisterReceiver(stateChangeReceiver);
         super.onDestroy();
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     @Override
@@ -304,20 +286,24 @@ public class MainActivity extends ActionBarActivity{
     protected void setProgress(){
         Log.d(TAG, "Set progress is called to set balance");
         if(LoginService.getStatus() == NetworkState.OFFLINE){
-            waveProgress.setProgress(100);
+            waveProgress.setProgress(50);
             waveProgress.setProgressTxt("未登录");
+            waveProgress.setCrestCount((float)0.5);
+            waveProgress.setWaveSpeed((float)0.02);
             status.setText("");
         } else {
             float fBalance = LoginService.getmBalance();
+            waveProgress.setCrestCount((float)1.5);
             if(fBalance < Global.INF)
             {
                 waveProgress.setProgress(0);
                 waveProgress.setProgressTxt("未知");
+            } else {
+                String balance = fBalance + "";
+                balance = balance.substring(0, (balance.length() > 4 ? 4 : balance.length()));
+                waveProgress.setProgress((int) ((fBalance > 30 ? 30 : fBalance) / 30 * 100));
+                waveProgress.setProgressTxt(balance + " G");
             }
-            String balance = fBalance + "";
-            balance = balance.substring(0, (balance.length() > 4 ? 4 : balance.length()));
-            waveProgress.setProgress((int) ((fBalance > 30 ? 30 : fBalance) / 30 * 100));
-            waveProgress.setProgressTxt(balance + " G");
             status.setText("已登录");
         }
     }

@@ -7,50 +7,29 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cengalabs.flatui.views.FlatButton;
+import com.xiaomi.mistatistic.sdk.MiStatInterface;
 
 import org.bitnp.netcheckin2.R;
 import org.bitnp.netcheckin2.network.LoginHelper;
-import org.bitnp.netcheckin2.network.LoginStateListener;
 import org.bitnp.netcheckin2.util.SharedPreferencesManager;
-
-import java.util.ArrayList;
 
 public class SettingsActivity extends ActionBarActivity{
 
     CheckBox autoLogin;
-    //EditText autoCheckTime;
     CheckBox autoLogout;
     SharedPreferencesManager manager;
     FlatButton logoutButton;
     FlatButton submitButton;
-
-    /*public void confirmTime(View v){
-        String s = autoCheckTime.getText().toString();
-        long val = 0;
-        try{
-            val = Long.parseLong(s);
-            manager.setAutoCheckTime(val);
-        } catch (Exception e) {
-            Toast.makeText(SettingsActivity.this, "Invalid format", Toast.LENGTH_SHORT).show();
-        }
-    }*/
+    FlatButton helpButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +42,7 @@ public class SettingsActivity extends ActionBarActivity{
         autoLogout = (CheckBox) findViewById(R.id.cb_auto_logout);
         logoutButton = (FlatButton) findViewById(R.id.bt_logout);
         submitButton = (FlatButton) findViewById(R.id.bt_submit);
+        helpButton = (FlatButton) findViewById(R.id.bt_help);
 
         autoLogin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -81,9 +61,21 @@ public class SettingsActivity extends ActionBarActivity{
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                manager.setUsername("");
-                manager.setPassword("");
-                finish();
+                AlertDialog.Builder dialog = new AlertDialog.Builder(SettingsActivity.this)
+                        .setMessage("确定退出么？")
+                        .setPositiveButton("是的", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                LoginHelper.asyncForceLogout();
+                                manager.setUsername("");
+                                manager.setPassword("");
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("点错了", null)
+                        .setTitle("退出帐号");
+                dialog.show();
+
             }
         });
 
@@ -96,22 +88,17 @@ public class SettingsActivity extends ActionBarActivity{
                 startActivity(Intent.createChooser(intent, "Send Email"));
             }
         });
-/*
-        autoCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+        helpButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                manager.setIsAutoCheck(isChecked);
-                autoCheckTime.setEnabled(isChecked);
-                autoCheckTime.setText(manager.getAutoCheckTime() + "");
+            public void onClick(View v) {
+                Intent intent = new Intent(SettingsActivity.this, HelpActivity.class);
+                startActivity(intent);
             }
-        });*/
-
-
+        });
 
         autoLogin.setChecked(manager.getIsAutoLogin());
         autoLogout.setChecked(manager.getIsAutoLogout());
-
-
     }
 
 

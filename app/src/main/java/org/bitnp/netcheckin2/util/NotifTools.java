@@ -11,7 +11,6 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import org.bitnp.netcheckin2.R;
-import org.bitnp.netcheckin2.network.LoginHelper;
 import org.bitnp.netcheckin2.service.LoginService;
 import org.bitnp.netcheckin2.ui.MainActivity;
 
@@ -32,6 +31,7 @@ public class NotifTools {
         return instance;
     }
 
+    // open MainAcitivity when clicked
     public void sendSimpleNotification(Context context, String title, String content){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 
@@ -59,18 +59,45 @@ public class NotifTools {
         }
     }
 
+    /**
+     * @param isToService this param doesn't effect the function, it marks different interfaces of functions
+     * */
+    public void sendSimpleNotification(Context context, String title, String content,boolean isToService){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+
+
+            mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            Intent proIntent = new Intent(context, LoginService.class);
+            proIntent.putExtra("command", LoginService.COMMAND_RE_LOGIN);
+            PendingIntent pProIntent = PendingIntent.getService(context, 0, proIntent, 0);
+
+
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+                    .setAutoCancel(true)
+                    .setContentTitle(title)
+                    .setContentText(content)
+                    .setTicker(title)
+                    .setContentIntent(pProIntent)
+                    .setSmallIcon(R.mipmap.logo);
+            mNotificationManager.notify(0, mBuilder.build());
+        } else {
+            Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     public void sendButtonNotification(Context context, String title, String content){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
             Intent proIntent = new Intent(context, LoginService.class);
             Intent conIntent = new Intent(context, MainActivity.class);
-            proIntent.putExtra("command",LoginService.COMMAND_RE_LOGIN);
+
+            proIntent.putExtra("command", LoginService.COMMAND_RE_LOGIN);
             PendingIntent pProIntent = PendingIntent.getService(context, 0, proIntent, 0);
             PendingIntent pConIntent = PendingIntent.getActivity(context, 0, conIntent, 0);
 
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-                    .setAutoCancel(true)
                     .setSmallIcon(R.mipmap.logo)
+                    .setAutoCancel(true)
                     .setContentTitle(title)
                     .setContentText(content)
                     .setTicker(content)

@@ -2,12 +2,9 @@ package org.bitnp.netcheckin2.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
-import android.preference.Preference;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -178,9 +175,9 @@ public class SharedPreferencesManager {
     }
 
     public boolean isAutoLogin(String SSID){
-        SharedPreferences sp;
+        SharedPreferences sp = context.getSharedPreferences("autoLogin_SSID", Context.MODE_PRIVATE);;
         String trimedSSID = SSID.substring(1, SSID.length() - 1);
-        sp = context.getSharedPreferences("autoLogin_SSID", Context.MODE_PRIVATE);
+        //sp = context.getSharedPreferences("autoLogin_SSID", Context.MODE_PRIVATE);
         Set<String> set = sp.getStringSet("autoLogin_SSID", new HashSet<String>());
 
         return set.contains(trimedSSID);
