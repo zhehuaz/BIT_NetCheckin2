@@ -2,6 +2,7 @@ package org.bitnp.netcheckin2.ui;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
@@ -9,8 +10,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import com.cengalabs.flatui.views.FlatButton;
 import com.xiaomi.mistatistic.sdk.MiStatInterface;
@@ -58,10 +61,21 @@ public class SettingsActivity extends ActionBarActivity{
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LoginHelper.asyncForceLogout();
-                manager.setUsername("");
-                manager.setPassword("");
-                finish();
+                AlertDialog.Builder dialog = new AlertDialog.Builder(SettingsActivity.this)
+                        .setMessage("确定退出么？")
+                        .setPositiveButton("是的", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                LoginHelper.asyncForceLogout();
+                                manager.setUsername("");
+                                manager.setPassword("");
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("点错了", null)
+                        .setTitle("退出帐号");
+                dialog.show();
+
             }
         });
 
@@ -78,10 +92,8 @@ public class SettingsActivity extends ActionBarActivity{
         helpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder dialog = new AlertDialog.Builder(SettingsActivity.this)
-                        .setTitle(R.string.title_help_info)
-                        .setMessage(R.string.text_help_info);
-                dialog.show();
+                Intent intent = new Intent(SettingsActivity.this, HelpActivity.class);
+                startActivity(intent);
             }
         });
 

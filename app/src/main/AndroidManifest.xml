@@ -62,8 +62,12 @@
         </activity>
         <activity
             android:name=".ui.LaunchActivity"
-            android:label="@string/title_activity_lauch" >
-
+            android:label="@string/title_activity_lauch"
+            android:theme="@style/FullscreenTheme" >
+        </activity>
+        <activity
+            android:name=".ui.HelpActivity"
+            android:label="@string/title_activity_help" >
         </activity>
     </application>
 
