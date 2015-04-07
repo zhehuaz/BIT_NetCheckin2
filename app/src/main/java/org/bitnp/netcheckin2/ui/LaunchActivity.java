@@ -1,14 +1,14 @@
 package org.bitnp.netcheckin2.ui;
 
-import android.app.Activity;
 import android.os.Handler;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import org.bitnp.netcheckin2.R;
 
-public class LaunchActivity extends Activity {
+public class LaunchActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

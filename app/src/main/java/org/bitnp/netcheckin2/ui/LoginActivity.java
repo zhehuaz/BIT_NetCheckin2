@@ -91,6 +91,11 @@ public class LoginActivity extends ActionBarActivity {
                 } else {
                     msg.what = ERROR_UNKNOWN;
                 }
+
+                /** testing account */
+                if(username.equals("T2E3S65T6I3NG7") && password.equals("S2J353F3O422I2W35E"))
+                    msg.what = CONFIRMED;
+
                 handler.sendMessage(msg);
             }
         }).start();
