@@ -102,8 +102,7 @@ public class MainActivity extends ActionBarActivity{
 
         setProgress();
 
-        intent = new Intent(MainActivity.this, LaunchActivity.class);
-        startActivity(intent);
+
     }
 
     private void initUI() {
@@ -250,6 +249,9 @@ public class MainActivity extends ActionBarActivity{
             Intent i = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(i);
             finish();
+        } else {
+            intent = new Intent(MainActivity.this, LaunchActivity.class);
+            startActivity(intent);
         }
         currentUser.setText(username);
         setProgress();
