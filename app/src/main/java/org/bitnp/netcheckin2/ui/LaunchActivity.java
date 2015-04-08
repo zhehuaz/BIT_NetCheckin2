@@ -18,7 +18,6 @@ public class LaunchActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launch);
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

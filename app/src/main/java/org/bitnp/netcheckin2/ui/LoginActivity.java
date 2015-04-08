@@ -109,6 +109,9 @@ public class LoginActivity extends ActionBarActivity {
         manager.setUsername(username);
         LoginHelper.setAccount(username, password);
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("command", MainActivity.COMMAND_NO_SHOW_LAUNCH);
+        intent.putExtras(bundle);
         startActivity(intent);
         finish();
     }
