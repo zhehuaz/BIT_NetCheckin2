@@ -45,9 +45,7 @@ public class MainActivity extends ActionBarActivity{
 
     public static final String COMMAND_NO_SHOW_LAUNCH = "NO_SHOW_L";
 
-    /** Used for Xiaomi States service */
-    private static final String appID = "2882303761517318026";
-    private static final String appKey = "5261731875026";
+
 
     SharedPreferencesManager manager = new SharedPreferencesManager(MainActivity.this);
     String username;
@@ -79,11 +77,6 @@ public class MainActivity extends ActionBarActivity{
         setContentView(R.layout.activity_main);
 
         instance = this;
-        /** Xiaomi States API*/
-        MiStatInterface.initialize(this.getApplicationContext(), appID, appKey, "default channel");
-        MiStatInterface.setUploadPolicy(MiStatInterface.UPLOAD_POLICY_WIFI_ONLY, 0);
-        MiStatInterface.enableLog();
-        MiStatInterface.enableExceptionCatcher(false);
 
         stateChangeReceiver = new StateChangeReceiver();
         IntentFilter intentFilter = new IntentFilter();
@@ -268,6 +261,7 @@ public class MainActivity extends ActionBarActivity{
     protected void onResume() {
 
         setProgress();
+        MiStatInterface.recordPageStart(this, TAG);
         super.onResume();
 
     }
@@ -283,6 +277,12 @@ public class MainActivity extends ActionBarActivity{
     @Override
     protected void onStop() {
         super.onStop();
+    }
+
+    @Override
+    protected void onPause() {
+        MiStatInterface.recordPageEnd();
+        super.onPause();
     }
 
     @Override
