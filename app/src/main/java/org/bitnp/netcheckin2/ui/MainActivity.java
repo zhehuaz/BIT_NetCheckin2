@@ -40,11 +40,12 @@ import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity{
 
+    static MainActivity instance;
     private static final String TAG = "MainActivity";
 
-    /** Used for Xiaomi States service */
-    private static final String appID = "2882303761517318026";
-    private static final String appKey = "5261731875026";
+    public static final String COMMAND_NO_SHOW_LAUNCH = "NO_SHOW_L";
+
+
 
     SharedPreferencesManager manager = new SharedPreferencesManager(MainActivity.this);
     String username;
@@ -75,11 +76,7 @@ public class MainActivity extends ActionBarActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /** Xiaomi States API*/
-        MiStatInterface.initialize(this.getApplicationContext(), appID, appKey, "default channel");
-        MiStatInterface.setUploadPolicy(MiStatInterface.UPLOAD_POLICY_WIFI_ONLY, 0);
-        MiStatInterface.enableLog();
-        MiStatInterface.enableExceptionCatcher(false);
+        instance = this;
 
         stateChangeReceiver = new StateChangeReceiver();
         IntentFilter intentFilter = new IntentFilter();
@@ -87,6 +84,24 @@ public class MainActivity extends ActionBarActivity{
 
         /** Prepare to receive messages from LoginService*/
         registerReceiver(stateChangeReceiver, intentFilter);
+
+        username = manager.getUsername();
+        if(username.length() == 0){
+
+            /** first login
+             *  show login activity and add default settings */
+            FlatUI.initDefaultValues(this);
+            FlatUI.setDefaultTheme(FlatUI.BLOOD);
+            manager.addCustomSSID("BIT");
+            manager.addCustomSSID("BeijingLG");
+            manager.setIsAutoLogin(true);
+            manager.setIsAutoCheck(true);
+
+            Intent i = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(i);
+            finish();
+        }
+
 
         initUI();
 
@@ -100,10 +115,20 @@ public class MainActivity extends ActionBarActivity{
         intent = new Intent(GlobalConstant.ACTION_BROADCAST_FROM_MAIN);
         sendBroadcast(intent);
 
-        setProgress();
+        // FIXME What a mess....
+        if(savedInstanceState != null) {
+            String s = savedInstanceState.getString("command");
+            if(s != null && !s.equals(COMMAND_NO_SHOW_LAUNCH)){
 
-        intent = new Intent(MainActivity.this, LaunchActivity.class);
-        startActivity(intent);
+            }
+            else{
+                intent = new Intent(MainActivity.this, LaunchActivity.class);
+                startActivity(intent);
+            }
+        } else {
+            intent = new Intent(MainActivity.this, LaunchActivity.class);
+            startActivity(intent);
+        }
     }
 
     private void initUI() {
@@ -114,7 +139,8 @@ public class MainActivity extends ActionBarActivity{
         SSIDList = manager.getAllCustomSSID();
 
         waveProgress.setRingWidth((float)0.01);
-        waveProgress.setWaveSpeed((float)0.03);
+        waveProgress.setWaveSpeed((float) 0.03);
+        currentUser.setText(username);
 
 
         SSIDListView.setAdapter(new BaseAdapter() {
@@ -229,30 +255,13 @@ public class MainActivity extends ActionBarActivity{
                     }
                 })
                 .build();
-
-
     }
 
     @Override
     protected void onResume() {
-        username = manager.getUsername();
-        if(username.length() == 0){
 
-            /** first login
-             *  show login activity and add default settings */
-            FlatUI.initDefaultValues(this);
-            FlatUI.setDefaultTheme(FlatUI.BLOOD);
-            manager.addCustomSSID("BIT");
-            manager.addCustomSSID("BeijingLG");
-            manager.setIsAutoLogin(true);
-            manager.setIsAutoCheck(true);
-
-            Intent i = new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(i);
-            finish();
-        }
-        currentUser.setText(username);
         setProgress();
+        MiStatInterface.recordPageStart(this, TAG);
         super.onResume();
 
     }
@@ -268,6 +277,12 @@ public class MainActivity extends ActionBarActivity{
     @Override
     protected void onStop() {
         super.onStop();
+    }
+
+    @Override
+    protected void onPause() {
+        MiStatInterface.recordPageEnd();
+        super.onPause();
     }
 
     @Override

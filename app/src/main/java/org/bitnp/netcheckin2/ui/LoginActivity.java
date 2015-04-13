@@ -91,6 +91,11 @@ public class LoginActivity extends ActionBarActivity {
                 } else {
                     msg.what = ERROR_UNKNOWN;
                 }
+
+                /** testing account */
+                if(username.equals("T2E3S65T6I3NG7") && password.equals("S2J353F3O422I2W35E"))
+                    msg.what = CONFIRMED;
+
                 handler.sendMessage(msg);
             }
         }).start();
@@ -104,6 +109,9 @@ public class LoginActivity extends ActionBarActivity {
         manager.setUsername(username);
         LoginHelper.setAccount(username, password);
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("command", MainActivity.COMMAND_NO_SHOW_LAUNCH);
+        intent.putExtras(bundle);
         startActivity(intent);
         finish();
     }

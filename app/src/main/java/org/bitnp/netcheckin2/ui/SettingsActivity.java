@@ -69,6 +69,7 @@ public class SettingsActivity extends ActionBarActivity{
                                 LoginHelper.asyncForceLogout();
                                 manager.setUsername("");
                                 manager.setPassword("");
+                                MainActivity.instance.finish();
                                 finish();
                             }
                         })
