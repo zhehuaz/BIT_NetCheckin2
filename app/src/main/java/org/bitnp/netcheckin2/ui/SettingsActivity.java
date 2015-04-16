@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.cengalabs.flatui.views.FlatButton;
@@ -30,6 +31,7 @@ public class SettingsActivity extends ActionBarActivity{
     FlatButton logoutButton;
     FlatButton submitButton;
     FlatButton helpButton;
+    SeekBar relogSeekBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class SettingsActivity extends ActionBarActivity{
         logoutButton = (FlatButton) findViewById(R.id.bt_logout);
         submitButton = (FlatButton) findViewById(R.id.bt_submit);
         helpButton = (FlatButton) findViewById(R.id.bt_help);
+        relogSeekBar = (SeekBar) findViewById(R.id.sb_relog_int);
 
         autoLogin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -55,6 +58,7 @@ public class SettingsActivity extends ActionBarActivity{
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 manager.setIsAutoLogout(isChecked);
+                relogSeekBar.setClickable(isChecked);
             }
         });
 
@@ -95,6 +99,23 @@ public class SettingsActivity extends ActionBarActivity{
             public void onClick(View v) {
                 Intent intent = new Intent(SettingsActivity.this, HelpActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        relogSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
             }
         });
 

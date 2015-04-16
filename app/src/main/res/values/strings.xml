@@ -15,6 +15,8 @@
     <string name="text_launch">从这里\nBITion\n做追赶世界的北理人</string>
     <string name="title_help_info">帮助信息</string>
 
+    <string name="title_relog_interval">强退后等待重连时间</string>
+
     <string name="text_help_info">
 谢谢使用～\n下面是一些提示：\n
 *   环形按钮的四个键分别表示 设置、登出、登录、添加SSID\n
@@ -29,6 +31,6 @@
 By LangleyChang and entalent
         </string>
 
-    <string name="version_info">版本:公开测试版 0.2/ LICENSE GPL v2</string>
+    <string name="version_info">版本:公开测试版 0.2.2/ LICENSE GPL v2</string>
     <string name="title_activity_help">HelpActivity</string>
 </resources>

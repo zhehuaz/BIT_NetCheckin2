@@ -128,7 +128,7 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
                             @Override
                             public void run() {
                                 try {
-                                    Thread.sleep(6000);
+                                    Thread.sleep(10000);
                                     LoginHelper.asyncLogin();
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
@@ -226,7 +226,7 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
             } else if(!message.equals("") && (message.length() < 60)){
                 if(message.equals("认证成功") && status == NetworkState.OFFLINE)
                     mNotifTools.sendSimpleNotification(getApplicationContext(), message, "点击查看详情");
-                else
+                else if(message.equals("您的IP尚未下线，请等待2分钟再试。"))
                     mNotifTools.sendSimpleNotification(getApplicationContext(), message, "点击查看详情");
             }
             status = NetworkState.ONLINE;
