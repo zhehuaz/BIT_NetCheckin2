@@ -10,6 +10,7 @@
     <string name="button_logout">退出帐号</string>
     <string name="button_submit">提交反馈</string>
     <string name="button_help">帮助</string>
+    <string name="title_check_silence">静默模式</string>
     <string name="title_activity_lauch">BITion</string>
 
     <string name="text_launch">从这里\nBITion\n做追赶世界的北理人</string>

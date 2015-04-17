@@ -13,6 +13,7 @@ import java.util.Set;
 public class SharedPreferencesManager {
 
     public final static String KEY_AUTO_LOGOUT = "auto_logout";
+    public final static String KEY_SILENCE = "silence mode";
 
     public void setListener(PreferenceChangedListener listener) {
         this.listener = listener;
@@ -192,5 +193,17 @@ public class SharedPreferencesManager {
         SharedPreferences sp = context.getSharedPreferences(KEY_AUTO_LOGOUT, Context.MODE_PRIVATE);
         sp.edit().putBoolean(KEY_AUTO_LOGOUT, value).apply();
         updatePreference(PreferenceChangedListener.PreferenceKey.IS_AUTO_LOGOUT);
+    }
+
+    public void setIsSilent(boolean value){
+        SharedPreferences sp = context.getSharedPreferences(KEY_SILENCE, Context.MODE_PRIVATE);
+        sp.edit().putBoolean(KEY_SILENCE, value).apply();
+        updatePreference(PreferenceChangedListener.PreferenceKey.IS_SLIENT);
+    }
+
+    public boolean getIsSilent(){
+        SharedPreferences sp = context.getSharedPreferences(KEY_SILENCE, Context.MODE_PRIVATE);
+        return sp.getBoolean(KEY_SILENCE, false);
+
     }
 }

@@ -27,11 +27,11 @@ public class SettingsActivity extends ActionBarActivity{
 
     CheckBox autoLogin;
     CheckBox autoLogout;
+    CheckBox silenceMode;
     SharedPreferencesManager manager;
     FlatButton logoutButton;
     FlatButton submitButton;
     FlatButton helpButton;
-    SeekBar relogSeekBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +45,7 @@ public class SettingsActivity extends ActionBarActivity{
         logoutButton = (FlatButton) findViewById(R.id.bt_logout);
         submitButton = (FlatButton) findViewById(R.id.bt_submit);
         helpButton = (FlatButton) findViewById(R.id.bt_help);
-        relogSeekBar = (SeekBar) findViewById(R.id.sb_relog_int);
+        silenceMode = (CheckBox) findViewById(R.id.cb_silence);
 
         autoLogin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -58,7 +58,13 @@ public class SettingsActivity extends ActionBarActivity{
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 manager.setIsAutoLogout(isChecked);
-                relogSeekBar.setClickable(isChecked);
+            }
+        });
+
+        silenceMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                manager.setIsSilent(isChecked);
             }
         });
 
@@ -102,22 +108,6 @@ public class SettingsActivity extends ActionBarActivity{
             }
         });
 
-        relogSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
 
         autoLogin.setChecked(manager.getIsAutoLogin());
         autoLogout.setChecked(manager.getIsAutoLogout());

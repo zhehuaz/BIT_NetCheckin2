@@ -31,10 +31,8 @@
         android:layout_height="wrap_content"
         android:text="自动登录"
         android:id="@+id/cb_auto_login"
-        android:textSize="25sp"
-        android:textColor="#FFFFFF"
-        android:checked="false"
-        android:layout_margin="20dp"/>
+        android:checked="true"
+        style="@style/SettingCheckText"/>
 
     <CheckBox
         android:layout_below="@+id/cb_auto_login"
@@ -42,15 +40,15 @@
         android:layout_height="wrap_content"
         android:text="人数满时自动强退"
         android:id="@+id/cb_auto_logout"
-        android:textSize="25sp"
-        android:textColor="#FFFFFF"
-        android:layout_margin="20dp"
+        style="@style/SettingCheckText"
         />
-    <SeekBar
-        android:layout_width="match_parent"
+
+    <CheckBox
+        android:id="@+id/cb_silence"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/sb_relog_int"
-        android:contentDescription="@string/abc_action_bar_home_description"
+        style="@style/SettingCheckText"
+        android:text="@string/title_check_silence"
         />
 
     </LinearLayout>
