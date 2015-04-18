@@ -17,7 +17,7 @@ public class ConnTest {
             public void run() {
                 String response = HttpRequest.sendGet("http://www.mathpages.com/home/kmath267/kmath267.htm", "", 3);
                 Log.v(TAG, "Response is " + response);
-                if(response.contains("Combining Probabilities"))
+                if(response.equals("<html><head>"))
                     callBack.onTestOver(true);
                 else
                     callBack.onTestOver(false);
