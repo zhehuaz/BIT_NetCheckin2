@@ -1,5 +1,9 @@
 <resources>
 
-    <color name="black_overlay">#66000000</color>
-
+    <color name="a_black_overlay">#66000000</color>
+    <color name="a_wallet_bright_foreground_holo_dark">#fff3f3f3</color>
+    <color name="a_wallet_highlighted_text_holo_light">#6633b5e5</color>
+    <color name="a_wallet_highlighted_text_holo_dark">#6633b5e5</color>
+    <color name="a_wallet_holo_blue_light">#ff33b5e5</color>
+    <color name="a_wallet_link_text_light">#0000ee</color>
 </resources>

@@ -7,7 +7,7 @@ public interface PreferenceChangedListener {
 
     public enum PreferenceKey{
         USERNAME, PASSWORD, IS_AUTO_LOGIN, IS_AUTO_LOGOUT, IS_KEEPALIVE, INTERVAL, UID,
-        IS_SLIENT
+        IS_SLIENT, RELOG_INTERVAL
     }
 
     public void onPreferenceChanged(PreferenceKey key);

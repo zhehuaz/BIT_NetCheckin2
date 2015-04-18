@@ -111,6 +111,7 @@ public class SettingsActivity extends ActionBarActivity{
 
         autoLogin.setChecked(manager.getIsAutoLogin());
         autoLogout.setChecked(manager.getIsAutoLogout());
+        silenceMode.setChecked(manager.getIsSilent());
     }
 
 

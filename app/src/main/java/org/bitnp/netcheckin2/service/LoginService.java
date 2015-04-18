@@ -100,6 +100,7 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
         autoLogoutFlag = mManager.getIsAutoLogout();
         autoLoginFLag = mManager.getIsAutoLogin();
         uid = mManager.getUID();
+        relog_interval = mManager.getRelogInterval();
 
         updateBalance();
 
@@ -128,7 +129,7 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
                             @Override
                             public void run() {
                                 try {
-                                    Thread.sleep(10000);
+                                    Thread.sleep(relog_interval);
                                     LoginHelper.asyncLogin();
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
@@ -220,12 +221,15 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
             if (message.equals("该帐号的登录人数已超过限额\n" +
                     "如果怀疑帐号被盗用，请联系管理员。")) {
                 if(!autoLogoutFlag)
-                    mNotifTools.sendSimpleNotification(getApplicationContext(), "是否强制断开", "点击登出所有在线用户，并在10秒后重连", true);
+                    mNotifTools.sendSimpleNotification(getApplicationContext(),
+                            "是否强制断开", "点击登出所有在线用户，并在" + relog_interval / 1000 +"秒后重连", true);
                 else
                     LoginHelper.asyncForceLogout();
             } else if(!message.equals("") && (message.length() < 60)){
-                if(message.equals("认证成功") && (status == NetworkState.OFFLINE))
-                    sendNotif(message, "点击查看详情");
+                if(message.equals("认证成功")){
+                    if(status == NetworkState.OFFLINE)
+                       sendNotif(message, "点击查看详情");
+                }
                 else if(!message.equals("您的IP尚未下线，请等待2分钟再试。"))
                     sendNotif(message, "点击查看详情");
             }
