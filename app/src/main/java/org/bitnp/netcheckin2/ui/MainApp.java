@@ -17,7 +17,7 @@ public class MainApp extends Application {
     @Override
     public void onCreate() {
         /** Xiaomi States API*/
-        MiStatInterface.initialize(this.getApplicationContext(), appID, appKey, "default channel");
+        MiStatInterface.initialize(this.getApplicationContext(), appID, appKey, "default");
         MiStatInterface.setUploadPolicy(MiStatInterface.UPLOAD_POLICY_WIFI_ONLY, 0);
         MiStatInterface.enableLog();
         MiStatInterface.enableExceptionCatcher(false);

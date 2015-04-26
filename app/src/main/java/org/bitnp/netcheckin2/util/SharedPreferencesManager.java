@@ -13,6 +13,8 @@ import java.util.Set;
 public class SharedPreferencesManager {
 
     public final static String KEY_AUTO_LOGOUT = "auto_logout";
+    public final static String KEY_SILENCE = "silence mode";
+    public final static String KEY_RELOG_INTERVAL = "relog_interval";
 
     public void setListener(PreferenceChangedListener listener) {
         this.listener = listener;
@@ -192,5 +194,28 @@ public class SharedPreferencesManager {
         SharedPreferences sp = context.getSharedPreferences(KEY_AUTO_LOGOUT, Context.MODE_PRIVATE);
         sp.edit().putBoolean(KEY_AUTO_LOGOUT, value).apply();
         updatePreference(PreferenceChangedListener.PreferenceKey.IS_AUTO_LOGOUT);
+    }
+
+    public void setIsSilent(boolean value){
+        SharedPreferences sp = context.getSharedPreferences(KEY_SILENCE, Context.MODE_PRIVATE);
+        sp.edit().putBoolean(KEY_SILENCE, value).apply();
+        updatePreference(PreferenceChangedListener.PreferenceKey.IS_SLIENT);
+    }
+
+    public boolean getIsSilent(){
+        SharedPreferences sp = context.getSharedPreferences(KEY_SILENCE, Context.MODE_PRIVATE);
+        return sp.getBoolean(KEY_SILENCE, false);
+    }
+
+    public void setRelogInterval(long interval){
+        SharedPreferences sp = context.getSharedPreferences(KEY_RELOG_INTERVAL, Context.MODE_PRIVATE);
+        sp.edit().putLong(KEY_RELOG_INTERVAL, interval).apply();
+        updatePreference(PreferenceChangedListener.PreferenceKey.RELOG_INTERVAL);
+    }
+
+    public long getRelogInterval(){
+        SharedPreferences sp = context.getSharedPreferences(KEY_RELOG_INTERVAL, Context.MODE_PRIVATE);
+        return sp.getLong(KEY_RELOG_INTERVAL, 100000);
+
     }
 }

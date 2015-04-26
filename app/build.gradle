@@ -8,8 +8,8 @@ android {
         applicationId "org.bitnp.netcheckin2"
         minSdkVersion 15
         targetSdkVersion 21
-        versionCode 3
-        versionName "0.2"
+        versionCode 4
+        versionName "0.2.2"
     }
     buildTypes {
         release {
@@ -23,9 +23,8 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile files('src/main/libs/MiStats_SDK_Client_1_2_0.jar')
     compile 'com.android.support:appcompat-v7:21.0.3'
-    compile 'com.google.android.gms:play-services:6.5.87'
     compile 'com.linroid.filtermenu:library:0.2.0@aar'
-    compile 'com.lsjwzh:materialloadingprogressbar:0.5.3-RELEASE'
     compile 'com.github.eluleci:flatui:3.0.0'
     compile 'com.android.support:support-v4:21.0.3'
+    compile 'com.edmodo:rangebar:1.0.0'
 }

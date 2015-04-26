@@ -23,5 +23,12 @@
 
     <!-- Backward-compatible version of ?android:attr/buttonBarButtonStyle -->
     <style name="ButtonBarButton" />
+    
+    <style name="SettingCheckText">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:layout_margin">20dp</item>
+
+    </style>
 
 </resources>

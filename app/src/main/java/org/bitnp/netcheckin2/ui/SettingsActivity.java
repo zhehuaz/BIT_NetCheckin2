@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.cengalabs.flatui.views.FlatButton;
@@ -26,6 +27,7 @@ public class SettingsActivity extends ActionBarActivity{
 
     CheckBox autoLogin;
     CheckBox autoLogout;
+    CheckBox silenceMode;
     SharedPreferencesManager manager;
     FlatButton logoutButton;
     FlatButton submitButton;
@@ -43,6 +45,7 @@ public class SettingsActivity extends ActionBarActivity{
         logoutButton = (FlatButton) findViewById(R.id.bt_logout);
         submitButton = (FlatButton) findViewById(R.id.bt_submit);
         helpButton = (FlatButton) findViewById(R.id.bt_help);
+        silenceMode = (CheckBox) findViewById(R.id.cb_silence);
 
         autoLogin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -55,6 +58,13 @@ public class SettingsActivity extends ActionBarActivity{
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 manager.setIsAutoLogout(isChecked);
+            }
+        });
+
+        silenceMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                manager.setIsSilent(isChecked);
             }
         });
 
@@ -98,8 +108,10 @@ public class SettingsActivity extends ActionBarActivity{
             }
         });
 
+
         autoLogin.setChecked(manager.getIsAutoLogin());
         autoLogout.setChecked(manager.getIsAutoLogout());
+        silenceMode.setChecked(manager.getIsSilent());
     }
 
 
