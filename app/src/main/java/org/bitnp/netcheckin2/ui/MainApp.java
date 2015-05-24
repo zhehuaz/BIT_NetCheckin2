@@ -13,11 +13,10 @@ public class MainApp extends Application {
     /** Used for Xiaomi States service */
     private static final String appID = "2882303761517318026";
     private static final String appKey = "5261731875026";
-
     @Override
     public void onCreate() {
         /** Xiaomi States API*/
-        MiStatInterface.initialize(this.getApplicationContext(), appID, appKey, "default");
+        MiStatInterface.initialize(this.getApplicationContext(), appID, appKey, "Flyme");
         MiStatInterface.setUploadPolicy(MiStatInterface.UPLOAD_POLICY_WIFI_ONLY, 0);
         MiStatInterface.enableLog();
         MiStatInterface.enableExceptionCatcher(false);

@@ -14,6 +14,7 @@
 
  Download
 ---
+
  Now available in
 
 *   [Flyme Store](http://app.flyme.cn/apps/public/detail?package_name=org.bitnp.netcheckin2)
@@ -35,7 +36,8 @@ Present BUG includes:
 1. Unable to show balance if user didn't logged in with this app(somewhere else like Browser).
 Because I need UID to check balance, but I can't access it except from login response, 
 and it's labile unfortunately.
-
+2. Notification of "Auth Success" shows again and again when login ok,because of unstable wifi
+state when it is just connected.
 THANKS a lot for helping fix them.
 
 Any questions, contact me @ zhehuaxiao at gmail

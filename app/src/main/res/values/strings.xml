@@ -33,6 +33,6 @@
 By LangleyChang and entalent
         </string>
 
-    <string name="version_info">版本:公开测试版 0.2.2/ LICENSE GPL v2</string>
+    <string name="version_info">版本:公开测试版 0.2.5/ LICENSE GPL v2</string>
     <string name="title_activity_help">HelpActivity</string>
 </resources>
