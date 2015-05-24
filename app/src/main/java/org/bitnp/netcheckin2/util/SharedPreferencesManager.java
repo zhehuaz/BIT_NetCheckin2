@@ -215,7 +215,7 @@ public class SharedPreferencesManager {
 
     public long getRelogInterval(){
         SharedPreferences sp = context.getSharedPreferences(KEY_RELOG_INTERVAL, Context.MODE_PRIVATE);
-        return sp.getLong(KEY_RELOG_INTERVAL, 100000);
+        return sp.getLong(KEY_RELOG_INTERVAL, 10000);
 
     }
 }
