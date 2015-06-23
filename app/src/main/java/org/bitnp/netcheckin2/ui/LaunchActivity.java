@@ -23,10 +23,8 @@ public class LaunchActivity extends ActionBarActivity {
             public void run() {
                 finish();
             }
-        }, 1500);
-
+        }, 1100);
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

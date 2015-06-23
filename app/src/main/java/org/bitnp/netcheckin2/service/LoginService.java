@@ -50,6 +50,7 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
 
     private NotifTools mNotifTools;
 
+    /** Timer for listening network connection state.*/
     private Timer timer;
     private TimerTask timerTask;
 
@@ -119,23 +120,13 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
                     stopListen();
                 else if(action.equals(COMMAND_DO_TEST)) {
                     if (((WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE)).isWifiEnabled()) {
+                        Log.d(TAG, "Test conn request is sending to ConnTest");
                         ConnTest.test(this);
                         updateBalance();
                     }
                 }
                 else if(action.equals(COMMAND_RE_LOGIN)) {
-                        LoginHelper.asyncForceLogout();
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    Thread.sleep(relog_interval);
-                                    LoginHelper.asyncLogin();
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }).start();
+                       asnycRelog();
                     }
                 else
                     Log.e(TAG, "Unknown action received");
@@ -153,7 +144,7 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
         if(!result){
             status = NetworkState.OFFLINE;
             if(isAutoLogin())
-                LoginHelper.asyncLogin();
+                asnycRelog();
         } else {
             status = NetworkState.ONLINE;
             startListen();
@@ -272,5 +263,20 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
         if(balance > Global.INF){
             mBalance = balance;
         }
+    }
+
+    private void asnycRelog() {
+        LoginHelper.asyncForceLogout();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(relog_interval);
+                    LoginHelper.asyncLogin();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 }

@@ -14,9 +14,9 @@ public class ConnTest {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String response = HttpRequest.sendGet("http://www.mathpages.com", "", 3);
-                Log.v(TAG, "Response is " + response);
-                if(response.contains("MathPages"))
+                String response = HttpRequest.sendGet("http://www.baidu.com/img/bd_logo1.png", null, 1);
+                Log.d(TAG, "Response is " + response);
+                if(response.contains("PNG"))
                     callBack.onTestOver(true);
                 else
                     callBack.onTestOver(false);

@@ -34,8 +34,6 @@ public class NotifTools {
     // open MainAcitivity when clicked
     public void sendSimpleNotification(Context context, String title, String content){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-
-
             mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             Intent intent = new Intent(context, MainActivity.class);
 
@@ -64,8 +62,6 @@ public class NotifTools {
      * */
     public void sendSimpleNotification(Context context, String title, String content,boolean isToService){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-
-
             mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             Intent proIntent = new Intent(context, LoginService.class);
             proIntent.putExtra("command", LoginService.COMMAND_RE_LOGIN);

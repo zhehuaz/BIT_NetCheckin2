@@ -22,6 +22,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cengalabs.flatui.FlatUI;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.linroid.filtermenu.library.FilterMenu;
 import com.linroid.filtermenu.library.FilterMenuLayout;
 import com.xiaomi.mistatistic.sdk.MiStatInterface;
@@ -41,11 +44,7 @@ public class MainActivity extends ActionBarActivity{
 
     static MainActivity instance;
     private static final String TAG = "MainActivity";
-
     public static final String COMMAND_NO_SHOW_LAUNCH = "NO_SHOW_L";
-
-
-
     SharedPreferencesManager manager = new SharedPreferencesManager(MainActivity.this);
     String username;
 
@@ -55,6 +54,7 @@ public class MainActivity extends ActionBarActivity{
     StateChangeReceiver stateChangeReceiver;
     FilterMenuLayout filterMenuLayout;
     WaterWaveProgress waveProgress;
+
 
     Intent intent;
 
@@ -100,8 +100,6 @@ public class MainActivity extends ActionBarActivity{
             startActivity(i);
             finish();
         }
-
-
         initUI();
 
         /** start service*/
@@ -114,17 +112,8 @@ public class MainActivity extends ActionBarActivity{
         intent = new Intent(GlobalConstant.ACTION_BROADCAST_FROM_MAIN);
         sendBroadcast(intent);
 
-        // FIXME What a mess....
-        if(savedInstanceState != null) {
-            String s = savedInstanceState.getString("command");
-            if(s != null && !s.equals(COMMAND_NO_SHOW_LAUNCH)){
-
-            }
-            else{
-                intent = new Intent(MainActivity.this, LaunchActivity.class);
-                startActivity(intent);
-            }
-        } else {
+        String s = getIntent().getStringExtra("command");
+        if (s == null || !s.equals(COMMAND_NO_SHOW_LAUNCH)) {
             intent = new Intent(MainActivity.this, LaunchActivity.class);
             startActivity(intent);
         }
@@ -141,23 +130,24 @@ public class MainActivity extends ActionBarActivity{
         waveProgress.setWaveSpeed((float) 0.03);
         currentUser.setText(username);
 
-
         SSIDListView.setAdapter(new BaseAdapter() {
             @Override
             public int getCount() {
-                return SSIDList.size() ;
+                return SSIDList.size();
             }
 
             @Override
-            public Object getItem(int position) {return null;}
+            public Object getItem(int position) {
+                return null;
+            }
 
             @Override
-            public long getItemId(int position) {return 0;}
+            public long getItemId(int position) {
+                return 0;
+            }
 
             @Override
             public View getView(int position, View view, ViewGroup parent) {
-
-
                 view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.list_ssid, null);
                 TextView text = (TextView) view.findViewById(R.id.item_ssid);
                 text.setText(SSIDList.get(position));
@@ -165,7 +155,7 @@ public class MainActivity extends ActionBarActivity{
                 view.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        final String ssid = ((TextView)v.findViewById(R.id.item_ssid)).getText().toString();
+                        final String ssid = ((TextView) v.findViewById(R.id.item_ssid)).getText().toString();
                         new AlertDialog.Builder(MainActivity.this)
                                 .setTitle("确定要删除\"" + ssid + "\"?")
                                 .setPositiveButton("嗯", new DialogInterface.OnClickListener() {
@@ -225,13 +215,6 @@ public class MainActivity extends ActionBarActivity{
                                     Toast.makeText(getApplicationContext(), "已登录", Toast.LENGTH_SHORT).show();
                                 break;
                             case 2://注销
-                                //setProgress(true);
-                                /*  FIXME login fail always
-                                if (LoginService.getStatus() == NetworkState.OFFLINE) {
-                                    LoginHelper.asyncForceLogout();
-                                } else {
-                                    LoginHelper.asyncLogout();
-                                }*/
                                 LoginHelper.asyncForceLogout();
                                 break;
                             case 3://设置
@@ -239,7 +222,6 @@ public class MainActivity extends ActionBarActivity{
                                 setting.setClass(MainActivity.this, SettingsActivity.class);
                                 startActivity(setting);
                                 break;
-
                         }
                     }
 
@@ -258,19 +240,15 @@ public class MainActivity extends ActionBarActivity{
 
     @Override
     protected void onResume() {
-
         setProgress();
         MiStatInterface.recordPageStart(this, TAG);
         super.onResume();
-
     }
-
 
     @Override
     protected void onDestroy() {
         unregisterReceiver(stateChangeReceiver);
         super.onDestroy();
-
     }
 
     @Override
