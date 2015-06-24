@@ -126,7 +126,7 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
                     }
                 }
                 else if(action.equals(COMMAND_RE_LOGIN)) {
-                       asnycRelog();
+                       asyncRelog();
                     }
                 else
                     Log.e(TAG, "Unknown action received");
@@ -144,7 +144,8 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
         if(!result){
             status = NetworkState.OFFLINE;
             if(isAutoLogin())
-                asnycRelog();
+                //asyncRelog();
+                LoginHelper.asyncLogin();
         } else {
             status = NetworkState.ONLINE;
             startListen();
@@ -215,7 +216,7 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
                     mNotifTools.sendSimpleNotification(getApplicationContext(),
                             "是否强制断开", "点击登出所有在线用户，并在" + relog_interval / 1000 +"秒后重连", true);
                 else
-                    LoginHelper.asyncForceLogout();
+                    asyncRelog();
             } else if(!message.equals("") && (message.length() < 60)){
                 if(message.equals("认证成功")){
                     if(status == NetworkState.OFFLINE)
@@ -265,7 +266,7 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
         }
     }
 
-    private void asnycRelog() {
+    private void asyncRelog() {
         LoginHelper.asyncForceLogout();
         new Thread(new Runnable() {
             @Override

@@ -66,8 +66,6 @@ public class NotifTools {
             Intent proIntent = new Intent(context, LoginService.class);
             proIntent.putExtra("command", LoginService.COMMAND_RE_LOGIN);
             PendingIntent pProIntent = PendingIntent.getService(context, 0, proIntent, 0);
-
-
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
                     .setAutoCancel(true)
                     .setContentTitle(title)
