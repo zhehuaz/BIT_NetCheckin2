@@ -50,6 +50,7 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
 
     private NotifTools mNotifTools;
 
+    /** Timer for listening network connection state.*/
     private Timer timer;
     private TimerTask timerTask;
 
@@ -119,23 +120,13 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
                     stopListen();
                 else if(action.equals(COMMAND_DO_TEST)) {
                     if (((WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE)).isWifiEnabled()) {
+                        Log.d(TAG, "Test conn request is sending to ConnTest");
                         ConnTest.test(this);
                         updateBalance();
                     }
                 }
                 else if(action.equals(COMMAND_RE_LOGIN)) {
-                        LoginHelper.asyncForceLogout();
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    Thread.sleep(relog_interval);
-                                    LoginHelper.asyncLogin();
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }).start();
+                       asyncRelog();
                     }
                 else
                     Log.e(TAG, "Unknown action received");
@@ -153,6 +144,7 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
         if(!result){
             status = NetworkState.OFFLINE;
             if(isAutoLogin())
+                //asyncRelog();
                 LoginHelper.asyncLogin();
         } else {
             status = NetworkState.ONLINE;
@@ -224,7 +216,7 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
                     mNotifTools.sendSimpleNotification(getApplicationContext(),
                             "是否强制断开", "点击登出所有在线用户，并在" + relog_interval / 1000 +"秒后重连", true);
                 else
-                    LoginHelper.asyncForceLogout();
+                    asyncRelog();
             } else if(!message.equals("") && (message.length() < 60)){
                 if(message.equals("认证成功")){
                     if(status == NetworkState.OFFLINE)
@@ -272,5 +264,20 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
         if(balance > Global.INF){
             mBalance = balance;
         }
+    }
+
+    private void asyncRelog() {
+        LoginHelper.asyncForceLogout();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(relog_interval);
+                    LoginHelper.asyncLogin();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 }

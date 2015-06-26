@@ -31,15 +31,6 @@
                 android:id="@+id/textView6"
                 android:layout_centerHorizontal="true" />
 
-           <!-- <com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
-                android:indeterminate="false"
-                /> -->
-
         </RelativeLayout>
 
         <LinearLayout
@@ -91,6 +82,7 @@
 
 
     <com.linroid.filtermenu.library.FilterMenuLayout
+        android:layout_alignParentRight="true"
         android:id="@+id/filter_menu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

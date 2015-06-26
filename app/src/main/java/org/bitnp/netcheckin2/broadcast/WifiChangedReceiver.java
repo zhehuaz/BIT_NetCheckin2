@@ -15,7 +15,6 @@ public class WifiChangedReceiver extends BroadcastReceiver {
     private final static String TAG = "WifiChangedReceiver";
     
     private WifiManager mWifiManager;
-    private WifiInfo mWifiInfo;
 
     public WifiChangedReceiver() {
     }
@@ -43,5 +42,4 @@ public class WifiChangedReceiver extends BroadcastReceiver {
         service.putExtra("command", action);
         context.startService(service);
     }
-
 }
