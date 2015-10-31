@@ -6,8 +6,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Build;
-import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,15 +17,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cengalabs.flatui.FlatUI;
-import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
-import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.linroid.filtermenu.library.FilterMenu;
 import com.linroid.filtermenu.library.FilterMenuLayout;
 import com.xiaomi.mistatistic.sdk.MiStatInterface;
@@ -49,7 +46,7 @@ public class MainActivity extends ActionBarActivity{
     String username;
 
     TextView status, currentUser;
-    ListView SSIDListView;
+    ListView ssidListView;
     ArrayList<String> SSIDList = new ArrayList<String>();
     StateChangeReceiver stateChangeReceiver;
     FilterMenuLayout filterMenuLayout;
@@ -122,7 +119,7 @@ public class MainActivity extends ActionBarActivity{
     private void initUI() {
         status = (TextView) findViewById(R.id.textView6);
         currentUser = (TextView) findViewById(R.id.textView5);
-        SSIDListView = (ListView) findViewById(R.id.ls_SSID);
+        ssidListView = (ListView) findViewById(R.id.ls_SSID);
         waveProgress = (WaterWaveProgress) findViewById(R.id.prg_show);
         SSIDList = manager.getAllCustomSSID();
 
@@ -130,7 +127,7 @@ public class MainActivity extends ActionBarActivity{
         waveProgress.setWaveSpeed((float) 0.03);
         currentUser.setText(username);
 
-        SSIDListView.setAdapter(new BaseAdapter() {
+        ssidListView.setAdapter(new BaseAdapter() {
             @Override
             public int getCount() {
                 return SSIDList.size();
@@ -163,7 +160,7 @@ public class MainActivity extends ActionBarActivity{
                                     public void onClick(DialogInterface dialog, int which) {
                                         manager.deleteSSID(ssid);
                                         SSIDList.remove(ssid);
-                                        ((BaseAdapter) SSIDListView.getAdapter()).notifyDataSetChanged();
+                                        ((BaseAdapter) ssidListView.getAdapter()).notifyDataSetChanged();
                                         Toast.makeText(getApplicationContext(), "删除成功", Toast.LENGTH_SHORT).show();
                                     }
                                 })
@@ -188,19 +185,26 @@ public class MainActivity extends ActionBarActivity{
                     public void onMenuItemClick(View view, int i) {
                         switch (i) {
                             case 0://添加SSID
-                                final EditText edit = new EditText(MainActivity.this);
-
+                                final CustomEditText edit = new CustomEditText(MainActivity.this);
+                                WifiInfo wifiInfo = ((WifiManager) getSystemService(WIFI_SERVICE)).getConnectionInfo();
+                                String ssid = wifiInfo.getSSID();
+                                if(ssid.equals("<unknown ssid>"))
+                                    ssid = "";
+                                else
+                                    ssid = ssid.substring(1, ssid.length() - 1);
+                                edit.setText(ssid);
                                 AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this)
                                         .setView(edit)
                                         .setPositiveButton("添加", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 String newSSID = edit.getText().toString();
-                                                if(manager.addCustomSSID(newSSID) == true)
+                                                if(manager.addCustomSSID(newSSID))
                                                     SSIDList.add(newSSID);
                                                 else
                                                     Toast.makeText(getApplicationContext(), "此SSID已存在或列表已满", Toast.LENGTH_SHORT).show();
-                                                ((BaseAdapter) SSIDListView.getAdapter()).notifyDataSetChanged();
+                                                ((BaseAdapter) ssidListView.getAdapter()).notifyDataSetChanged();
+                                                LoginHelper.asyncLogin();
                                             }
                                         })
                                         .setNegativeButton("取消", null)
