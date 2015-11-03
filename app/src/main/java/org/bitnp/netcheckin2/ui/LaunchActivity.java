@@ -23,7 +23,7 @@ public class LaunchActivity extends ActionBarActivity {
             public void run() {
                 finish();
             }
-        }, 1100);
+        }, 1000);
     }
 
     @Override
