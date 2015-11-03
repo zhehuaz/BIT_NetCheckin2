@@ -188,9 +188,9 @@ public class MainActivity extends ActionBarActivity{
                                 final CustomEditText edit = new CustomEditText(MainActivity.this);
                                 WifiInfo wifiInfo = ((WifiManager) getSystemService(WIFI_SERVICE)).getConnectionInfo();
                                 String ssid = wifiInfo.getSSID();
-                                if(ssid.equals("<unknown ssid>"))
+                                if(ssid == null || ssid.equals("<unknown ssid>") || ssid.equals(""))
                                     ssid = "";
-                                else
+                                else if(ssid.startsWith("\"") && ssid.endsWith("\""))
                                     ssid = ssid.substring(1, ssid.length() - 1);
                                 edit.setText(ssid);
                                 AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this)
