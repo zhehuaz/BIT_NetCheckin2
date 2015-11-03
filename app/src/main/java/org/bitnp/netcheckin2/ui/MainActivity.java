@@ -88,8 +88,8 @@ public class MainActivity extends ActionBarActivity{
              *  show login activity and add default settings */
             FlatUI.initDefaultValues(this);
             FlatUI.setDefaultTheme(FlatUI.BLOOD);
-            manager.addCustomSSID("BIT");
-            manager.addCustomSSID("BeijingLG");
+            manager.addCustomSsid("BIT");
+            manager.addCustomSsid("BeijingLG");
             manager.setIsAutoLogin(true);
             manager.setIsAutoCheck(true);
 
@@ -121,7 +121,7 @@ public class MainActivity extends ActionBarActivity{
         currentUser = (TextView) findViewById(R.id.textView5);
         ssidListView = (ListView) findViewById(R.id.ls_SSID);
         waveProgress = (WaterWaveProgress) findViewById(R.id.prg_show);
-        SSIDList = manager.getAllCustomSSID();
+        SSIDList = manager.getAllCustomSsid();
 
         waveProgress.setRingWidth((float)0.01);
         waveProgress.setWaveSpeed((float) 0.03);
@@ -158,7 +158,7 @@ public class MainActivity extends ActionBarActivity{
                                 .setPositiveButton("嗯", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        manager.deleteSSID(ssid);
+                                        manager.deleteSsid(ssid);
                                         SSIDList.remove(ssid);
                                         ((BaseAdapter) ssidListView.getAdapter()).notifyDataSetChanged();
                                         Toast.makeText(getApplicationContext(), "删除成功", Toast.LENGTH_SHORT).show();
@@ -188,23 +188,30 @@ public class MainActivity extends ActionBarActivity{
                                 final CustomEditText edit = new CustomEditText(MainActivity.this);
                                 WifiInfo wifiInfo = ((WifiManager) getSystemService(WIFI_SERVICE)).getConnectionInfo();
                                 String ssid = wifiInfo.getSSID();
-                                if(ssid == null || ssid.equals("<unknown ssid>") || ssid.equals(""))
-                                    ssid = "";
-                                else if(ssid.startsWith("\"") && ssid.endsWith("\""))
-                                    ssid = ssid.substring(1, ssid.length() - 1);
-                                edit.setText(ssid);
+//                                if(ssid == null || ssid.equals("<unknown ssid>") || ssid.equals(""))
+//                                    ssid = "";
+//                                else if(ssid.startsWith("\"") && ssid.endsWith("\""))
+//                                    ssid = ssid.substring(1, ssid.length() - 1);
+                                edit.setText(SharedPreferencesManager.trimSsid(ssid));
                                 AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this)
                                         .setView(edit)
                                         .setPositiveButton("添加", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 String newSSID = edit.getText().toString();
-                                                if(manager.addCustomSSID(newSSID))
-                                                    SSIDList.add(newSSID);
-                                                else
-                                                    Toast.makeText(getApplicationContext(), "此SSID已存在或列表已满", Toast.LENGTH_SHORT).show();
-                                                ((BaseAdapter) ssidListView.getAdapter()).notifyDataSetChanged();
-                                                LoginHelper.asyncLogin();
+                                                if(newSSID.length() > 0 && !newSSID.equals("<unknown ssid>")) {
+                                                    if (newSSID.startsWith("\"") && newSSID.endsWith("\"")) {
+                                                        Toast.makeText(getApplicationContext(), "不支持双引号包裹的SSID", Toast.LENGTH_SHORT).show();
+                                                    } else if (manager.addCustomSsid(newSSID)) {
+                                                        SSIDList.add(newSSID);
+                                                    } else {
+                                                        Toast.makeText(getApplicationContext(), "此SSID已存在或列表已满", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                    ((BaseAdapter) ssidListView.getAdapter()).notifyDataSetChanged();
+                                                    LoginHelper.asyncLogin();
+                                                } else {
+                                                    Toast.makeText(getApplicationContext(), "非法输入", Toast.LENGTH_SHORT).show();
+                                                }
                                             }
                                         })
                                         .setNegativeButton("取消", null)

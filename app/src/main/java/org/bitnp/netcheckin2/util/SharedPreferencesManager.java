@@ -110,7 +110,7 @@ public class SharedPreferencesManager {
         updatePreference(PreferenceChangedListener.PreferenceKey.INTERVAL);
     }
 
-    public ArrayList<String> getAllCustomSSID(){
+    public ArrayList<String> getAllCustomSsid(){
         SharedPreferences sp = context.getSharedPreferences("autoLogin_SSID", Context.MODE_PRIVATE);
 
         Set<String> set = new HashSet<String>();
@@ -126,7 +126,7 @@ public class SharedPreferencesManager {
         return res;
     }
 
-    public void setAllCustomSSID(ArrayList<String> arr){
+    public void setAllCustomSsid(ArrayList<String> arr){
         SharedPreferences sp = context.getSharedPreferences("autoLogin_SSID", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         HashSet<String> set = new HashSet<String>();
@@ -140,7 +140,7 @@ public class SharedPreferencesManager {
     /**
      * @return if this ssid already exists, true means ssid is new
      * */
-    public boolean addCustomSSID(String ssid){
+    public boolean addCustomSsid(String ssid){
         boolean newFlag = true;
         SharedPreferences sp;
         sp = context.getSharedPreferences("autoLogin_SSID", Context.MODE_PRIVATE);
@@ -163,22 +163,33 @@ public class SharedPreferencesManager {
         return newFlag;
     }
 
-    public void deleteSSID(String SSID){
+    public static String trimSsid(String ssid) {
+        if(ssid != null && ssid.length() > 0 && !ssid.equals("<unknown ssid>")) {
+            if(ssid.length() > 2 && ssid.startsWith("\"") && ssid.endsWith("\"")) {
+                return trimSsid(ssid);
+            } else {
+                return ssid;
+            }
+        }
+        return "";
+    }
+
+    public void deleteSsid(String ssid){
         SharedPreferences sp = context.getSharedPreferences("autoLogin_SSID", Context.MODE_PRIVATE);
         Set<String> set;
         set = sp.getStringSet("autoLogin_SSID", new HashSet<String>());
         Set<String> cpSet = new HashSet<>();
         if(set != null){
             for(String i : set)
-                if(!i.equals(SSID))
+                if(!i.equals(ssid))
                     cpSet.add(i);
         }
         sp.edit().putStringSet("autoLogin_SSID", cpSet).apply();
     }
 
-    public boolean isAutoLogin(String SSID){
+    public boolean isAutoLogin(String ssid){
         SharedPreferences sp = context.getSharedPreferences("autoLogin_SSID", Context.MODE_PRIVATE);;
-        String trimedSSID = SSID.substring(1, SSID.length() - 1);
+        String trimedSSID = trimSsid(ssid);
         //sp = context.getSharedPreferences("autoLogin_SSID", Context.MODE_PRIVATE);
         Set<String> set = sp.getStringSet("autoLogin_SSID", new HashSet<String>());
 
