@@ -33,6 +33,9 @@ public class WifiChangedReceiver extends BroadcastReceiver {
         if(new SharedPreferencesManager(context).isAutoLogin(currentSSID)){
             Log.i(TAG, "WIFI check ok");
             callBackToService(context, LoginService.COMMAND_DO_TEST);
+        }else{
+            // unkonwn SSID
+            callBackToService(context, LoginService.COMMAND_STOP_LISTEN);
         }
     }
 
