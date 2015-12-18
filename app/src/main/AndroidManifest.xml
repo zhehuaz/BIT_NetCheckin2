@@ -65,7 +65,7 @@
         </activity>
         <activity
             android:name=".ui.LaunchActivity"
-            android:label="@string/title_activity_lauch" >
+            android:label="@string/title_activity_launch" >
         </activity>
         <activity
             android:name=".ui.HelpActivity"

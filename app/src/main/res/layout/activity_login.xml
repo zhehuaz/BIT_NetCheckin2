@@ -55,7 +55,7 @@
 
         <org.bitnp.netcheckin2.ui.CustomEditText
             android:id="@+id/username" android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:hint="用户名"
+            android:layout_height="wrap_content" android:hint="@string/login_hint_username"
             android:inputType="textEmailAddress" android:maxLines="1"
             android:singleLine="true"
             android:textColorHint="#9FFFFFFF"
@@ -67,7 +67,7 @@
 
         <org.bitnp.netcheckin2.ui.CustomEditText
             android:id="@+id/password" android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:hint="密码"
+            android:layout_height="wrap_content" android:hint="@string/user_hint_password"
             android:imeOptions="actionUnspecified" android:inputType="textPassword"
             android:maxLines="1"
             android:singleLine="true"
@@ -84,7 +84,7 @@
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:textStyle="bold"
-            android:text="@string/prompt_login"
+            android:text="@string/login_prompt"
             android:layout_marginLeft="80dp"
             android:layout_marginRight="80dp"
             android:textSize="@dimen/edittext_text_size"
@@ -97,12 +97,10 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="提示：验证账户时将在校园网强制注销当前账户"
+        android:text="@string/login_reminder"
         android:textColor="#FFFFFF"
         android:id="@+id/tv_hint"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
         android:layout_centerHorizontal="true"/>
 </RelativeLayout>
-
-
-
