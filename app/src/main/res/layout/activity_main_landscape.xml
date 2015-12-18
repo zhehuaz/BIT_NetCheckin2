@@ -12,8 +12,23 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:weightSum="2">
+
+        <!--
+        <RelativeLayout android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/layout_lower">-->
+
+            <ListView
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:layout_weight="1"
+             android:id="@+id/ls_SSID">
+             </ListView>
+        <!--</RelativeLayout>-->
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -39,15 +54,15 @@
             </RelativeLayout>
 
             <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="status"
-                    android:textColor="#FFFFFF"
-                    android:id="@+id/textView6"
-                    android:layout_above="@id/layout_user"
-                    android:layout_marginBottom="10dp"
-                    android:layout_centerHorizontal="true"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="status"
+                android:textColor="#FFFFFF"
+                android:id="@+id/textView6"
+                android:layout_above="@id/layout_user"
+                android:layout_marginBottom="10dp"
+                android:layout_centerHorizontal="true"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -60,21 +75,6 @@
                 android:layout_marginTop="10dp"
                 android:layout_centerHorizontal="true" />
         </RelativeLayout>
-
-        <!--
-        <RelativeLayout android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:id="@+id/layout_lower">-->
-
-            <ListView
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:layout_weight="1"
-             android:id="@+id/ls_SSID">
-             </ListView>
-        <!--</RelativeLayout>-->
-
     </LinearLayout>
 
     <com.linroid.filtermenu.library.FilterMenuLayout
@@ -86,7 +86,7 @@
         custom:expandedRadius="96dp"
         custom:collapsedRadius="26dp"
         custom:centerRight="35dp"
-        custom:centerVertical="true"
+        custom:centerBottom="75dp"
         custom:primaryColor="#ff3163"
         custom:primaryDarkColor="#ce3d68">
     </com.linroid.filtermenu.library.FilterMenuLayout>
