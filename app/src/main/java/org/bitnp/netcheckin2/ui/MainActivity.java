@@ -154,17 +154,17 @@ public class MainActivity extends ActionBarActivity{
                     public boolean onLongClick(View v) {
                         final String ssid = ((TextView) v.findViewById(R.id.item_ssid)).getText().toString();
                         new AlertDialog.Builder(MainActivity.this)
-                                .setTitle("确定要删除\"" + ssid + "\"?")
-                                .setPositiveButton("嗯", new DialogInterface.OnClickListener() {
+                                .setTitle(String.format(getString(R.string.ssid_delete_confirm), ssid))
+                                .setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         manager.deleteSsid(ssid);
                                         SSIDList.remove(ssid);
                                         ((BaseAdapter) ssidListView.getAdapter()).notifyDataSetChanged();
-                                        Toast.makeText(getApplicationContext(), "删除成功", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getApplicationContext(), R.string.ssid_delete_toast_success, Toast.LENGTH_SHORT).show();
                                     }
                                 })
-                                .setNegativeButton("等等", null)
+                                .setNegativeButton(R.string.confirm_wait, null)
                                 .show();
                         return false;
                     }
@@ -195,27 +195,27 @@ public class MainActivity extends ActionBarActivity{
                                 edit.setText(SharedPreferencesManager.trimSsid(ssid));
                                 AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this)
                                         .setView(edit)
-                                        .setPositiveButton("添加", new DialogInterface.OnClickListener() {
+                                        .setPositiveButton(R.string.ssid_add_submit, new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 String newSSID = edit.getText().toString();
                                                 if(newSSID.length() > 0 && !newSSID.equals("<unknown ssid>")) {
                                                     if (newSSID.startsWith("\"") && newSSID.endsWith("\"")) {
-                                                        Toast.makeText(getApplicationContext(), "不支持双引号包裹的SSID", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(getApplicationContext(), R.string.ssid_add_quotes_not_supported, Toast.LENGTH_SHORT).show();
                                                     } else if (manager.addCustomSsid(newSSID)) {
                                                         SSIDList.add(newSSID);
                                                     } else {
-                                                        Toast.makeText(getApplicationContext(), "此SSID已存在或列表已满", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(getApplicationContext(), R.string.ssid_add_failure, Toast.LENGTH_SHORT).show();
                                                     }
                                                     ((BaseAdapter) ssidListView.getAdapter()).notifyDataSetChanged();
                                                     LoginHelper.asyncLogin();
                                                 } else {
-                                                    Toast.makeText(getApplicationContext(), "非法输入", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(getApplicationContext(), R.string.ssid_add_illegal_input, Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         })
-                                        .setNegativeButton("取消", null)
-                                        .setTitle("自定义SSID");
+                                        .setNegativeButton(R.string.ssid_add_cancel, null)
+                                        .setTitle(R.string.ssid_add_title);
                                 dialog.show();
                                 break;
                             case 1://登录
@@ -223,7 +223,7 @@ public class MainActivity extends ActionBarActivity{
                                     LoginHelper.asyncLogin();
                                 }
                                 else
-                                    Toast.makeText(getApplicationContext(), "已登录", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), R.string.toast_logged, Toast.LENGTH_SHORT).show();
                                 break;
                             case 2://注销
                                 LoginHelper.asyncForceLogout();
@@ -290,7 +290,7 @@ public class MainActivity extends ActionBarActivity{
         Log.d(TAG, "Set progress is called to set balance");
         if(LoginService.getStatus() == NetworkState.OFFLINE){
             waveProgress.setProgress(50);
-            waveProgress.setProgressTxt("未登录");
+            waveProgress.setProgressTxt(getString(R.string.status_unlogged));
             waveProgress.setCrestCount((float)0.5);
             waveProgress.setWaveSpeed((float)0.02);
             status.setText("");
@@ -300,14 +300,14 @@ public class MainActivity extends ActionBarActivity{
             if(fBalance < Global.INF)
             {
                 waveProgress.setProgress(0);
-                waveProgress.setProgressTxt("未知");
+                waveProgress.setProgressTxt(getString(R.string.status_unknown));
             } else {
                 String balance = fBalance + "";
                 balance = balance.substring(0, (balance.length() > 4 ? 4 : balance.length()));
                 waveProgress.setProgress((int) ((fBalance > 30 ? 30 : fBalance) / 30 * 100));
                 waveProgress.setProgressTxt(balance + " G");
             }
-            status.setText("已登录");
+            status.setText(R.string.status_logged);
         }
     }
 

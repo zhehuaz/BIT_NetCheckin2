@@ -40,4 +40,27 @@ s
 *   本软件旨在方便北理师生，承诺永远不添加任何形式的商业广告\n\n
 By LangleyChang and entalent
         </string>
+    <string name="ssid_delete_confirm">确定要删除"%1$s"?</string>
+    <string name="confirm_yes">嗯</string>
+    <string name="confirm_wait">等等</string>
+    <string name="ssid_delete_toast_success">删除成功</string>
+    <string name="ssid_add_submit">添加</string>
+    <string name="ssid_add_quotes_not_supported">不支持双引号包裹的SSID</string>
+    <string name="ssid_add_failure">此SSID已存在或列表已满</string>
+    <string name="ssid_add_illegal_input">非法输入</string>
+    <string name="ssid_add_cancel">取消</string>
+    <string name="ssid_add_title">自定义SSID</string>
+    <string name="toast_logged">已登录</string>
+    <string name="status_logged">已登录</string>
+    <string name="status_unlogged">未登录</string>
+    <string name="status_unknown">未知</string>
+    <string name="confirm_nope">点错了</string>
+    <string name="confirm_exit_account">确定退出账号吗？</string>
+    <string name="login_toast_username_required">请填写用户名</string>
+    <string name="login_toast_password_required">请填写密码</string>
+    <string name="login_toast_ok">验证成功</string>
+    <string name="login_toast_username_error">用户名错误</string>
+    <string name="login_toast_password_error">密码错误</string>
+    <string name="login_toast_error_logout">检测到未登录，在尝试登录</string>
+    <string name="login_toast_error_unknown">连接失败，请检查网络\n如果不是网络问题，请联系我 zhehuaxiao@gmail.com</string>
 </resources>
