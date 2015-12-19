@@ -41,6 +41,7 @@ s
 By LangleyChang and entalent
         </string>
     <string name="ssid_delete_confirm">确定要删除"%1$s"?</string>
+    <string name="confirm_getit">知道了</string>
     <string name="confirm_yes">嗯</string>
     <string name="confirm_wait">等等</string>
     <string name="ssid_delete_toast_success">删除成功</string>
