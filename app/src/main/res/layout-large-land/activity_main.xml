@@ -1,0 +1,98 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:fitsSystemWindows="false"
+    android:clipToPadding="false"
+    tools:context="org.bitnp.netcheckin2.ui.MainActivity"
+    android:background="@color/sky_primary">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <!--
+        <RelativeLayout android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/layout_lower">-->
+
+            <ListView
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:layout_weight="1"
+             android:id="@+id/ls_SSID"
+                android:background="@android:color/white">
+             </ListView>
+        <!--</RelativeLayout>-->
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/sky_primary"
+            android:id="@+id/layout_upper">
+            <RelativeLayout
+                android:layout_width="170dp"
+                android:layout_height="170dp"
+                android:id="@+id/layout_user"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true">
+
+                <org.bitnp.netcheckin2.ui.wave_progress.WaterWaveProgress
+                    android:layout_width="170dp"
+                    android:layout_height="170dp"
+                    android:id="@+id/prg_show"
+                    custom:progress="35"
+                    custom:maxProgress="100"
+                    custom:waterWaveBgColor="#70FFFFFF"
+                    custom:showProgress="false"
+                    />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="status"
+                android:textColor="#FFFFFF"
+                android:id="@+id/textView6"
+                android:layout_above="@id/layout_user"
+                android:layout_marginBottom="10dp"
+                android:layout_centerHorizontal="true"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="username"
+                android:id="@+id/textView5"
+                android:textColor="#FFFFFF"
+                android:layout_below="@+id/layout_user"
+                android:layout_marginTop="10dp"
+                android:layout_centerHorizontal="true" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <com.linroid.filtermenu.library.FilterMenuLayout
+        android:layout_alignParentRight="true"
+        android:id="@+id/filter_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="8dp"
+        android:fitsSystemWindows="true"
+        custom:expandedRadius="96dp"
+        custom:collapsedRadius="26dp"
+        custom:centerRight="35dp"
+        custom:centerBottom="65dp"
+        custom:primaryColor="#ff3163"
+        custom:primaryDarkColor="#ce3d68">
+    </com.linroid.filtermenu.library.FilterMenuLayout>
+</RelativeLayout>
