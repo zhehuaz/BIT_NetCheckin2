@@ -93,7 +93,7 @@ public class MainActivity extends ActionBarActivity{
         if(username.length() == 0){
             /** first login
              *  show login activity and add default settings */
-            manager.addCustomSsid("BIT");
+            manager.addCustomSsid("BIT-Web");
             manager.addCustomSsid("BeijingLG");
             manager.setIsAutoLogin(true);
             manager.setIsAutoCheck(true);
