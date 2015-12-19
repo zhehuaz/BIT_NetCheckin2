@@ -4,6 +4,3 @@
 /.idea/libraries
 .DS_Store
 /build
-/BIT_NetCheckin2.iml
-/build.gradle
-/gradle.properties
