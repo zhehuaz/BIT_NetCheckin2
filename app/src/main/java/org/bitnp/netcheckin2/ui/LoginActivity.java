@@ -60,11 +60,11 @@ public class LoginActivity extends ActionBarActivity {
                 username = textUsername.getText().toString();
                 password = textPassword.getText().toString();
                 if(username.length() == 0){
-                    Toast.makeText(LoginActivity.this, R.string.login_toast_username_required, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, getString(R.string.login_toast_username_required), Toast.LENGTH_SHORT).show();
                     textUsername.requestFocus();
                 }
                 if(password.length() == 0){
-                    Toast.makeText(LoginActivity.this, R.string.login_toast_password_required, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, getString(R.string.login_toast_password_required), Toast.LENGTH_SHORT).show();
                     textPassword.requestFocus();
                 }
 
@@ -154,23 +154,23 @@ public class LoginActivity extends ActionBarActivity {
             confirm.setClickable(true);
             switch (msg.what){
                 case CONFIRMED:
-                    Toast.makeText(LoginActivity.this, R.string.login_toast_ok, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, getString(R.string.login_toast_ok), Toast.LENGTH_SHORT).show();
                     showProgress(false);
                     saveAccountInfo();
                     break;
                 case ERROR_USERNAME:
-                    Toast.makeText(LoginActivity.this, R.string.login_toast_username_error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, getString(R.string.login_toast_username_error), Toast.LENGTH_SHORT).show();
                     showProgress(false);
                     break;
                 case ERROR_PASSWORD:
-                    Toast.makeText(LoginActivity.this, R.string.login_toast_password_error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, getString(R.string.login_toast_password_error), Toast.LENGTH_SHORT).show();
                     showProgress(false);
                     break;
                 case ERROR_LOGOUT:
-                    Toast.makeText(LoginActivity.this, R.string.login_toast_error_logout, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, getString(R.string.login_toast_error_logout), Toast.LENGTH_SHORT).show();
                     LoginHelper.asyncLogin();
                 default:
-                    Toast.makeText(LoginActivity.this, R.string.login_toast_error_unknown, Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, getString(R.string.login_toast_error_unknown), Toast.LENGTH_LONG).show();
                     showProgress(false);
             }
         }
@@ -178,6 +178,3 @@ public class LoginActivity extends ActionBarActivity {
 
     };
 }
-
-
-

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -20,6 +21,8 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import android.widget.ImageButton;
 
 import com.cengalabs.flatui.FlatUI;
 import com.linroid.filtermenu.library.FilterMenu;
@@ -123,7 +126,7 @@ public class MainActivity extends ActionBarActivity{
         waveProgress = (WaterWaveProgress) findViewById(R.id.prg_show);
         SSIDList = manager.getAllCustomSsid();
 
-        waveProgress.setRingWidth((float)0.01);
+        waveProgress.setRingWidth((float) 0.01);
         waveProgress.setWaveSpeed((float) 0.03);
         currentUser.setText(username);
 
@@ -161,10 +164,10 @@ public class MainActivity extends ActionBarActivity{
                                         manager.deleteSsid(ssid);
                                         SSIDList.remove(ssid);
                                         ((BaseAdapter) ssidListView.getAdapter()).notifyDataSetChanged();
-                                        Toast.makeText(getApplicationContext(), R.string.ssid_delete_toast_success, Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getApplicationContext(), getString(R.string.ssid_delete_toast_success), Toast.LENGTH_SHORT).show();
                                     }
                                 })
-                                .setNegativeButton(R.string.confirm_wait, null)
+                                .setNegativeButton(getString(R.string.confirm_wait), null)
                                 .show();
                         return false;
                     }
@@ -174,11 +177,12 @@ public class MainActivity extends ActionBarActivity{
         });
 
         filterMenuLayout = (FilterMenuLayout) findViewById(R.id.filter_menu);
+
         new FilterMenu.Builder(this)
-                .addItem(R.drawable.ic_action_add)//添加SSID
-                .addItem(R.drawable.ic_action_wifi)//登录
-                .addItem(R.drawable.ic_action_io)//注销
-                .addItem(R.drawable.ic_action_info)//设置
+                .addItem(createAccessbilityBtn(R.drawable.ic_action_add, getString(R.string.ic_action_add)))//添加SSID
+                .addItem(createAccessbilityBtn(R.drawable.ic_action_wifi, getString(R.string.ic_action_login)))//登录
+                .addItem(createAccessbilityBtn(R.drawable.ic_action_io, getString(R.string.ic_action_logout)))//注销
+                .addItem(createAccessbilityBtn(R.drawable.ic_action_info, getString(R.string.ic_action_settings)))//设置
                 .attach(filterMenuLayout)
                 .withListener(new FilterMenu.OnMenuChangeListener() {
                     @Override
@@ -195,35 +199,34 @@ public class MainActivity extends ActionBarActivity{
                                 edit.setText(SharedPreferencesManager.trimSsid(ssid));
                                 AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this)
                                         .setView(edit)
-                                        .setPositiveButton(R.string.ssid_add_submit, new DialogInterface.OnClickListener() {
+                                        .setPositiveButton(getString(R.string.ssid_add_submit), new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 String newSSID = edit.getText().toString();
-                                                if(newSSID.length() > 0 && !newSSID.equals("<unknown ssid>")) {
+                                                if (newSSID.length() > 0 && !newSSID.equals("<unknown ssid>")) {
                                                     if (newSSID.startsWith("\"") && newSSID.endsWith("\"")) {
-                                                        Toast.makeText(getApplicationContext(), R.string.ssid_add_quotes_not_supported, Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(getApplicationContext(), getString(R.string.ssid_add_quotes_not_supported), Toast.LENGTH_SHORT).show();
                                                     } else if (manager.addCustomSsid(newSSID)) {
                                                         SSIDList.add(newSSID);
                                                     } else {
-                                                        Toast.makeText(getApplicationContext(), R.string.ssid_add_failure, Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(getApplicationContext(), getString(R.string.ssid_add_failure), Toast.LENGTH_SHORT).show();
                                                     }
                                                     ((BaseAdapter) ssidListView.getAdapter()).notifyDataSetChanged();
                                                     LoginHelper.asyncLogin();
                                                 } else {
-                                                    Toast.makeText(getApplicationContext(), R.string.ssid_add_illegal_input, Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(getApplicationContext(), getString(R.string.ssid_add_illegal_input), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         })
-                                        .setNegativeButton(R.string.ssid_add_cancel, null)
-                                        .setTitle(R.string.ssid_add_title);
+                                        .setNegativeButton(getString(R.string.ssid_add_cancel), null)
+                                        .setTitle(getString(R.string.ssid_add_title));
                                 dialog.show();
                                 break;
                             case 1://登录
                                 if (LoginService.getStatus() == NetworkState.OFFLINE) {
                                     LoginHelper.asyncLogin();
-                                }
-                                else
-                                    Toast.makeText(getApplicationContext(), R.string.toast_logged, Toast.LENGTH_SHORT).show();
+                                } else
+                                    Toast.makeText(getApplicationContext(), getString(R.string.toast_logged), Toast.LENGTH_SHORT).show();
                                 break;
                             case 2://注销
                                 LoginHelper.asyncForceLogout();
@@ -247,6 +250,14 @@ public class MainActivity extends ActionBarActivity{
                     }
                 })
                 .build();
+    }
+
+    protected ImageButton createAccessbilityBtn(int iconResId, String desc){
+        Drawable icon = getResources().getDrawable(iconResId);
+        ImageButton view = (ImageButton) getLayoutInflater().inflate(R.layout.menu_item, null, false);
+        view.setImageDrawable(icon);
+        view.setContentDescription(desc);
+        return view;
     }
 
     @Override
@@ -307,7 +318,7 @@ public class MainActivity extends ActionBarActivity{
                 waveProgress.setProgress((int) ((fBalance > 30 ? 30 : fBalance) / 30 * 100));
                 waveProgress.setProgressTxt(balance + " G");
             }
-            status.setText(R.string.status_logged);
+            status.setText(getString(R.string.status_logged));
         }
     }
 
