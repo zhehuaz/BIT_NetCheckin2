@@ -68,4 +68,40 @@ By LangleyChang and entalent
     <string name="ic_action_login">登录</string>
     <string name="ic_action_logout">注销</string>
     <string name="ic_action_settings">设置</string>
+    <string name="login_toast_success_mode1">认证成功</string>
+    <string name="login_toast_success_mode2">登录成功</string>
+    <string-array name="login_error_messages">
+        <item>认证程序未启动</item>
+        <item>用户名错误</item>
+        <item>您无须认证，可直接上网</item>
+        <item>密码错误</item>
+        <item>用户已欠费，请尽快充值</item>
+        <item>用户已禁用</item>
+        <item>您的IP尚未下线，请等待2分钟再试</item>
+        <item>同时登陆已达上限</item>
+        <item>该帐号的登录人数已超过限额，如果怀疑帐号被盗用，请联系网络服务中心</item>
+        <item>系统已禁止WEB方式登录，请改用官方客户端</item>
+        <item>当前时段不允许连接</item>
+        <item>您的流量已超支</item>
+        <item>您的时长已超支</item>
+        <item>您的IP地址不合法</item>
+        <item>您的MAC地址不合法</item>
+        <item>您的资料已修改，正在等待同步，请2分钟后再试</item>
+        <item>认证成功</item>
+    </string-array>
+    <string-array name="keeplive_error_messages">
+        <item>登录成功</item>
+        <item>您的帐户余额不足</item>
+        <item>您的帐户被禁用</item>
+        <item>您被强制下线</item>
+        <item>您的流量已超支</item>
+        <item>您的账户时长不足</item>
+    </string-array>
+    <string-array name="logout_error_messages">
+        <item>认证程序未启动</item>
+        <item>用户名错误</item>
+        <item>密码错误</item>
+        <item>注销成功，请1分钟后登录</item>
+        <item>您不在线上</item>
+    </string-array>
 </resources>

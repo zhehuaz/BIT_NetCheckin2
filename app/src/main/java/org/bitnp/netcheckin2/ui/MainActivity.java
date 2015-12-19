@@ -84,6 +84,8 @@ public class MainActivity extends ActionBarActivity{
         /** Prepare to receive messages from LoginService*/
         registerReceiver(stateChangeReceiver, intentFilter);
 
+        LoginHelper.setContext(this);
+
         FlatUI.initDefaultValues(this);
         FlatUI.setDefaultTheme(FlatUI.BLOOD);
 
@@ -113,7 +115,7 @@ public class MainActivity extends ActionBarActivity{
         sendBroadcast(intent);
 
         String s = getIntent().getStringExtra("command");
-        if (s == null || !s.equals(COMMAND_NO_SHOW_LAUNCH)) {
+        if ((s == null || !s.equals(COMMAND_NO_SHOW_LAUNCH)) && savedInstanceState == null) {
             intent = new Intent(MainActivity.this, LaunchActivity.class);
             startActivity(intent);
         }
@@ -200,10 +202,6 @@ public class MainActivity extends ActionBarActivity{
                                 final CustomEditText edit = new CustomEditText(MainActivity.this);
                                 WifiInfo wifiInfo = ((WifiManager) getSystemService(WIFI_SERVICE)).getConnectionInfo();
                                 String ssid = wifiInfo.getSSID();
-//                                if(ssid == null || ssid.equals("<unknown ssid>") || ssid.equals(""))
-//                                    ssid = "";
-//                                else if(ssid.startsWith("\"") && ssid.endsWith("\""))
-//                                    ssid = ssid.substring(1, ssid.length() - 1);
                                 edit.setText(SharedPreferencesManager.trimSsid(ssid));
                                 AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this)
                                         .setView(edit)
@@ -290,6 +288,15 @@ public class MainActivity extends ActionBarActivity{
     protected void onPause() {
         MiStatInterface.recordPageEnd();
         super.onPause();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save something to indicate our status
+        savedInstanceState.putInt("OPENED", 1);
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override

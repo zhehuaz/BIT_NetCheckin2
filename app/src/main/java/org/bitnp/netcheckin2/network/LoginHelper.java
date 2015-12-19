@@ -1,7 +1,10 @@
 package org.bitnp.netcheckin2.network;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.util.Log;
 
+import org.bitnp.netcheckin2.R;
 import org.bitnp.netcheckin2.util.MD5;
 
 import java.util.ArrayList;
@@ -28,6 +31,8 @@ public class LoginHelper {
 
     private static ArrayList<LoginStateListener> listeners = new ArrayList<LoginStateListener>();
 
+    private static Context context;
+
     static Pattern VALID_UID, VALID_KEEPLIVE_STATUS, VALID_BALANCE, VALID_COMMA;
 
     public static String[] LOGIN_STATUS = {
@@ -36,31 +41,31 @@ public class LoginHelper {
             "time_policy_error","flux_error" ,"minutes_error","ip_error" ,"mac_error", "sync_error",
             "login_ok"
     };
-    public static String[] LOGIN_MESSAGE = {
-            "认证程序未启动","用户名错误","您无须认证，可直接上网","密码错误","用户已欠费，请尽快充值。",
-            "用户已禁用","您的IP尚未下线，请等待2分钟再试。","用户数已达上限","该帐号的登录人数已超过限额\n如果怀疑帐号被盗用，请联系管理员。",
-            "系统已禁止WEB方式登录，请使用客户端","当前时段不允许连接","您的流量已超支","您的时长已超支",
-            "您的IP地址不合法","您的MAC地址不合法","您的资料已修改，正在等待同步，请2分钟后再试。",
-            "认证成功"
-    };
+
+    public static String[] LOGIN_MESSAGE;
     public static String[] KEEPLIVE_STATUS = {
             "keeplive_ok", "status_error","available_error","drop_error","flux_error","minutes_error"
     };
-    public static String[] KEEPLIVE_MESSAGE = {
-            "登录成功", "您的帐户余额不足","您的帐户被禁用","您被强制下线","您的流量已超支","minutes_error"
-    };
+    public static String[] KEEPLIVE_MESSAGE;
     public static String[] LOGOUT_STATUS = {
             "user_tab_error", "username_error", "password_error", "logout_ok", "logout_error"
     };
-    public static String[] LOGOUT_MESSAGE = {
-            "认证程序未启动", "用户名错误", "密码错误", "注销成功,请等1分钟后登录", "您不在线上"
-    };
+    public static String[] LOGOUT_MESSAGE;
 
     static{
         VALID_UID = Pattern.compile("^[\\d]+$");
         VALID_KEEPLIVE_STATUS = Pattern.compile("^[\\d]+,[\\d]+,[\\d]+,[\\d]+");
         VALID_BALANCE = Pattern.compile("[\\d,?]*(?=Bytes)");
         VALID_COMMA = Pattern.compile(",");
+    }
+
+    public static void setContext(Context mcontext){
+        if(context == null){
+            context = mcontext;
+            LOGIN_MESSAGE = context.getResources().getStringArray(R.array.login_error_messages);
+            KEEPLIVE_MESSAGE = context.getResources().getStringArray(R.array.keeplive_error_messages);
+            LOGOUT_MESSAGE = context.getResources().getStringArray(R.array.logout_error_messages);
+        }
     }
 
     public static void setAccount(String u, String p){
@@ -77,7 +82,7 @@ public class LoginHelper {
         return listeners.add(listener);
     }
 
-    public static boolean unRegisterLisener(LoginStateListener listener){
+    public static boolean unRegisterListener(LoginStateListener listener){
         return listeners.remove(listener);
     }
 
@@ -92,7 +97,7 @@ public class LoginHelper {
                 if(login2()){
                     Log.v(TAG, getLoginState2());
                     loginState = LOGIN_MODE_2;
-                    responseMessage = "登录成功";
+                    responseMessage = context.getResources().getString(R.string.login_toast_success_mode2);
                 } else if((responseMessage.length() != 0) && (!responseMessage.contains("err_code"))) {
                 }
                 if(!login1())
@@ -174,7 +179,7 @@ public class LoginHelper {
         if(matcher.matches()){
             uid = res;
             //this.loginState = LOGIN_MODE_1;
-            responseMessage = "认证成功";
+            responseMessage = context.getResources().getString(R.string.login_toast_success_mode1);
             return true;
         } else {
             responseMessage = findMessage(res, LOGIN_STATUS, LOGIN_MESSAGE);
