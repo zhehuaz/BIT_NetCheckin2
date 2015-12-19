@@ -166,7 +166,7 @@ public class SharedPreferencesManager {
     public static String trimSsid(String ssid) {
         if(ssid != null && ssid.length() > 0 && !ssid.equals("<unknown ssid>")) {
             if(ssid.length() > 2 && ssid.startsWith("\"") && ssid.endsWith("\"")) {
-                return trimSsid(ssid);
+                return trimSsid(ssid.substring(1,ssid.length()-1));
             } else {
                 return ssid;
             }
@@ -188,7 +188,7 @@ public class SharedPreferencesManager {
     }
 
     public boolean isAutoLogin(String ssid){
-        SharedPreferences sp = context.getSharedPreferences("autoLogin_SSID", Context.MODE_PRIVATE);;
+        SharedPreferences sp = context.getSharedPreferences("autoLogin_SSID", Context.MODE_PRIVATE);
         String trimedSSID = trimSsid(ssid);
         //sp = context.getSharedPreferences("autoLogin_SSID", Context.MODE_PRIVATE);
         Set<String> set = sp.getStringSet("autoLogin_SSID", new HashSet<String>());
