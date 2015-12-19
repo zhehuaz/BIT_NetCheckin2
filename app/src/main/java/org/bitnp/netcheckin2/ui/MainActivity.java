@@ -88,7 +88,7 @@ public class MainActivity extends ActionBarActivity{
              *  show login activity and add default settings */
             FlatUI.initDefaultValues(this);
             FlatUI.setDefaultTheme(FlatUI.BLOOD);
-            manager.addCustomSsid("BIT");
+            manager.addCustomSsid("BIT-Web");
             manager.addCustomSsid("BeijingLG");
             manager.setIsAutoLogin(true);
             manager.setIsAutoCheck(true);
