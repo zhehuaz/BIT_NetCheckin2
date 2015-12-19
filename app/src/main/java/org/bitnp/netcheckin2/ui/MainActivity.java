@@ -84,13 +84,13 @@ public class MainActivity extends ActionBarActivity{
         /** Prepare to receive messages from LoginService*/
         registerReceiver(stateChangeReceiver, intentFilter);
 
+        FlatUI.initDefaultValues(this);
+        FlatUI.setDefaultTheme(FlatUI.BLOOD);
+
         username = manager.getUsername();
         if(username.length() == 0){
-
             /** first login
              *  show login activity and add default settings */
-            FlatUI.initDefaultValues(this);
-            FlatUI.setDefaultTheme(FlatUI.BLOOD);
             manager.addCustomSsid("BIT");
             manager.addCustomSsid("BeijingLG");
             manager.setIsAutoLogin(true);
@@ -128,6 +128,14 @@ public class MainActivity extends ActionBarActivity{
 
         waveProgress.setRingWidth((float) 0.01);
         waveProgress.setWaveSpeed((float) 0.03);
+        waveProgress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (LoginService.getStatus() == NetworkState.OFFLINE) {
+                    LoginHelper.asyncLogin();
+                }
+            }
+        });
         currentUser.setText(username);
 
         ssidListView.setAdapter(new BaseAdapter() {
