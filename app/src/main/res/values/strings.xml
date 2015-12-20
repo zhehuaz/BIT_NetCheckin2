@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">BITion</string>
     <string name="version_info">Beta测试版 0.4.1 / LICENSE GPL v2</string>
-s
+
     <string name="action_settings">Settings</string>
     <string name="title_activity_demo">Demo</string>
     <string name="title_activity_settings">SettingsActivity</string>
