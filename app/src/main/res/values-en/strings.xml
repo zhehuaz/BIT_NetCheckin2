@@ -1,0 +1,103 @@
+<resources>
+    <string name="app_name">BITion</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_demo">Demo</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_launch">BITion</string>
+    <string name="title_activity_help">HelpActivity</string>
+
+    <string name="text_launch">Start here\nAs a BITion\nChase your life</string>
+
+    <string name="login_reminder">All sessions of your network account will be logged out</string>
+    <string name="login_prompt">Login</string>
+    <string name="login_hint_username">Username</string>
+    <string name="user_hint_password">Password</string>
+
+    <string name="button_logout">Sign out</string>
+    <string name="button_feedback">Send feedback</string>
+    <string name="button_help">Help</string>
+    <string name="title_check_silence">Silent mode</string>
+    <string name="title_auto_login">Automatic login</string>
+    <string name="title_auto_kick_session">Force logout when exceeding session limit</string>
+    <string name="title_relog_interval">Reconnect time</string>
+
+    <string name="title_help_info">Help</string>
+    <string name="text_help_info">
+Thanks for using, here is some help.\n\n
+*   The four buttons in the round panel are: Settings, log out, log in, add SSID. Only WLANs in the list can be logged in automatically.\n
+*   The ball in the middle presents the balance, currently showing after logged in by this app.
+When "unknown" balance is shown, you can still use the network.\n
+*   During setup, all sessions of your network account will be logged off. Wait a moment for relogin.\n
+*   If "login successful" is prompted repeatedly but you cannot access the web, please mamually log out and reconnect.\n
+*   In future releases error reporting will be enabled. It only fires when you have WLAN connected. Your account information won\'t be uploaded (see the open source code).\n
+*   This app is for the sake of BIT students and staffs. We will NEVER add any commercial ADs.\n\n
+By LangleyChang and entalent
+        </string>
+    <string name="ssid_delete_confirm">Delete "%1$s"?</string>
+    <string name="confirm_getit">Get it</string>
+    <string name="confirm_yes">Yes</string>
+    <string name="confirm_wait">Wait</string>
+    <string name="ssid_delete_toast_success">SSID deleted</string>
+    <string name="ssid_add_submit">Add</string>
+    <string name="ssid_add_quotes_not_supported">SSID with quotes not supported</string>
+    <string name="ssid_add_failure">SSID exists or list is full</string>
+    <string name="ssid_add_illegal_input">Invalid input</string>
+    <string name="ssid_add_cancel">Cancel</string>
+    <string name="ssid_add_title">Custom SSID name</string>
+    <string name="toast_logged">Logged in now</string>
+    <string name="status_logged">Connected</string>
+    <string name="status_unlogged">Disconnected</string>
+    <string name="status_unknown">Unknown</string>
+    <string name="confirm_nope">Nope</string>
+    <string name="confirm_exit_account">Are you sure to sign out?</string>
+    <string name="login_toast_username_required">Username required</string>
+    <string name="login_toast_password_required">Password required</string>
+    <string name="login_toast_ok">Account authenticated</string>
+    <string name="login_toast_username_error">Username error</string>
+    <string name="login_toast_password_error">Password error</string>
+    <string name="login_toast_error_logout">Not logged in yet, attempting to login</string>
+    <string name="login_toast_error_unknown">Connect failure, please check the network\nIf everything is fine, contact zhehuaxiao@gmail.com</string>
+    <string name="ic_action_add">Add SSID</string>
+    <string name="ic_action_login">Log in</string>
+    <string name="ic_action_logout">Log out</string>
+    <string name="ic_action_settings">Settings</string>
+    <string name="login_toast_success_mode1">Authentication successful</string>
+    <string name="login_toast_success_mode2">Login successful</string>
+    <string-array name="login_error_messages">
+        <item>Auth server not in operation</item>
+        <item>Username error</item>
+        <item>Auth service not in effect, just use the network</item>
+        <item>Password error</item>
+        <item>Your account charge is overdue, please add value to your account</item>
+        <item>User disabled</item>
+        <item>Your IP is not logged off yet, wait a moment and try again</item>
+        <item>Maximun login exceeded</item>
+        <item>Maximun login session number exceeded.\nIf you believe your account has been stolen, contact Network Service Center</item>
+        <item>Login by web port disabled, use the official app to login instead</item>
+        <item>Not allowed to connect at this time period</item>
+        <item>Your transfer flux has run out</item>
+        <item>Your online time has run out</item>
+        <item>IP address illegal</item>
+        <item>MAC address illegal</item>
+        <item>Your profile is updating, please wait a moment and try again</item>
+        <item>Login successful</item>
+    </string-array>
+    <string-array name="keeplive_error_messages">
+        <item>Login successful</item>
+        <item>Your account charge is overdue</item>
+        <item>User disabled</item>
+        <item>Your session has been force logged out</item>
+        <item>Your transfer flux has run out</item>
+        <item>Your online time has run out</item>
+    </string-array>
+    <string-array name="logout_error_messages">
+        <item>Auth server not in operation</item>
+        <item>Username error</item>
+        <item>Password error</item>
+        <item>Logged out successful, please wait a moment to relogin</item>
+        <item>No online sessions to log out</item>
+    </string-array>
+</resources>
