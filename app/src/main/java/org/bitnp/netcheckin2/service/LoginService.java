@@ -219,8 +219,11 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
                 else
                     asyncRelog();
             } else if(!message.equals("") && (message.length() < 60)){
-                // In whatever situation, push notification
-                sendNotif(message, getString(R.string.toast_seedetail));
+                if(message.equals(getString(R.string.login_toast_success_matcher))){
+                    sendNotif(message, getString(R.string.toast_seedetail));
+                }else {
+                    sendNotif(getString(R.string.login_toast_failure), message);
+                }
             }
             status = NetworkState.ONLINE;
             broadcastState();

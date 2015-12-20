@@ -74,8 +74,10 @@ By LangleyChang and entalent
     <string name="ic_action_login">登录</string>
     <string name="ic_action_logout">注销</string>
     <string name="ic_action_settings">设置</string>
+    <string name="login_toast_failure">认证失败</string>
+    <string name="login_toast_success_matcher">认证成功</string><!-- For detecting messages -->
     <string name="login_toast_success_mode1">认证成功</string>
-    <string name="login_toast_success_mode2">登录成功</string>
+    <string name="login_toast_success_mode2">认证成功</string>
     <string name="login_error_messages_limit">该帐号的登录人数已超过限额，如果怀疑帐号被盗用，请联系网络服务中心</string>
     <!-- Should keep the same as that below -->
     <string-array name="login_error_messages">
@@ -98,7 +100,7 @@ By LangleyChang and entalent
         <item>认证成功</item>
     </string-array>
     <string-array name="keeplive_error_messages">
-        <item>登录成功</item>
+        <item>认证成功</item>
         <item>您的帐户余额不足</item>
         <item>您的帐户被禁用</item>
         <item>您被强制下线</item>
