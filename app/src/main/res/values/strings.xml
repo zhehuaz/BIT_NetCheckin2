@@ -2,7 +2,7 @@
     <string name="app_name">BITion</string>
     <string name="version_info">Beta测试版 0.4.1 / LICENSE GPL v2</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">设置</string>
     <string name="title_activity_demo">Demo</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="title_activity_main">MainActivity</string>
@@ -42,7 +42,9 @@ By LangleyChang and entalent
         </string>
     <string name="ssid_delete_confirm">确定要删除"%1$s"?</string>
     <string name="confirm_getit">知道了</string>
-    <string name="confirm_yes">嗯</string>
+    <string name="confirm_yepe">嗯</string>
+    <string name="confirm_yes">确定</string>
+    <string name="confirm_cancel">取消</string>
     <string name="confirm_wait">等等</string>
     <string name="ssid_delete_toast_success">删除成功</string>
     <string name="ssid_add_submit">添加</string>
@@ -52,6 +54,10 @@ By LangleyChang and entalent
     <string name="ssid_add_cancel">取消</string>
     <string name="ssid_add_title">自定义SSID</string>
     <string name="toast_logged">已登录</string>
+    <string name="toast_loggedout">已断开</string>
+    <string name="toast_seedetail">点击查看详情</string>
+    <string name="notif_forcelogout_title">是否强制断开</string>
+    <string name="notif_forcelogout_desc">点击登出所有在线用户，并在%1$s秒后重连</string>
     <string name="status_logged">已登录</string>
     <string name="status_unlogged">未登录</string>
     <string name="status_unknown">未知</string>
@@ -70,6 +76,8 @@ By LangleyChang and entalent
     <string name="ic_action_settings">设置</string>
     <string name="login_toast_success_mode1">认证成功</string>
     <string name="login_toast_success_mode2">登录成功</string>
+    <string name="login_error_messages_limit">该帐号的登录人数已超过限额，如果怀疑帐号被盗用，请联系网络服务中心</string>
+    <!-- Should keep the same as that below -->
     <string-array name="login_error_messages">
         <item>认证程序未启动</item>
         <item>用户名错误</item>
