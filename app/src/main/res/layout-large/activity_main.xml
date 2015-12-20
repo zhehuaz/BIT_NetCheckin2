@@ -45,7 +45,7 @@
                     android:text="status"
                     android:textColor="#FFFFFF"
                     android:id="@+id/textView6"
-                    android:layout_above="@+id/layout_user"
+                    android:layout_above="@id/layout_user"
                     android:layout_marginBottom="10dp"
                     android:layout_centerHorizontal="true"/>
 
@@ -85,8 +85,8 @@
         android:elevation="8dp"
         custom:expandedRadius="96dp"
         custom:collapsedRadius="26dp"
-        custom:centerRight="35dp"
-        custom:centerVertical="true"
+        custom:centerRight="55dp"
+        custom:centerBottom="55dp"
         custom:primaryColor="#ff3163"
         custom:primaryDarkColor="#ce3d68">
     </com.linroid.filtermenu.library.FilterMenuLayout>

@@ -1,23 +1,31 @@
 <resources>
     <string name="app_name">BITion</string>
-
-    <string name="hello_world">Hello world!</string>
+    <string name="version_info">Beta测试版 0.4.1 / LICENSE GPL v2</string>
+s
     <string name="action_settings">Settings</string>
     <string name="title_activity_demo">Demo</string>
     <string name="title_activity_settings">SettingsActivity</string>
-    <string name="title_activity_main">Main</string>
-
-    <string name="button_logout">退出帐号</string>
-    <string name="button_submit">提交反馈</string>
-    <string name="button_help">帮助</string>
-    <string name="title_check_silence">静默模式</string>
-    <string name="title_activity_lauch">BITion</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_launch">BITion</string>
+    <string name="title_activity_help">HelpActivity</string>
 
     <string name="text_launch">从这里\nBITion\n做追赶世界的北理人</string>
-    <string name="title_help_info">帮助信息</string>
 
+    <string name="login_reminder">提示：验证密码时将在校园网强制注销当前账户</string>
+    <string name="login_prompt">登 录</string>
+    <string name="login_hint_username">用户名</string>
+    <string name="user_hint_password">密码</string>
+
+    <string name="button_logout">退出帐号</string>
+    <string name="button_feedback">提交反馈</string>
+    <string name="button_help">帮助</string>
+    <string name="title_check_silence">静默模式</string>
+    <string name="title_auto_login">自动登录</string>
+    <string name="title_auto_kick_session">人数满时自动强退</string>
     <string name="title_relog_interval">强退后等待重连时间</string>
 
+    <string name="title_help_info">帮助信息</string>
     <string name="text_help_info">
 谢谢使用～\n下面是一些提示：\n
 *   环形按钮的四个键分别表示 设置、登出、登录、添加SSID\n
@@ -32,7 +40,68 @@
 *   本软件旨在方便北理师生，承诺永远不添加任何形式的商业广告\n\n
 By LangleyChang and entalent
         </string>
-
-    <string name="version_info">Beta测试版 0.4.1/ LICENSE GPL v2</string>
-    <string name="title_activity_help">HelpActivity</string>
+    <string name="ssid_delete_confirm">确定要删除"%1$s"?</string>
+    <string name="confirm_getit">知道了</string>
+    <string name="confirm_yes">嗯</string>
+    <string name="confirm_wait">等等</string>
+    <string name="ssid_delete_toast_success">删除成功</string>
+    <string name="ssid_add_submit">添加</string>
+    <string name="ssid_add_quotes_not_supported">不支持双引号包裹的SSID</string>
+    <string name="ssid_add_failure">此SSID已存在或列表已满</string>
+    <string name="ssid_add_illegal_input">非法输入</string>
+    <string name="ssid_add_cancel">取消</string>
+    <string name="ssid_add_title">自定义SSID</string>
+    <string name="toast_logged">已登录</string>
+    <string name="status_logged">已登录</string>
+    <string name="status_unlogged">未登录</string>
+    <string name="status_unknown">未知</string>
+    <string name="confirm_nope">点错了</string>
+    <string name="confirm_exit_account">确定退出账号吗？</string>
+    <string name="login_toast_username_required">请填写用户名</string>
+    <string name="login_toast_password_required">请填写密码</string>
+    <string name="login_toast_ok">验证成功</string>
+    <string name="login_toast_username_error">用户名错误</string>
+    <string name="login_toast_password_error">密码错误</string>
+    <string name="login_toast_error_logout">检测到未登录，在尝试登录</string>
+    <string name="login_toast_error_unknown">连接失败，请检查网络\n如果不是网络问题，请联系我 zhehuaxiao@gmail.com</string>
+    <string name="ic_action_add">增加SSID</string>
+    <string name="ic_action_login">登录</string>
+    <string name="ic_action_logout">注销</string>
+    <string name="ic_action_settings">设置</string>
+    <string name="login_toast_success_mode1">认证成功</string>
+    <string name="login_toast_success_mode2">登录成功</string>
+    <string-array name="login_error_messages">
+        <item>认证程序未启动</item>
+        <item>用户名错误</item>
+        <item>您无须认证，可直接上网</item>
+        <item>密码错误</item>
+        <item>用户已欠费，请尽快充值</item>
+        <item>用户已禁用</item>
+        <item>您的IP尚未下线，请等待2分钟再试</item>
+        <item>同时登陆已达上限</item>
+        <item>该帐号的登录人数已超过限额，如果怀疑帐号被盗用，请联系网络服务中心</item>
+        <item>系统已禁止WEB方式登录，请改用官方客户端</item>
+        <item>当前时段不允许连接</item>
+        <item>您的流量已超支</item>
+        <item>您的时长已超支</item>
+        <item>您的IP地址不合法</item>
+        <item>您的MAC地址不合法</item>
+        <item>您的资料已修改，正在等待同步，请2分钟后再试</item>
+        <item>认证成功</item>
+    </string-array>
+    <string-array name="keeplive_error_messages">
+        <item>登录成功</item>
+        <item>您的帐户余额不足</item>
+        <item>您的帐户被禁用</item>
+        <item>您被强制下线</item>
+        <item>您的流量已超支</item>
+        <item>您的账户时长不足</item>
+    </string-array>
+    <string-array name="logout_error_messages">
+        <item>认证程序未启动</item>
+        <item>用户名错误</item>
+        <item>密码错误</item>
+        <item>注销成功，请1分钟后登录</item>
+        <item>您不在线上</item>
+    </string-array>
 </resources>

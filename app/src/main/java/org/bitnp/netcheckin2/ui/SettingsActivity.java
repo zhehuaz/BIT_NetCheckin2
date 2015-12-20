@@ -72,8 +72,8 @@ public class SettingsActivity extends ActionBarActivity{
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(SettingsActivity.this)
-                        .setMessage("确定退出么？")
-                        .setPositiveButton("是的", new DialogInterface.OnClickListener() {
+                        .setMessage(getString(R.string.confirm_exit_account))
+                        .setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 LoginHelper.asyncForceLogout();
@@ -83,8 +83,8 @@ public class SettingsActivity extends ActionBarActivity{
                                 finish();
                             }
                         })
-                        .setNegativeButton("点错了", null)
-                        .setTitle("退出帐号");
+                        .setNegativeButton(getString(R.string.confirm_nope), null);
+                        //.setTitle("退出帐号");
                 dialog.show();
 
             }

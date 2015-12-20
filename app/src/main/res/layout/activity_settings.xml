@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/bt_submit"
         android:layout_margin="@dimen/edittext_margin"
-        android:text="@string/button_submit"
+        android:text="@string/button_feedback"
         android:layout_alignParentRight="true"
         />
 
@@ -30,7 +30,7 @@
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="自动登录"
+        android:text="@string/title_auto_login"
         android:id="@+id/cb_auto_login"
         android:checked="true"
         style="@style/SettingCheckText"/>
@@ -39,7 +39,7 @@
         android:layout_below="@+id/cb_auto_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="人数满时自动强退"
+        android:text="@string/title_auto_kick_session"
         android:id="@+id/cb_auto_logout"
         style="@style/SettingCheckText"
         />
