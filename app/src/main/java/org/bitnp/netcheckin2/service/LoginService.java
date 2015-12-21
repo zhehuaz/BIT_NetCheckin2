@@ -215,7 +215,7 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
             if (message.equals(getString(R.string.login_error_messages_limit))) {
                 if(!autoLogoutFlag)
                     mNotifTools.sendSimpleNotificationAndReLogin(getApplicationContext(),
-                            getString(R.string.notif_forcelogout_title), String.format(getString(R.string.notif_forcelogout_title), relog_interval / 1000));
+                            getString(R.string.notif_forcelogout_title), String.format(getString(R.string.notif_forcelogout_desc), relog_interval / 1000));
                 else
                     asyncRelog();
             } else if(!message.equals("") && (message.length() < 60)){
