@@ -168,7 +168,7 @@ public class MainActivity extends ActionBarActivity{
                         final String ssid = ((TextView) v.findViewById(R.id.item_ssid)).getText().toString();
                         new AlertDialog.Builder(MainActivity.this)
                                 .setTitle(String.format(getString(R.string.ssid_delete_confirm), ssid))
-                                .setPositiveButton(getString(R.string.confirm_yes), new DialogInterface.OnClickListener() {
+                                .setPositiveButton(getString(R.string.confirm_yepe), new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         manager.deleteSsid(ssid);
@@ -336,5 +336,4 @@ public class MainActivity extends ActionBarActivity{
             status.setText(getString(R.string.status_logged));
         }
     }
-
 }

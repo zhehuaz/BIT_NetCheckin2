@@ -64,7 +64,8 @@ By LangleyChang and entalent
     <string name="ic_action_login">Log in</string>
     <string name="ic_action_logout">Log out</string>
     <string name="ic_action_settings">Settings</string>
-    <string name="login_toast_success_mode1">Authentication successful</string>
+    <string name="login_toast_success_matcher">Login successful</string>
+    <string name="login_toast_success_mode1">Login successful</string>
     <string name="login_toast_success_mode2">Login successful</string>
     <string-array name="login_error_messages">
         <item>Auth server not in operation</item>
@@ -75,7 +76,7 @@ By LangleyChang and entalent
         <item>User disabled</item>
         <item>Your IP is not logged off yet, wait a moment and try again</item>
         <item>Maximun login exceeded</item>
-        <item>Maximun login session number exceeded.\nIf you believe your account has been stolen, contact Network Service Center</item>
+        <item>Maximun login session number exceeded, if you believe your account has been stolen, contact Network Service Center</item>
         <item>Login by web port disabled, use the official app to login instead</item>
         <item>Not allowed to connect at this time period</item>
         <item>Your transfer flux has run out</item>
@@ -100,4 +101,12 @@ By LangleyChang and entalent
         <item>Logged out successful, please wait a moment to relogin</item>
         <item>No online sessions to log out</item>
     </string-array>
+    <string name="confirm_cancel">Cancel</string>
+    <string name="confirm_yepe">Yes</string>
+    <string name="login_error_messages_limit">Maximum login session number exceeded, if you believe your account has been stolen, contact Network Service Center</string>
+    <string name="notif_forcelogout_desc">Tap to log out all online session and reconnect in %1$ds</string>
+    <string name="notif_forcelogout_title">Perform force logout?</string>
+    <string name="toast_loggedout">Disconnected</string>
+    <string name="toast_seedetail">Tap to see detail</string>
+    <string name="login_toast_failure">Authentication failure</string>
 </resources>

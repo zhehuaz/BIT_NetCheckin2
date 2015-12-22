@@ -93,8 +93,8 @@ public class NotifTools {
                     .setContentTitle(title)
                     .setContentText(content)
                     .setTicker(content)
-                    .addAction(R.drawable.ic_action_ok, "确定", pProIntent)
-                    .addAction(R.drawable.ic_action_no, "取消", pConIntent);
+                    .addAction(R.drawable.ic_action_ok, context.getResources().getString(R.string.confirm_yes), pProIntent)
+                    .addAction(R.drawable.ic_action_no, context.getResources().getString(R.string.confirm_cancel), pConIntent);
 
             mNotificationManager.notify(0, mBuilder.build());
         } else {

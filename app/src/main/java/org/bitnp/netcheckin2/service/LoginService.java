@@ -8,6 +8,7 @@ import android.net.wifi.WifiManager;
 import android.os.IBinder;
 import android.util.Log;
 
+import org.bitnp.netcheckin2.R;
 import org.bitnp.netcheckin2.network.LoginHelper;
 import org.bitnp.netcheckin2.network.LoginStateListener;
 import org.bitnp.netcheckin2.util.ConnTest;
@@ -201,7 +202,7 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
             broadcastState();
             stopListen();
             if(message.equals("LOGOUT_OK"))
-                sendNotif("已断开", "点击查看详情");
+                sendNotif(getString(R.string.toast_loggedout), getString(R.string.toast_seedetail));
         }
         else if((state == LoginHelper.LOGIN_MODE_1) || (state == LoginHelper.LOGIN_MODE_2)) {
             Log.i(TAG, "login in mode 1");
@@ -211,20 +212,18 @@ public class LoginService extends Service implements ConnTestCallBack, LoginStat
             updateBalance();
 
             startListen();
-            if (message.equals("该帐号的登录人数已超过限额\n" +
-                    "如果怀疑帐号被盗用，请联系管理员。")) {
+            if (message.equals(getString(R.string.login_error_messages_limit))) {
                 if(!autoLogoutFlag)
                     mNotifTools.sendSimpleNotificationAndReLogin(getApplicationContext(),
-                            "是否强制断开", "点击登出所有在线用户，并在" + relog_interval / 1000 +"秒后重连");
+                            getString(R.string.notif_forcelogout_title), String.format(getString(R.string.notif_forcelogout_desc), relog_interval / 1000));
                 else
                     asyncRelog();
             } else if(!message.equals("") && (message.length() < 60)){
-                if(message.equals("认证成功")){
-                    if(status == NetworkState.OFFLINE)
-                       sendNotif(message, "点击查看详情");
+                if(message.equals(getString(R.string.login_toast_success_matcher))){
+                    sendNotif(message, getString(R.string.toast_seedetail));
+                }else {
+                    sendNotif(getString(R.string.login_toast_failure), message);
                 }
-                else if(!message.equals("您的IP尚未下线，请等待2分钟再试。"))
-                    sendNotif(message, "点击查看详情");
             }
             status = NetworkState.ONLINE;
             broadcastState();
