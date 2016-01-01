@@ -279,7 +279,7 @@ public class LoginHelper {
             try {
                 result = Float.parseFloat(response);
                 Log.i(TAG, "Get balance " + result);
-                result /= 1024 * 1024 * 1024;
+                result /= 1000 * 1000 * 1000;
             }
             catch(NumberFormatException e){
                 result = 0;
