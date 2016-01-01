@@ -57,10 +57,8 @@ public class NotifTools {
         }
     }
 
-    /**
-     * @param isToService this param doesn't effect the function, it marks different interfaces of functions
-     * */
-    public void sendSimpleNotification(Context context, String title, String content,boolean isToService){
+    // Send notification that starts relogin service
+    public void sendSimpleNotificationAndReLogin(Context context, String title, String content){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             Intent proIntent = new Intent(context, LoginService.class);
@@ -80,7 +78,7 @@ public class NotifTools {
     }
 
 
-    public void sendButtonNotification(Context context, String title, String content){
+    public void sendButtonNotificationAndReLogin(Context context, String title, String content){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
             Intent proIntent = new Intent(context, LoginService.class);
             Intent conIntent = new Intent(context, MainActivity.class);
@@ -95,12 +93,20 @@ public class NotifTools {
                     .setContentTitle(title)
                     .setContentText(content)
                     .setTicker(content)
-                    .addAction(R.drawable.ic_action_ok, "好", pProIntent)
-                    .addAction(R.drawable.ic_action_no, "不", pConIntent);
+                    .addAction(R.drawable.ic_action_ok, context.getResources().getString(R.string.confirm_yes), pProIntent)
+                    .addAction(R.drawable.ic_action_no, context.getResources().getString(R.string.confirm_cancel), pConIntent);
 
             mNotificationManager.notify(0, mBuilder.build());
         } else {
             Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void cancelNotification() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            mNotificationManager.cancel(0);
+        } else {
+            // As toast will close itself, forget it
         }
     }
 }

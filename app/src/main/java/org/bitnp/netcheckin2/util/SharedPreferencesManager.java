@@ -188,7 +188,7 @@ public class SharedPreferencesManager {
     }
 
     public boolean isAutoLogin(String ssid){
-        SharedPreferences sp = context.getSharedPreferences("autoLogin_SSID", Context.MODE_PRIVATE);;
+        SharedPreferences sp = context.getSharedPreferences("autoLogin_SSID", Context.MODE_PRIVATE);
         String trimedSSID = trimSsid(ssid);
         //sp = context.getSharedPreferences("autoLogin_SSID", Context.MODE_PRIVATE);
         Set<String> set = sp.getStringSet("autoLogin_SSID", new HashSet<String>());
