@@ -166,7 +166,7 @@ public class SharedPreferencesManager {
     public static String trimSsid(String ssid) {
         if(ssid != null && ssid.length() > 0 && !ssid.equals("<unknown ssid>")) {
             if(ssid.length() > 2 && ssid.startsWith("\"") && ssid.endsWith("\"")) {
-                return trimSsid(ssid.substring(1,ssid.length()-1));
+                return ssid.substring(1, ssid.length() - 1);
             } else {
                 return ssid;
             }
