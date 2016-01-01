@@ -1,14 +1,14 @@
 <resources>
-    <string name="app_name">BITion</string>
-    <string name="version_info">Beta测试版 0.5 / LICENSE GPL v2</string>
+    <string name="app_name" translatable="false">BITion</string>
+    <string name="version_info">测试版 %1$s / LICENSE GPL v2</string>
 
     <string name="action_settings">设置</string>
-    <string name="title_activity_demo">Demo</string>
-    <string name="title_activity_settings">SettingsActivity</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="title_activity_login">LoginActivity</string>
-    <string name="title_activity_launch">BITion</string>
-    <string name="title_activity_help">HelpActivity</string>
+    <string name="title_activity_demo" translatable="false">Demo</string>
+    <string name="title_activity_settings" translatable="false">SettingsActivity</string>
+    <string name="title_activity_main" translatable="false">MainActivity</string>
+    <string name="title_activity_login" translatable="false">LoginActivity</string>
+    <string name="title_activity_launch" translatable="false">BITion</string>
+    <string name="title_activity_help" translatable="false">HelpActivity</string>
 
     <string name="text_launch">从这里\nBITion\n做追赶世界的北理人</string>
 
@@ -38,7 +38,6 @@
 *   本版本以后添加错误报告，如果你的设备出现闪退等问题会自动(连接WiFi时)上报给我，
 放心，不会把你的上网帐号上传上来的～参看源码\n
 *   本软件旨在方便北理师生，承诺永远不添加任何形式的商业广告\n\n
-By LangleyChang and entalent
         </string>
     <string name="ssid_delete_confirm">确定要删除"%1$s"?</string>
     <string name="confirm_getit">知道了</string>
@@ -69,7 +68,7 @@ By LangleyChang and entalent
     <string name="login_toast_username_error">用户名错误</string>
     <string name="login_toast_password_error">密码错误</string>
     <string name="login_toast_error_logout">检测到未登录，在尝试登录</string>
-    <string name="login_toast_error_unknown">连接失败，请检查网络\n如果不是网络问题，请联系我 zhehuaxiao@gmail.com</string>
+    <string name="login_toast_error_unknown">连接失败，请检查网络</string>
     <string name="ic_action_add">增加SSID</string>
     <string name="ic_action_login">登录</string>
     <string name="ic_action_logout">注销</string>

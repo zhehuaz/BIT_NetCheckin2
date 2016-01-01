@@ -1,20 +1,25 @@
 package org.bitnp.netcheckin2.ui;
 
+import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
+import org.bitnp.netcheckin2.BuildConfig;
 import org.bitnp.netcheckin2.R;
 
 public class HelpActivity extends ActionBarActivity {
-
+    TextView versionInfoText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help);
-    }
 
+        versionInfoText = (TextView) findViewById(R.id.tv_version_info);
+        versionInfoText.setText(String.format(getString(R.string.version_info), BuildConfig.VERSION_NAME));
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
