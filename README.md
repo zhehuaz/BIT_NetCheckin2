@@ -1,5 +1,5 @@
 # BIT_NetCheckin2
-
+**This repo is deprecated.The new version please refer to [BITion3](https://github.com/LangleyChang/BITion3).**
  Overview
 ---
  Auto login app of Android for Beijing Institute of Technology.
